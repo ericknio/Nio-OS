@@ -1,0 +1,72 @@
+{
+  "ok": true,
+  "stage": "4A.15A-DIAGNOSTICO-FIREWALL-LAN",
+  "generatedAt": "2026-08-12T20:49:51.110Z",
+  "installedExeExists": true,
+  "installedExe": "C:\\Program Files\\Nio-OS\\Nio-OS.exe",
+  "firewallService": {
+    "Name": "MpsSvc",
+    "Status": 4,
+    "StartType": 2
+  },
+  "connectionProfiles": [
+    {
+      "InterfaceAlias": "Ethernet",
+      "InterfaceIndex": 18,
+      "Name": "Rede",
+      "NetworkCategory": 1,
+      "IPv4Connectivity": 4,
+      "IPv6Connectivity": 3
+    }
+  ],
+  "ipv4Addresses": [
+    {
+      "InterfaceAlias": "Ethernet",
+      "InterfaceIndex": 18,
+      "IPAddress": "192.168.1.9",
+      "PrefixLength": 24,
+      "AddressState": 4
+    }
+  ],
+  "firewallProfiles": [
+    {
+      "Name": "Domain",
+      "Enabled": 1,
+      "DefaultInboundAction": 0,
+      "DefaultOutboundAction": 0,
+      "NotifyOnListen": 1
+    },
+    {
+      "Name": "Private",
+      "Enabled": 1,
+      "DefaultInboundAction": 0,
+      "DefaultOutboundAction": 0,
+      "NotifyOnListen": 1
+    },
+    {
+      "Name": "Public",
+      "Enabled": 1,
+      "DefaultInboundAction": 0,
+      "DefaultOutboundAction": 0,
+      "NotifyOnListen": 1
+    }
+  ],
+  "inboundRules": [],
+  "port3000Listeners": [],
+  "listenerProcesses": [],
+  "assessment": {
+    "privateProfileCount": 0,
+    "publicProfileCount": 0,
+    "nioInboundRuleCount": 0,
+    "desiredRuleAlreadyExists": false,
+    "broadPort3000RuleCount": 0,
+    "port3000CurrentlyListening": false,
+    "recommendedTarget": "TCP 3000 / Inbound Allow / Profile Private / RemoteAddress LocalSubnet / Program C:\\Program Files\\Nio-OS\\Nio-OS.exe"
+  },
+  "safety": {
+    "firewallChanged": false,
+    "networkProfileChanged": false,
+    "databaseChanged": false,
+    "applicationStarted": false
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "name": "sistema-os",
+  "version": "0.1.4",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "lint": "eslint",
+    "prisma:generate": "prisma generate",
+    "backup": "node scripts/backup-local.js",
+    "restore": "node scripts/restore-local.js",
+    "backup:auto": "node scripts/backup-auto.js",
+    "pacote": "node scripts/criar-pacote-local.js",
+    "sqlite:env": "node scripts/preparar-env-sqlite-local.js",
+    "local:prepare": "npm run prisma:generate && npm run build",
+    "desktop": "electron desktop/main.cjs",
+    "desktop:servidor": "electron desktop/main.cjs --servidor",
+    "desktop:cliente": "electron desktop/main.cjs --cliente",
+    "desktop:prepare": "npm run local:prepare && npm run seed:sqlite && node scripts/preparar-standalone-desktop.js",
+    "desktop:dir": "npm run desktop:prepare && electron-builder --dir",
+    "desktop:portable": "npm run desktop:prepare && electron-builder --win portable",
+    "desktop:installer": "npm run desktop:prepare && electron-builder --win nsis",
+    "desktop:release": "npm run desktop:prepare && electron-builder --win portable nsis",
+    "desktop:win": "npm run desktop:prepare && electron-builder --win",
+    "desktop:instalador": "npm run desktop:installer",
+    "seed:sqlite": "node scripts/criar-seed-sqlite-limpo.cjs"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3",
+    "next": "^16.2.10",
+    "next-themes": "^0.4.6",
+    "pdfkit": "^0.19.1",
+    "qrcode": "^1.5.4",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/pdfkit": "^0.17.6",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "electron": "^43.2.0",
+    "electron-builder": "^26.15.3",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.10",
+    "prisma": "6.19.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "main": "desktop/main.cjs",
+  "build": {
+    "appId": "br.com.nioos.desktop",
+    "productName": "Nio-OS",
+    "copyright": "Copyright © 2026 Nio-OS",
+    "asar": false,
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "desktop/**/*",
+      ".next/standalone/**/*",
+      "scripts/schema-migrator/**/*",
+      "prisma/**/*",
+      "package.json",
+      "!data/**/*",
+      "!backups/**/*",
+      "!storage/**/*",
+      "!public/uploads/**/*",
+      "!.next/standalone/data/**/*",
+      "!.next/standalone/backups/**/*",
+      "!.next/standalone/storage/**/*",
+      "!.next/standalone/public/uploads/**/*",
+      "!.next/standalone/release/**/*",
+      "!.next/standalone/dist-local/**/*",
+      "!.next/standalone/_arquivo_morto_nio_os/**/*",
+      "!.next/standalone/logs-build-*/*",
+      "!**/*.bak-*",
+      "!**/*.nio",
+      "!**/SOLICITACAO-ATIVACAO-*.json",
+      "!**/ETAPA012_*.json",
+      "!**/.env",
+      "!**/.env.*"
+    ],
+    "extraMetadata": {
+      "main": "desktop/main.cjs"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "dir",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "icon": "build/icon.png",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Nio-OS",
+      "perMachine": false,
+      "allowElevation": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "Nio-OS Setup ${version}.${ext}"
+    },
+    "executableName": "Nio-OS",
+    "publish": null,
+    "extraResources": [
+      {
+        "from": "build/seed/data",
+        "to": "seed/data",
+        "filter": [
+          "nio-os.db"
+        ]
+      }
+    ],
+    "afterPack": "scripts/electron-afterpack-v11n.js"
+  },
+  "description": "Sistema local de ordem de servico Nio-OS",
+  "author": "Nio-OS"
+}

@@ -1,0 +1,106 @@
+{
+  "ok": true,
+  "stage": "4A.10D.2-BOOT-EMPACOTADO",
+  "generatedAt": "2026-08-12T16:07:10.628Z",
+  "validationModel": {
+    "physicalHashRequiredForApprovedCandidate": true,
+    "physicalHashRequiredForRuntime": false,
+    "stableLogicalStateRequired": true,
+    "volatileColumnsAllowed": {
+      "SystemUser": [
+        "lastLoginAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "packageValidation": {
+    "ok": true,
+    "stage": "4A.14C.3-DESKTOP-DIR-RECURSIVAMENTE-VALIDADO",
+    "unexpectedDatabases": 0,
+    "envFilesInsideApp": 0,
+    "realDataPathsWithFiles": 0,
+    "seedBusinessRows": 0
+  },
+  "runtime": {
+    "root": "C:\\Users\\PC\\AppData\\Local\\Nio-OS",
+    "physicalShaBefore": "cbc45aecdad1ecfb5aa2dd95a309c4879b5455ad47899e5a5db31f92d1e667f5",
+    "physicalShaAfter": "cbc45aecdad1ecfb5aa2dd95a309c4879b5455ad47899e5a5db31f92d1e667f5",
+    "physicalHashChanged": false,
+    "stableDigestBefore": "eb2385e8fab5f1e8991065674c41b192e4c9bf3c6764a58e46568c274e5525a9",
+    "stableDigestAfter": "eb2385e8fab5f1e8991065674c41b192e4c9bf3c6764a58e46568c274e5525a9",
+    "stableStateChanged": false,
+    "envExistedBefore": true,
+    "envPresentAfter": true,
+    "envKeys": [
+      "AUTH_SECRET",
+      "COOKIE_SECURE",
+      "DATABASE_URL",
+      "HOST",
+      "HOSTNAME",
+      "NEXT_TELEMETRY_DISABLED",
+      "NIO_OS_DATA_DIR",
+      "NIO_OS_RUNTIME_DIR",
+      "NODE_ENV",
+      "PORT"
+    ],
+    "envChecks": {
+      "databaseUrl": true,
+      "dataDir": true,
+      "runtimeDir": true,
+      "host": true,
+      "port": true,
+      "authSecretPresent": true
+    }
+  },
+  "database": {
+    "healthBefore": {
+      "integrityCheck": "ok",
+      "foreignKeyViolations": 0,
+      "tableCount": 22,
+      "migrationCount": 5
+    },
+    "healthAfter": {
+      "integrityCheck": "ok",
+      "foreignKeyViolations": 0,
+      "tableCount": 22,
+      "migrationCount": 5
+    },
+    "approvedEquivalentBefore": true,
+    "approvedEquivalentAfter": true,
+    "businessStateChanged": false
+  },
+  "config": {
+    "lastMode": "server",
+    "autoStart": true,
+    "authSecretPresent": true
+  },
+  "http": {
+    "health": {
+      "status": 200,
+      "contentType": "application/json"
+    },
+    "login": {
+      "status": 200,
+      "contentType": "text/html; charset=utf-8"
+    },
+    "authSetup": {
+      "status": 200,
+      "contentType": "application/json"
+    }
+  },
+  "process": {
+    "packagedExeStarted": true,
+    "packagedExeStopped": true,
+    "serverPortClosedAfterTest": true
+  },
+  "safety": {
+    "projectDatabaseChanged": false,
+    "roamingDatabaseChanged": false,
+    "businessDataMutationDetected": false,
+    "installerBuildRun": false
+  },
+  "nextStep": {
+    "manualPackagedDesktopUseAllowed": true,
+    "installerBuildStillPending": true
+  }
+}

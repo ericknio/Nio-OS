@@ -1,0 +1,48 @@
+{
+  "ok": true,
+  "stage": "4A.14C-PRE-INSTALACAO",
+  "createdAt": "2026-08-12T14:17:00.181Z",
+  "package": {
+    "productName": "Nio-OS",
+    "version": "0.1.1"
+  },
+  "installer": {
+    "path": "release/Nio-OS Setup 0.1.1.exe",
+    "exists": true,
+    "sizeBytes": 320835545,
+    "sha256": "d431ed9aaf7cc0c88c7dcad4bc4390388198436c9a9ee4081a91fdf21ef8bc77"
+  },
+  "unpackedExe": {
+    "path": "release/win-unpacked/Nio-OS.exe",
+    "exists": true,
+    "sizeBytes": 225613824,
+    "sha256": "e0dbd0869896a9f94cb9aaf3b2b02c2073e2914abed6ee055113e78c6760f33b"
+  },
+  "runtime": {
+    "root": "C:/Users/PC/AppData/Local/Nio-OS",
+    "database": {
+      "exists": true,
+      "sizeBytes": 557056,
+      "sha256": "cbc45aecdad1ecfb5aa2dd95a309c4879b5455ad47899e5a5db31f92d1e667f5"
+    }
+  },
+  "sourceDatabases": {
+    "project": {
+      "exists": true,
+      "sizeBytes": 552960,
+      "sha256": "ffb4dc202a3ffc67632674fd8690864ad697a6e782bd1eada261e982c6c36fec"
+    },
+    "roaming": {
+      "exists": true,
+      "sizeBytes": 364544,
+      "sha256": "bbda6b82df5d74af7e121146355afd8fbc9bec59e9acf6db3c6667906600628f"
+    }
+  },
+  "installedExeBefore": null,
+  "safety": {
+    "readOnly": true,
+    "databaseChanged": false,
+    "installerExecuted": false,
+    "applicationExecuted": false
+  }
+}

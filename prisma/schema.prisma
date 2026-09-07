@@ -1,0 +1,678 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  TECNICO
+  ATENDENTE
+}
+
+enum EquipmentType {
+  NOTEBOOK
+  COMPUTADOR
+  CELULAR
+  TABLET
+  VIDEOGAME
+  IMPRESSORA
+  TV
+  OUTRO
+}
+
+enum PaymentMethod {
+  DINHEIRO
+  PIX
+  CARTAO
+  PARCELADO
+  AGUARDANDO_PAGAMENTO
+}
+
+enum OrderStatus {
+  RECEBIDO
+  EM_ANALISE
+  AGUARDANDO_PECA
+  EM_REPARO
+  PRONTO
+  ENTREGUE
+  CANCELADO
+}
+
+enum SystemUserRole {
+  ADMIN
+  ATENDENTE
+  TECNICO
+  FINANCEIRO
+}
+
+enum SystemUserStatus {
+  ATIVO
+  INATIVO
+  BLOQUEADO
+}
+
+enum ProductSaleStatus {
+  CONCLUIDA
+  CANCELADA
+}
+
+enum StockMovementType {
+  ENTRADA
+  SAIDA
+  AJUSTE
+  VENDA
+  CANCELAMENTO_VENDA
+}
+
+enum ServiceOrderPartState {
+  RESERVED
+  CONSUMED
+  RELEASED
+  REVERSED
+}
+
+enum TechnicalPartMovementType {
+  ENTRY
+  POSITIVE_ADJUSTMENT
+  NEGATIVE_ADJUSTMENT
+  RESERVATION
+  RESERVATION_INCREASE
+  RESERVATION_DECREASE
+  RELEASE
+  CONSUMPTION
+  MANUAL_REVERSAL
+  STOCK_MODE_CHANGE
+}
+
+enum TechnicalPartCommandOperation {
+  CREATE
+  UPDATE_METADATA
+  DEACTIVATE
+  REACTIVATE
+}
+
+enum ServiceOrderTechnicalOperation {
+  CONSUME_ON_READY
+  RELEASE_ON_CANCEL
+  MANUAL_REVERSAL
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(ATENDENTE)
+  active       Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders ServiceOrder[]
+}
+
+model Customer {
+  id             String    @id @default(uuid())
+  name           String
+  cpf            String?
+  birthDate      DateTime?
+  whatsapp       String?
+  secondaryPhone String?
+  email          String?
+  zipCode        String?
+  address        String?
+  number         String?
+  complement     String?
+  district       String?
+  city           String?
+  state          String?
+  notes          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders       ServiceOrder[]
+  productSales ProductSale[]
+
+  @@index([name])
+  @@index([cpf])
+  @@index([whatsapp])
+}
+
+model ServiceOrder {
+  id       String @id @default(uuid())
+  osNumber Int    @unique
+
+  openedAt             DateTime  @default(now())
+  expectedDeliveryDate DateTime?
+
+  historicos           HistoricoOrdem[]
+  attachments          ServiceOrderAttachment[]
+  internalNotes        ServiceOrderInternalNote[]
+  payments             ServiceOrderPayment[]
+  technicalParts       ServiceOrderPart[]
+  technicalCommandLogs ServiceOrderTechnicalCommandLog[]
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id])
+
+  equipmentType  EquipmentType
+  equipmentOther String?
+
+  brand          String?
+  model          String?
+  serialNumber   String?
+  imei           String?
+  devicePassword String?
+
+  deliveredAccessories  String?
+  reportedDefect        String
+  technicalNotes        String?
+  requiredParts                     String?
+  technicianResponsible             String?
+  technicianUserId                  String?
+  technicianProfitPercentSnapshot   Decimal?
+
+  technicianUser SystemUser? @relation("ServiceOrderTechnician", fields: [technicianUserId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  partsCost   Decimal @default(0)
+  laborCost   Decimal @default(0)
+  discount    Decimal @default(0)
+  totalAmount Decimal @default(0)
+
+  paymentMethod PaymentMethod @default(AGUARDANDO_PAGAMENTO)
+  status        OrderStatus   @default(RECEBIDO)
+
+  finalizedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  finalization OrderFinalization?
+  histories    OrderHistory[]
+
+  paidAmount        Decimal   @default(0)
+  paymentPercent    Int       @default(0)
+  paymentReceivedAt DateTime?
+
+  @@index([osNumber])
+  @@index([brand])
+  @@index([model])
+  @@index([imei])
+  @@index([serialNumber])
+  @@index([status])
+  @@index([technicianUserId])
+}
+
+model OrderFinalization {
+  id String @id @default(uuid())
+
+  serviceOrderId String       @unique
+  serviceOrder   ServiceOrder @relation(fields: [serviceOrderId], references: [id])
+
+  repairDescription String
+  replacedParts     String?
+  finalAmount       Decimal       @default(0)
+  warrantyDays      Int
+  deliveredAt       DateTime
+  deliveredBy       String
+  paymentMethod     PaymentMethod
+  finalNotes        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderHistory {
+  id String @id @default(uuid())
+
+  serviceOrderId String
+  serviceOrder   ServiceOrder @relation(fields: [serviceOrderId], references: [id])
+
+  userName    String?
+  action      String
+  description String
+  oldValue    String?
+  newValue    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([serviceOrderId])
+}
+
+model CompanySettings {
+  id                    String   @id @default(cuid())
+  companyName           String
+  tradeName             String?
+  cnpj                  String?
+  address               String?
+  phone                 String?
+  whatsapp              String?
+  email                 String?
+  website               String?
+  instagram             String?
+  facebook              String?
+  logoUrl               String?
+  bannerUrl             String?
+  primaryColor          String   @default("#2563EB")
+  footerText            String?
+  warrantyText          String?
+  defaultWarrantyDays   Int      @default(90)
+  city                  String?
+  state                 String?
+  zipCode               String?
+  defaultOperator       String?  @default("Sistema")
+  productsModuleEnabled Boolean  @default(true)
+  osModuleEnabled       Boolean  @default(true)
+  businessDays          String   @default("1,2,3,4,5,6")
+  businessOpenTime      String   @default("08:00")
+  businessCloseTime     String   @default("18:00")
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model HistoricoOrdem {
+  id        String   @id @default(cuid())
+  ordemId   String
+  acao      String
+  descricao String?
+  criadoEm  DateTime @default(now())
+
+  ordem ServiceOrder @relation(fields: [ordemId], references: [id], onDelete: Cascade)
+
+  @@index([ordemId])
+}
+
+model ServiceOrderAttachment {
+  id             String   @id @default(cuid())
+  serviceOrderId String
+  fileName       String
+  originalName   String
+  url            String
+  mimeType       String?
+  size           Int?
+  createdAt      DateTime @default(now())
+
+  serviceOrder ServiceOrder @relation(fields: [serviceOrderId], references: [id], onDelete: Cascade)
+
+  @@index([serviceOrderId])
+}
+
+model ServiceOrderInternalNote {
+  id             String   @id @default(cuid())
+  serviceOrderId String
+  userName       String   @default("Sistema")
+  note           String
+  createdAt      DateTime @default(now())
+
+  serviceOrder ServiceOrder @relation(fields: [serviceOrderId], references: [id], onDelete: Cascade)
+
+  @@index([serviceOrderId])
+}
+
+model ServiceOrderPayment {
+  id             String   @id @default(cuid())
+  serviceOrderId String
+  amount         Decimal
+  percent        Int
+  paymentMethod  String
+  note           String?
+  userName       String   @default("Sistema")
+  createdAt      DateTime @default(now())
+
+  serviceOrder ServiceOrder @relation(fields: [serviceOrderId], references: [id], onDelete: Cascade)
+
+  @@index([serviceOrderId])
+}
+
+model SystemUser {
+  id String @id @default(cuid())
+
+  name         String
+  username     String  @unique
+  email        String?
+  passwordHash String
+
+  role   SystemUserRole   @default(ATENDENTE)
+  status SystemUserStatus @default(ATIVO)
+
+  profitShareEnabled Boolean @default(false)
+  profitSharePercent Decimal @default(0)
+
+  pdvProfitShareEnabled Boolean @default(false)
+  pdvProfitSharePercent Decimal @default(0)
+
+  lastLoginAt DateTime?
+
+  permissions                   SystemUserPermission[]
+  technicalPartResponsibilities ServiceOrderPart[]                @relation("TechnicalPartResponsibleUser")
+  technicalPartMovements        TechnicalPartMovement[]           @relation("TechnicalPartMovementOperator")
+  technicalPartCommands         TechnicalPartCommandLog[]         @relation("TechnicalPartCommandOperator")
+  serviceOrderTechnicalCommands ServiceOrderTechnicalCommandLog[] @relation("ServiceOrderTechnicalCommandOperator")
+  technicianServiceOrders         ServiceOrder[]                     @relation("ServiceOrderTechnician")
+  attendantProductSales           ProductSale[]                      @relation("ProductSaleAttendant")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([username])
+  @@index([email])
+  @@index([role])
+  @@index([status])
+}
+
+model SystemUserPermission {
+  id String @id @default(cuid())
+
+  userId String
+  key    String
+
+  user SystemUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, key])
+  @@index([userId])
+  @@index([key])
+}
+
+model Product {
+  id String @id @default(cuid())
+
+  name        String
+  sku         String?
+  category    String?
+  description String?
+  imageUrl    String?
+
+  salePrice  Decimal @default(0)
+  costPrice  Decimal @default(0)
+  taxPercent Decimal @default(0)
+
+  stockQuantity Int?
+  minStock      Int  @default(0)
+
+  isActive Boolean @default(true)
+
+  saleItems      ProductSaleItem[]
+  stockMovements StockMovement[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([sku])
+  @@index([category])
+  @@index([isActive])
+  @@index([stockQuantity])
+}
+
+model ProductSale {
+  id         String @id @default(cuid())
+  saleNumber Int    @unique
+
+  soldAt DateTime @default(now())
+
+  customerId   String?
+  customerName String?
+
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  subtotalAmount Decimal @default(0)
+  discount       Decimal @default(0)
+  taxAmount      Decimal @default(0)
+  costAmount     Decimal @default(0)
+  profitAmount   Decimal @default(0)
+  totalAmount    Decimal @default(0)
+
+  paymentMethod PaymentMethod
+  status        ProductSaleStatus @default(CONCLUIDA)
+
+  note     String?
+  userName String  @default("Sistema")
+
+  attendantUserId                String?
+  attendantProfitPercentSnapshot Decimal?
+  attendantProfitShare           Decimal  @default(0)
+
+  attendantUser  SystemUser?       @relation("ProductSaleAttendant", fields: [attendantUserId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  items          ProductSaleItem[]
+  stockMovements StockMovement[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([saleNumber])
+  @@index([soldAt])
+  @@index([customerId])
+  @@index([paymentMethod])
+  @@index([status])
+  @@index([userName])
+  @@index([attendantUserId])
+}
+
+model ProductSaleItem {
+  id String @id @default(cuid())
+
+  saleId String
+  sale   ProductSale @relation(fields: [saleId], references: [id], onDelete: Cascade)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  productName String
+
+  quantity Int
+
+  unitPrice  Decimal @default(0)
+  unitCost   Decimal @default(0)
+  taxPercent Decimal @default(0)
+
+  subtotalAmount Decimal @default(0)
+  taxAmount      Decimal @default(0)
+  costAmount     Decimal @default(0)
+  profitAmount   Decimal @default(0)
+  totalAmount    Decimal @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([saleId])
+  @@index([productId])
+  @@index([productName])
+}
+
+model StockMovement {
+  id String @id @default(cuid())
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  saleId String?
+  sale   ProductSale? @relation(fields: [saleId], references: [id], onDelete: SetNull)
+
+  type StockMovementType
+
+  quantity      Int
+  previousStock Int?
+  newStock      Int?
+
+  reason   String?
+  userName String  @default("Sistema")
+
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+  @@index([saleId])
+  @@index([type])
+  @@index([createdAt])
+  @@index([userName])
+}
+
+model TechnicalPart {
+  id String @id @default(cuid())
+
+  name            String
+  sku             String? @unique
+  category        String?
+  brand           String?
+  compatibleModel String?
+  description     String?
+  location        String?
+  notes           String?
+
+  quantityOnHand   Int?
+  quantityReserved Int  @default(0)
+  minStock         Int  @default(0)
+
+  currentCostPrice Decimal @default(0)
+  defaultSalePrice Decimal @default(0)
+
+  isActive Boolean @default(true)
+  version  Int     @default(0)
+
+  serviceOrderParts ServiceOrderPart[]
+  movements         TechnicalPartMovement[]
+  commandLogs       TechnicalPartCommandLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([category])
+  @@index([brand])
+  @@index([compatibleModel])
+  @@index([isActive])
+  @@index([location])
+  @@index([updatedAt])
+}
+
+model TechnicalPartCommandLog {
+  id String @id @default(cuid())
+
+  logicalKey  String                        @unique
+  payloadHash String
+  operation   TechnicalPartCommandOperation
+
+  technicalPartId String
+  technicalPart   TechnicalPart @relation(fields: [technicalPartId], references: [id], onDelete: Restrict)
+
+  operatorId String?
+  operator   SystemUser? @relation("TechnicalPartCommandOperator", fields: [operatorId], references: [id], onDelete: SetNull)
+
+  operatorNameSnapshot String
+  reason               String?
+  resultVersion        Int
+  createdAt            DateTime @default(now())
+
+  @@index([technicalPartId])
+  @@index([operation])
+  @@index([operatorId])
+  @@index([createdAt])
+}
+
+model ServiceOrderTechnicalCommandLog {
+  id String @id @default(cuid())
+
+  logicalKey  String                         @unique
+  payloadHash String
+  operation   ServiceOrderTechnicalOperation
+
+  serviceOrderId String
+  serviceOrder   ServiceOrder @relation(fields: [serviceOrderId], references: [id], onDelete: Restrict)
+
+  operatorId String?
+  operator   SystemUser? @relation("ServiceOrderTechnicalCommandOperator", fields: [operatorId], references: [id], onDelete: SetNull)
+
+  operatorNameSnapshot String
+  affectedItems        Int
+  resultOrderStatus    String
+  createdAt            DateTime @default(now())
+
+  @@index([serviceOrderId])
+  @@index([operation])
+  @@index([operatorId])
+  @@index([createdAt])
+}
+
+model ServiceOrderPart {
+  id String @id @default(cuid())
+
+  serviceOrderId String
+  serviceOrder   ServiceOrder @relation(fields: [serviceOrderId], references: [id], onDelete: Restrict)
+
+  technicalPartId String
+  technicalPart   TechnicalPart @relation(fields: [technicalPartId], references: [id], onDelete: Restrict)
+
+  partNameSnapshot String
+  partSkuSnapshot  String?
+
+  unitCostSnapshot   Decimal
+  unitPriceSnapshot  Decimal
+  quantity           Int
+  totalCostSnapshot  Decimal
+  totalPriceSnapshot Decimal
+
+  state ServiceOrderPartState @default(RESERVED)
+
+  reservedAt DateTime  @default(now())
+  consumedAt DateTime?
+  releasedAt DateTime?
+  reversedAt DateTime?
+
+  responsibleUserId           String?
+  responsibleUser             SystemUser? @relation("TechnicalPartResponsibleUser", fields: [responsibleUserId], references: [id], onDelete: SetNull)
+  responsibleUserNameSnapshot String
+
+  idempotencyKey String @unique
+
+  movements TechnicalPartMovement[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([serviceOrderId, state])
+  @@index([technicalPartId, state])
+  @@index([reservedAt])
+  @@index([consumedAt])
+  @@index([responsibleUserId])
+}
+
+model TechnicalPartMovement {
+  id String @id @default(cuid())
+
+  technicalPartId String
+  technicalPart   TechnicalPart @relation(fields: [technicalPartId], references: [id], onDelete: Restrict)
+
+  serviceOrderPartId String?
+  serviceOrderPart   ServiceOrderPart? @relation(fields: [serviceOrderPartId], references: [id], onDelete: Restrict)
+
+  type     TechnicalPartMovementType
+  quantity Int
+
+  onHandBefore   Int?
+  onHandAfter    Int?
+  reservedBefore Int
+  reservedAfter  Int
+
+  unitCostSnapshot Decimal?
+  reason           String?
+
+  operatorId           String?
+  operator             SystemUser? @relation("TechnicalPartMovementOperator", fields: [operatorId], references: [id], onDelete: SetNull)
+  operatorNameSnapshot String
+
+  idempotencyKey String   @unique
+  createdAt      DateTime @default(now())
+
+  @@index([technicalPartId, createdAt])
+  @@index([serviceOrderPartId, createdAt])
+  @@index([type, createdAt])
+  @@index([operatorId])
+}

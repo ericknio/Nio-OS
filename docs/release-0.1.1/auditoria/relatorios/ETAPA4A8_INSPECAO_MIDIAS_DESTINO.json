@@ -1,0 +1,267 @@
+{
+  "ok": true,
+  "stage": "4A.8-INSPECAO-MIDIAS-DESTINO",
+  "generatedAt": "2026-08-11T16:24:29.801Z",
+  "safety": {
+    "readOnly": true,
+    "databaseChanged": false,
+    "schemaChanged": false,
+    "migrationExecuted": false,
+    "promotionPerformed": false,
+    "fileContentsExported": false,
+    "secretsExported": false
+  },
+  "environment": {
+    "APPDATA": "C:\\Users\\PC\\AppData\\Roaming",
+    "LOCALAPPDATA": "C:\\Users\\PC\\AppData\\Local"
+  },
+  "candidate": {
+    "exists": true,
+    "path": "C:\\projetos\\sistema-os\\data\\nio-os-merge-preview-4a5b-2026-08-11T15-55-30-510Z.db",
+    "sizeBytes": 557056,
+    "sha256": "bb0bf660bfc74528ee5355af787a835aaff75e288d7fe01a022518203569d675",
+    "walExists": false,
+    "shmExists": false,
+    "integrityCheck": "ok",
+    "foreignKeyViolations": 0,
+    "tableCount": 22
+  },
+  "roots": {
+    "project": {
+      "root": "C:\\projetos\\sistema-os",
+      "exists": true,
+      "configExists": false,
+      "runtimeEnvExists": true,
+      "desktopLogExists": false,
+      "database": {
+        "exists": true,
+        "path": "C:\\projetos\\sistema-os\\data\\nio-os.db",
+        "sizeBytes": 552960,
+        "sha256": "ffb4dc202a3ffc67632674fd8690864ad697a6e782bd1eada261e982c6c36fec",
+        "walExists": false,
+        "shmExists": false,
+        "integrityCheck": "ok",
+        "foreignKeyViolations": 0,
+        "tableCount": 22
+      }
+    },
+    "roaming": {
+      "root": "C:\\Users\\PC\\AppData\\Roaming\\Nio-OS",
+      "exists": true,
+      "configExists": true,
+      "runtimeEnvExists": true,
+      "desktopLogExists": true,
+      "database": {
+        "exists": true,
+        "path": "C:\\Users\\PC\\AppData\\Roaming\\Nio-OS\\data\\nio-os.db",
+        "sizeBytes": 364544,
+        "sha256": "bbda6b82df5d74af7e121146355afd8fbc9bec59e9acf6db3c6667906600628f",
+        "walExists": false,
+        "shmExists": false,
+        "integrityCheck": "ok",
+        "foreignKeyViolations": 0,
+        "tableCount": 17
+      }
+    },
+    "local": {
+      "root": "C:\\Users\\PC\\AppData\\Local\\Nio-OS",
+      "exists": false,
+      "configExists": false,
+      "runtimeEnvExists": false,
+      "desktopLogExists": false,
+      "database": {
+        "exists": false,
+        "path": "C:\\Users\\PC\\AppData\\Local\\Nio-OS\\data\\nio-os.db"
+      }
+    }
+  },
+  "trees": {
+    "publicUploads": {
+      "roots": {
+        "project": "C:\\projetos\\sistema-os\\public\\uploads",
+        "roaming": "C:\\Users\\PC\\AppData\\Roaming\\Nio-OS\\public\\uploads",
+        "local": "C:\\Users\\PC\\AppData\\Local\\Nio-OS\\public\\uploads"
+      },
+      "counts": {
+        "project": 4,
+        "roaming": 7,
+        "local": 0
+      },
+      "comparison": {
+        "summary": {
+          "totalPaths": 7,
+          "projectOnly": 0,
+          "roamingOnly": 3,
+          "localOnly": 0,
+          "sameProjectRoaming": 4,
+          "conflictProjectRoaming": 0,
+          "localMatchesProject": 0,
+          "localMatchesRoaming": 0,
+          "localConflict": 0
+        },
+        "entries": [
+          {
+            "relativePath": "logo.png",
+            "classification": "ROAMING_ONLY",
+            "project": null,
+            "roaming": {
+              "relativePath": "logo.png",
+              "kind": "file",
+              "sizeBytes": 1486554,
+              "sha256": "113b5d342f32a73d73ccc2ac206399cd56e46a0e460da686fc0182cb2e50faae"
+            },
+            "local": null
+          },
+          {
+            "relativePath": "ordens/a6a5af33-557a-4086-81c6-bd4200cb0dd2/1783355313802-105598563_2970219379682590_7107035018389786252_n-1-.jpg",
+            "classification": "PROJECT_ROAMING_SAME",
+            "project": {
+              "relativePath": "ordens/a6a5af33-557a-4086-81c6-bd4200cb0dd2/1783355313802-105598563_2970219379682590_7107035018389786252_n-1-.jpg",
+              "kind": "file",
+              "sizeBytes": 144677,
+              "sha256": "429c3ddca75ac9e1572366072cab45d9b825fa13a959e9bb5a86a84b8a110611"
+            },
+            "roaming": {
+              "relativePath": "ordens/a6a5af33-557a-4086-81c6-bd4200cb0dd2/1783355313802-105598563_2970219379682590_7107035018389786252_n-1-.jpg",
+              "kind": "file",
+              "sizeBytes": 144677,
+              "sha256": "429c3ddca75ac9e1572366072cab45d9b825fa13a959e9bb5a86a84b8a110611"
+            },
+            "local": null
+          },
+          {
+            "relativePath": "produtos/produto-1784998505389-8cb0eeed-f119-4c55-9ce4-4f36fadb5949.jpg",
+            "classification": "PROJECT_ROAMING_SAME",
+            "project": {
+              "relativePath": "produtos/produto-1784998505389-8cb0eeed-f119-4c55-9ce4-4f36fadb5949.jpg",
+              "kind": "file",
+              "sizeBytes": 1504925,
+              "sha256": "3e916e39f73407c6d54dd2712c3d4e7a22769eb3c9cb40f3b7b88f3505343049"
+            },
+            "roaming": {
+              "relativePath": "produtos/produto-1784998505389-8cb0eeed-f119-4c55-9ce4-4f36fadb5949.jpg",
+              "kind": "file",
+              "sizeBytes": 1504925,
+              "sha256": "3e916e39f73407c6d54dd2712c3d4e7a22769eb3c9cb40f3b7b88f3505343049"
+            },
+            "local": null
+          },
+          {
+            "relativePath": "produtos/produto-1785009169539-7c82e084-793e-49cd-8c71-d6c55a3d0306.jpg",
+            "classification": "PROJECT_ROAMING_SAME",
+            "project": {
+              "relativePath": "produtos/produto-1785009169539-7c82e084-793e-49cd-8c71-d6c55a3d0306.jpg",
+              "kind": "file",
+              "sizeBytes": 22211,
+              "sha256": "f82739d69b797863f7c9e812e56c71cf6967fd19f3c6facc2819aadbbee2f8f2"
+            },
+            "roaming": {
+              "relativePath": "produtos/produto-1785009169539-7c82e084-793e-49cd-8c71-d6c55a3d0306.jpg",
+              "kind": "file",
+              "sizeBytes": 22211,
+              "sha256": "f82739d69b797863f7c9e812e56c71cf6967fd19f3c6facc2819aadbbee2f8f2"
+            },
+            "local": null
+          },
+          {
+            "relativePath": "produtos/produto-1785027375868-10033e27-b934-44d3-beb1-c50d3d0aabbe.jpg",
+            "classification": "PROJECT_ROAMING_SAME",
+            "project": {
+              "relativePath": "produtos/produto-1785027375868-10033e27-b934-44d3-beb1-c50d3d0aabbe.jpg",
+              "kind": "file",
+              "sizeBytes": 22211,
+              "sha256": "f82739d69b797863f7c9e812e56c71cf6967fd19f3c6facc2819aadbbee2f8f2"
+            },
+            "roaming": {
+              "relativePath": "produtos/produto-1785027375868-10033e27-b934-44d3-beb1-c50d3d0aabbe.jpg",
+              "kind": "file",
+              "sizeBytes": 22211,
+              "sha256": "f82739d69b797863f7c9e812e56c71cf6967fd19f3c6facc2819aadbbee2f8f2"
+            },
+            "local": null
+          },
+          {
+            "relativePath": "produtos/produto-1785191784062-95d1119a-8198-4c38-9422-15878118d3aa.jpg",
+            "classification": "ROAMING_ONLY",
+            "project": null,
+            "roaming": {
+              "relativePath": "produtos/produto-1785191784062-95d1119a-8198-4c38-9422-15878118d3aa.jpg",
+              "kind": "file",
+              "sizeBytes": 1504925,
+              "sha256": "3e916e39f73407c6d54dd2712c3d4e7a22769eb3c9cb40f3b7b88f3505343049"
+            },
+            "local": null
+          },
+          {
+            "relativePath": "produtos/produto-1785775146331-ce0fb113-bba5-4121-b543-5d67ae854247.png",
+            "classification": "ROAMING_ONLY",
+            "project": null,
+            "roaming": {
+              "relativePath": "produtos/produto-1785775146331-ce0fb113-bba5-4121-b543-5d67ae854247.png",
+              "kind": "file",
+              "sizeBytes": 1683569,
+              "sha256": "e460b9f61e8fd17343081bce78f4456f5543e0e342390870fba0d559b16514bd"
+            },
+            "local": null
+          }
+        ]
+      }
+    },
+    "storage": {
+      "roots": {
+        "project": "C:\\projetos\\sistema-os\\storage",
+        "roaming": "C:\\Users\\PC\\AppData\\Roaming\\Nio-OS\\storage",
+        "local": "C:\\Users\\PC\\AppData\\Local\\Nio-OS\\storage"
+      },
+      "counts": {
+        "project": 2,
+        "roaming": 1,
+        "local": 0
+      },
+      "comparison": {
+        "summary": {
+          "totalPaths": 2,
+          "projectOnly": 1,
+          "roamingOnly": 0,
+          "localOnly": 0,
+          "sameProjectRoaming": 1,
+          "conflictProjectRoaming": 0,
+          "localMatchesProject": 0,
+          "localMatchesRoaming": 0,
+          "localConflict": 0
+        },
+        "entries": [
+          {
+            "relativePath": "uploads/anexos/os-1-1785027290363-56a45555-8ab4-4403-88c6-55be6f2fe867-chatgpt-image-21-de-jun.-de-2026-20_04_49.png",
+            "classification": "PROJECT_ROAMING_SAME",
+            "project": {
+              "relativePath": "uploads/anexos/os-1-1785027290363-56a45555-8ab4-4403-88c6-55be6f2fe867-chatgpt-image-21-de-jun.-de-2026-20_04_49.png",
+              "kind": "file",
+              "sizeBytes": 1683569,
+              "sha256": "e460b9f61e8fd17343081bce78f4456f5543e0e342390870fba0d559b16514bd"
+            },
+            "roaming": {
+              "relativePath": "uploads/anexos/os-1-1785027290363-56a45555-8ab4-4403-88c6-55be6f2fe867-chatgpt-image-21-de-jun.-de-2026-20_04_49.png",
+              "kind": "file",
+              "sizeBytes": 1683569,
+              "sha256": "e460b9f61e8fd17343081bce78f4456f5543e0e342390870fba0d559b16514bd"
+            },
+            "local": null
+          },
+          {
+            "relativePath": "uploads/anexos/os-18-1784998356575-74b0507c-734a-475f-88c4-9995db8034bd-dc5fcaff-5ca2-4c91-a04e-fe1026578d0b.jpg",
+            "classification": "PROJECT_ONLY",
+            "project": {
+              "relativePath": "uploads/anexos/os-18-1784998356575-74b0507c-734a-475f-88c4-9995db8034bd-dc5fcaff-5ca2-4c91-a04e-fe1026578d0b.jpg",
+              "kind": "file",
+              "sizeBytes": 576499,
+              "sha256": "e847234269db8cba53539b870d14e5289f3bc061a054788062e7463dc3eed1cc"
+            },
+            "roaming": null,
+            "local": null
+          }
+        ]
+      }
+    }
+  }
+}

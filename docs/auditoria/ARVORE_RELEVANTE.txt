@@ -1,0 +1,204 @@
+C:\projetos\sistema-os
+|-- AGENTS.md
+|-- package.json
+|-- package-lock.json
+|-- next.config.ts
+|-- next-env.d.ts
+|-- proxy.ts
+|-- tsconfig.json
+|-- eslint.config.mjs
+|-- postcss.config.mjs
+|-- .env.example
+|-- README.md
+|-- README-INSTALACAO-LOCAL.md
+|-- README-MODO-UNICO-SERVIDOR-CLIENTE.md
+|-- README-PACOTE-CLIENTE-TESTE.md
+|-- README-SQLITE-LOCAL.md
+|-- README-V12-ICONE.md
+|-- app
+|   |-- layout.tsx
+|   |-- page.tsx
+|   |-- globals.css
+|   |-- AppShell.tsx
+|   |-- AuthGuard.tsx
+|   |-- Permissao.tsx
+|   |-- SistemaFrame.tsx
+|   |-- UsuarioLogadoBox.tsx
+|   |-- login/page.tsx
+|   |-- primeiro-acesso/page.tsx
+|   |-- trocar-senha/page.tsx
+|   |-- minha-conta/page.tsx
+|   |-- sair/page.tsx
+|   |-- usuarios-sistema/page.tsx
+|   |-- clientes
+|   |   |-- page.tsx
+|   |   |-- novo/page.tsx
+|   |   `-- [id]/page.tsx
+|   |-- ordens
+|   |   |-- page.tsx
+|   |   |-- nova/page.tsx
+|   |   |-- atrasadas/page.tsx
+|   |   `-- [id]
+|   |       |-- page.tsx
+|   |       |-- editar/page.tsx
+|   |       |-- finalizar/page.tsx
+|   |       |-- cancelar/page.tsx
+|   |       |-- pagamento/page.tsx
+|   |       |-- AnexosOS.tsx
+|   |       |-- HistoricoOS.tsx
+|   |       |-- ObservacoesInternasOS.tsx
+|   |       |-- StatusRapidoOS.tsx
+|   |       `-- WhatsAppOS.tsx
+|   |-- pagamentos/page.tsx
+|   |-- garantias/page.tsx
+|   |-- relatorios/page.tsx
+|   |-- financeiro-geral/page.tsx
+|   |-- configuracoes
+|   |   |-- page.tsx
+|   |   |-- LogoUpload.tsx
+|   |   `-- BackupRestoreCard.tsx
+|   |-- produtos
+|   |   |-- page.tsx
+|   |   |-- ModuloProdutosGuard.tsx
+|   |   |-- novo/page.tsx
+|   |   |-- estoque/page.tsx
+|   |   |-- vendas/page.tsx
+|   |   `-- relatorios/page.tsx
+|   `-- api
+|       |-- auth
+|       |   |-- login/route.ts
+|       |   |-- logout/route.ts
+|       |   |-- me/route.ts
+|       |   |-- setup/route.ts
+|       |   |-- minha-conta/route.ts
+|       |   `-- trocar-senha/route.ts
+|       |-- usuarios-sistema
+|       |   |-- route.ts
+|       |   |-- [id]/route.ts
+|       |   `-- reaplicar-permissoes/route.ts
+|       |-- clientes
+|       |   |-- route.ts
+|       |   `-- [id]/route.ts
+|       |-- ordens
+|       |   |-- route.ts
+|       |   |-- atrasadas/route.ts
+|       |   `-- [id]
+|       |       |-- route.ts
+|       |       |-- status/route.ts
+|       |       |-- finalizar/route.ts
+|       |       |-- cancelar/route.ts
+|       |       |-- reabrir/route.ts
+|       |       |-- duplicar/route.ts
+|       |       |-- pagamento/route.ts
+|       |       |-- historico/route.ts
+|       |       |-- observacoes/route.ts
+|       |       |-- anexos/route.ts
+|       |       |-- anexos/[anexoId]/route.ts
+|       |       |-- imprimir/route.ts
+|       |       |-- recibo/route.ts
+|       |       |-- garantia/route.ts
+|       |       `-- etiqueta/route.ts
+|       |-- pagamentos
+|       |   |-- route.ts
+|       |   `-- pdf/route.ts
+|       |-- garantias/route.ts
+|       |-- relatorios
+|       |   |-- route.ts
+|       |   `-- pdf/route.ts
+|       |-- financeiro-geral/route.ts
+|       |-- dashboard/route.ts
+|       |-- produtos
+|       |   |-- route.ts
+|       |   |-- [id]/route.ts
+|       |   |-- [id]/estoque/route.ts
+|       |   |-- [id]/excluir-definitivo/route.ts
+|       |   |-- upload/route.ts
+|       |   |-- upload/[arquivo]/route.ts
+|       |   `-- relatorios/route.ts
+|       |-- vendas-produtos
+|       |   |-- route.ts
+|       |   `-- [id]/cancelar/route.ts
+|       |-- configuracoes
+|       |   |-- route.ts
+|       |   `-- logo/route.ts
+|       |-- backups
+|       |   |-- route.ts
+|       |   `-- restaurar/route.ts
+|       |-- uploads
+|       |   |-- anexos/[arquivo]/route.ts
+|       |   `-- produtos/[arquivo]/route.ts
+|       |-- runtime/uploads/[...path]/route.ts
+|       |-- manutencao/regularizar-pagamentos-finalizadas/route.ts
+|       `-- local/health/route.ts
+|-- lib
+|   |-- prisma.ts
+|   |-- authSistema.ts
+|   |-- permissaoApi.ts
+|   |-- permissoesSistema.ts
+|   |-- moduloProdutos.ts
+|   |-- numeroSequencial.ts
+|   |-- historico.ts
+|   |-- operadorSistema.ts
+|   |-- runtimeStorage.ts
+|   |-- configuracoesSistema.ts
+|   |-- configuracoesPadrao.ts
+|   |-- funcionamentoLoja.ts
+|   |-- formatadores.ts
+|   |-- pdfEmpresa.ts
+|   `-- server
+|       |-- clientesCore.ts
+|       `-- usuariosSistemaCore.ts
+|-- prisma
+|   |-- schema.prisma
+|   `-- migrations
+|       |-- migration_lock.toml
+|       |-- 20260705132444_init/migration.sql
+|       |-- 20260705235427_historico_ordem/migration.sql
+|       |-- 20260706155247_anexos_os/migration.sql
+|       |-- 20260706165918_observacoes_internas_os/migration.sql
+|       |-- 20260706225707_pagamento_parcial_os/migration.sql
+|       |-- 20260706232704_pagamentos_multiplos_os/migration.sql
+|       |-- 20260717003726_add_technician_responsible/migration.sql
+|       |-- 20260718165356_add_default_operator_to_settings/migration.sql
+|       |-- 20260719001413_add_license_system/migration.sql
+|       |-- 20260719010741_add_activation_requests/migration.sql
+|       |-- 20260719161842_add_system_users/migration.sql
+|       |-- 20260719183634_add_system_user_permissions/migration.sql
+|       `-- 20260723151506_produtos_vendas_estoque/migration.sql
+|-- desktop
+|   |-- main.cjs
+|   |-- preload.cjs
+|   `-- seletor.html
+|-- scripts
+|   |-- backup-api.js
+|   |-- backup-auto.js
+|   |-- backup-core.js
+|   |-- backup-local.js
+|   |-- restore-local.js
+|   |-- adicionar-permissoes-produtos.js
+|   |-- criar-pacote-local.js
+|   |-- criar-pacote-cliente-teste.ps1
+|   |-- nio-os-cliente.js
+|   |-- preparar-env-sqlite-local.js
+|   |-- preparar-standalone-desktop.js
+|   |-- preparar-dados-v11.js
+|   |-- preparar-dados-v11b.js
+|   |-- electron-afterpack-v11n.js
+|   |-- electron-afterpack-v11l.cjs
+|   |-- abrir-janela-app.js
+|   `-- corrigir-*.{js,ps1} (scripts históricos de manutenção)
+|-- public
+|   |-- file.svg
+|   |-- globe.svg
+|   |-- next.svg
+|   |-- vercel.svg
+|   `-- window.svg
+`-- docs
+    `-- auditoria
+        |-- AUDITORIA_NIO_OS.md
+        |-- MAPA_ESTOQUE_PECAS.md
+        `-- ARVORE_RELEVANTE.txt
+
+Excluídos desta árvore: node_modules, .next, build/dist/release/win-unpacked,
+backups, VERSOES-FINAIS, _arquivo_morto_nio_os, logs, executáveis,
+instaladores, compactados, temporários, bancos SQLite, WAL/SHM e uploads.

@@ -1,0 +1,1572 @@
+{
+  "ok": true,
+  "stage": "4A.16D-PLANO-LIMPEZA-RELEASE-0.1.1",
+  "generatedAt": "2026-08-15T19:23:26.263Z",
+  "version": "0.1.1",
+  "policy": {
+    "deleteNothing": true,
+    "moveOnlyAfterApproval": true,
+    "preserveHashes": true,
+    "preserveBackupRelativePaths": true,
+    "keepFinalValidatorAtRoot": true,
+    "keepFinalReportAtRoot": true
+  },
+  "destinations": {
+    "scriptsArchive": "docs/release-0.1.1/auditoria/scripts",
+    "reportsArchive": "docs/release-0.1.1/auditoria/relatorios",
+    "backupArchive": "backups/release-0.1.1/patches"
+  },
+  "summary": {
+    "operationalScriptCount": 71,
+    "scriptsToArchive": 70,
+    "scriptsToKeepAtRoot": 1,
+    "reportCount": 33,
+    "reportsToArchive": 32,
+    "reportsToKeepAtRoot": 1,
+    "backupFileCount": 114,
+    "backupFilesToArchive": 114,
+    "totalArchiveBytes": 5311190,
+    "collisionCount": 0
+  },
+  "scripts": [
+    {
+      "source": "APLICAR-ETAPA4A15B-FIREWALL-LAN-SEGURO.cjs",
+      "sizeBytes": 9693,
+      "sha256": "ef2463e471db3890685d289a2b296220281a13a045a8a4197e8393f58599a28c",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/APLICAR-ETAPA4A15B-FIREWALL-LAN-SEGURO.cjs"
+    },
+    {
+      "source": "COLETAR-ETAPA4A10A-DESKTOP-BUILD.cjs",
+      "sizeBytes": 2384,
+      "sha256": "9c78a3f2173ddd31034d1972ff2a0280a4f80ed6721cc750b80c08146b079da3",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/COLETAR-ETAPA4A10A-DESKTOP-BUILD.cjs"
+    },
+    {
+      "source": "COLETAR-ETAPA4A12-CLIENTE-DESKTOP.cjs",
+      "sizeBytes": 3057,
+      "sha256": "46fb47509d8288eb6bd8b7fbb8a1b59d69ae2d4797dd450c11033b29f2095b51",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/COLETAR-ETAPA4A12-CLIENTE-DESKTOP.cjs"
+    },
+    {
+      "source": "COLETAR-ETAPA4A13A-SEGURANCA-LAN.cjs",
+      "sizeBytes": 4362,
+      "sha256": "830bbf74e01cfcfe8f550469358ecb1a3f7179402f94e70f830a62097a2ec6a4",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/COLETAR-ETAPA4A13A-SEGURANCA-LAN.cjs"
+    },
+    {
+      "source": "COLETAR-ETAPA4A13C-AUTORIZACAO-API-V2.cjs",
+      "sizeBytes": 5327,
+      "sha256": "7529f41e08b7171edd2a37f27f3b5f6a98be153a3557a047f7bcfdaebbca29f5",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/COLETAR-ETAPA4A13C-AUTORIZACAO-API-V2.cjs"
+    },
+    {
+      "source": "COLETAR-ETAPA4A13C-AUTORIZACAO-API.cjs",
+      "sizeBytes": 5237,
+      "sha256": "f9d23dbff237aa4ae7a453414f7daa61637008df339fe4be3ab3046f942972ea",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/COLETAR-ETAPA4A13C-AUTORIZACAO-API.cjs"
+    },
+    {
+      "source": "COLETAR-ETAPA4A16A-FECHAMENTO-RELEASE-011.cjs",
+      "sizeBytes": 12445,
+      "sha256": "dea247f98555bb433afd33a7d65954b3825f6140c4ef8097728071893217c339",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/COLETAR-ETAPA4A16A-FECHAMENTO-RELEASE-011.cjs"
+    },
+    {
+      "source": "COLETAR-ETAPA4A7-RUNTIME-PATHS.cjs",
+      "sizeBytes": 3818,
+      "sha256": "356c79bdb0f002901f4422ff7a43c0722141a1aa6eb1c6624cdf80a6620a6f35",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/COLETAR-ETAPA4A7-RUNTIME-PATHS.cjs"
+    },
+    {
+      "source": "COLETAR-SISTEMAFRAME-ATUAL.cjs",
+      "sizeBytes": 1379,
+      "sha256": "a0545a040c87877e4317980e273312f0d9b68f73c0da3513bd39e03c5fe7299b",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/COLETAR-SISTEMAFRAME-ATUAL.cjs"
+    },
+    {
+      "source": "corrigir-concorrencia-etapa3c33a.cjs",
+      "sizeBytes": 4652,
+      "sha256": "a8de17fc4dae28d2aa8062a2b882b99b223de0b019a2ff1645ca9c79cd3a9596",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/corrigir-concorrencia-etapa3c33a.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA3C35A-A1.cjs",
+      "sizeBytes": 6967,
+      "sha256": "1817f8c9fd6d2e43e7425131c556e2ee99a178b7b6ee5bbce8b5b16390aaeefc",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA3C35A-A1.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA3C35A-A2.cjs",
+      "sizeBytes": 6120,
+      "sha256": "b9ab1392f693b290b0c0ff02ded114712a5767e501c60b53fc819975e285afbb",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA3C35A-A2.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA3C5A1-PROJECAO-CANCELAMENTO.cjs",
+      "sizeBytes": 4642,
+      "sha256": "dba28a7a2ff44bcd30854b6580c8f6d5c3a65178d5bf3c8f626d161cc13c311b",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA3C5A1-PROJECAO-CANCELAMENTO.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA3C6A-REGRESSAO-E-TSC.cjs",
+      "sizeBytes": 12009,
+      "sha256": "ff1252b57a802de78d4d1200daf0b134d2fa337307d310bb354dcf1d92b2e213",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA3C6A-REGRESSAO-E-TSC.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA4A10B-EMPACOTAMENTO-SEGURO.cjs",
+      "sizeBytes": 14608,
+      "sha256": "ff018e9b9d3c03b711e7f8dccc21bdfdf2fa36a647afa495534b56518df647ca",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA4A10B-EMPACOTAMENTO-SEGURO.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA4A10B1-REMOVER-ENV-STANDALONE.cjs",
+      "sizeBytes": 19024,
+      "sha256": "ce0e0c073853cfe340d9c7ebebdac73bf30a2f163674264b1ab15fdc15e4a3c8",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA4A10B1-REMOVER-ENV-STANDALONE.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA4A10D2-VALIDACAO-LOGICA-RUNTIME.cjs",
+      "sizeBytes": 23018,
+      "sha256": "c4088a18653f8562ee263a0f66a1e606fe073bf88034678e9c7888bfa974048d",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA4A10D2-VALIDACAO-LOGICA-RUNTIME.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA4A14C3-VAZAMENTO-ARTEFATOS.cjs",
+      "sizeBytes": 20272,
+      "sha256": "5dc3143eaf920b77f4e94c04373f389b4ca33a42f7de004174cbef1bf5287790",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA4A14C3-VAZAMENTO-ARTEFATOS.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA4A14C4-FALSO-POSITIVO-NEXT.cjs",
+      "sizeBytes": 9798,
+      "sha256": "a5373c9386054452b0b1572c6a39068dfa3897c1f87258235d3ca250c16f5a68",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA4A14C4-FALSO-POSITIVO-NEXT.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA4A14C4-V2-FALSO-POSITIVO-NEXT.cjs",
+      "sizeBytes": 12999,
+      "sha256": "5f203cb8eb3eb87373329a71902927e4a90c9232d5f087d439380156b27ee244",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA4A14C4-V2-FALSO-POSITIVO-NEXT.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA4A16B3-FIREWALL-PERSISTENTE.cjs",
+      "sizeBytes": 7594,
+      "sha256": "6a99f7defe1f839a33d5da4f4f6b7daf2b3867bb638af9e5ea1368c71545e61d",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA4A16B3-FIREWALL-PERSISTENTE.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA4A6A-PRISMA-SMOKE.cjs",
+      "sizeBytes": 5883,
+      "sha256": "0b018461ad965a5015eca5e3a17a713f911739316d38ae0571ee5fdee0bdbf04",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA4A6A-PRISMA-SMOKE.cjs"
+    },
+    {
+      "source": "CORRIGIR-ETAPA4A7B1-SEED-SCHEMA-METADATA.cjs",
+      "sizeBytes": 15570,
+      "sha256": "ba46ed9257810222854a594849100bf13bcb4cf9b959a32ef58126e4d247dcef",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/CORRIGIR-ETAPA4A7B1-SEED-SCHEMA-METADATA.cjs"
+    },
+    {
+      "source": "corrigir-loaders-testes-estoque.cjs",
+      "sizeBytes": 1455,
+      "sha256": "5379ec16a9573af2b831adb7f4bc4530fb8a9cfea640a5e85a82baef3b50e00d",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/corrigir-loaders-testes-estoque.cjs"
+    },
+    {
+      "source": "DIAGNOSTICAR-ETAPA4A15A-FIREWALL-LAN.cjs",
+      "sizeBytes": 9340,
+      "sha256": "9e3e06268c69e4ceda438dfab146fbd0e02e4f2c6292503c3150b1b30d81d2be",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/DIAGNOSTICAR-ETAPA4A15A-FIREWALL-LAN.cjs"
+    },
+    {
+      "source": "DIAGNOSTICAR-ETAPA4A15A2-PERFIL-REDE.cjs",
+      "sizeBytes": 8577,
+      "sha256": "fa70be10c32946170258e160ecf4d0dcc6a06fbeb8c3460e744a7579be36838d",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/DIAGNOSTICAR-ETAPA4A15A2-PERFIL-REDE.cjs"
+    },
+    {
+      "source": "DIAGNOSTICAR-ETAPA4A16A1-FIREWALL-FECHAMENTO.cjs",
+      "sizeBytes": 5555,
+      "sha256": "da00080ba4a3e00a30d47f9465e1d71b8a5eeca30ab5b1fb43ac3c70d91ad7ee",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/DIAGNOSTICAR-ETAPA4A16A1-FIREWALL-FECHAMENTO.cjs"
+    },
+    {
+      "source": "DIAGNOSTICAR-ETAPA4A16A2-LOCALIZAR-REGRA-FIREWALL.cjs",
+      "sizeBytes": 6843,
+      "sha256": "36a5541f8b7ae67deca6401d47ba4549a2918eb746eebab4863f7c89f4ae54a9",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/DIAGNOSTICAR-ETAPA4A16A2-LOCALIZAR-REGRA-FIREWALL.cjs"
+    },
+    {
+      "source": "DIAGNOSTICAR-ETAPA4A16A2-V2-LOCALIZAR-REGRA-FIREWALL.cjs",
+      "sizeBytes": 7545,
+      "sha256": "d0a2058515cb94ff6af19e6f753870a32518708e84e2f9f68bd8dcab893d1b54",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/DIAGNOSTICAR-ETAPA4A16A2-V2-LOCALIZAR-REGRA-FIREWALL.cjs"
+    },
+    {
+      "source": "DIAGNOSTICAR-ETAPA4A16B-ESTOQUE-E-FIREWALL.cjs",
+      "sizeBytes": 5427,
+      "sha256": "438e5cca2a21923072b3f2b7cb3ef5a15162d654f202fbaf4647e7b96282a87b",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/DIAGNOSTICAR-ETAPA4A16B-ESTOQUE-E-FIREWALL.cjs"
+    },
+    {
+      "source": "DIAGNOSTICAR-ETAPA4A16B2-TOGGLE-ESTOQUE-FIREWALL.cjs",
+      "sizeBytes": 9268,
+      "sha256": "273c2dcf90a914a5ac0917092f831ba8c2f851a86357759a7b40f4cb4fbaebad",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/DIAGNOSTICAR-ETAPA4A16B2-TOGGLE-ESTOQUE-FIREWALL.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C35B.cjs",
+      "sizeBytes": 32678,
+      "sha256": "bef506d18132d2fb76a463186fda80b9a585f77e676586035f456bbec1327f86",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C35B.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C4A-API-ESTOQUE-TECNICO.cjs",
+      "sizeBytes": 24089,
+      "sha256": "739f52a834e896b73535dc9075fff82265105035e833600b292bb89d6ba5508f",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C4A-API-ESTOQUE-TECNICO.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C4B-TELA-ESTOQUE-TECNICO.cjs",
+      "sizeBytes": 61534,
+      "sha256": "ad074790736e0052aac35241047eca0e333b7ee07273a4278627578a20e0e670",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C4B-TELA-ESTOQUE-TECNICO.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C4C-PECAS-TECNICAS-OS.cjs",
+      "sizeBytes": 36778,
+      "sha256": "6219bc8920329557d14cfec79d7d71f686794f0670c2afe2209b09d3efb9b040",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C4C-PECAS-TECNICAS-OS.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C4D-PECAS-VALORES-NOVA-OS-V2.cjs",
+      "sizeBytes": 70131,
+      "sha256": "e3cdf4fb025039210845759cb01854d5941f63dec4a6bc7ce34af9e0f53a75c6",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C4D-PECAS-VALORES-NOVA-OS-V2.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C4D-PECAS-VALORES-NOVA-OS.cjs",
+      "sizeBytes": 69870,
+      "sha256": "d962c8fb643ae68ba3e2f4afe4f4070b0ee4ba11dfe61fc3f2d9ed75a619fc4a",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C4D-PECAS-VALORES-NOVA-OS.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C4E-RESULTADO-FINANCEIRO-OS.cjs",
+      "sizeBytes": 89002,
+      "sha256": "51b8b8d0b4e850ee6c9deafb54664e366352410e2e96d9dd84a8fc6a9898455f",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C4E-RESULTADO-FINANCEIRO-OS.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C5A-TECNICO-SNAPSHOT.cjs",
+      "sizeBytes": 116538,
+      "sha256": "067967aa2011a7458deb48ca1e060e540f93c19e19011c3d4fd2db8e86986e64",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C5A-TECNICO-SNAPSHOT.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C5B-CONFIGURACAO-LUCRO-TECNICO.cjs",
+      "sizeBytes": 67752,
+      "sha256": "261fe55e794eb377daf4689b999a4ebad6160d0f449e6d6c60b131a4b25f6f41",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C5B-CONFIGURACAO-LUCRO-TECNICO.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C5C-SELECAO-TECNICO-PRONTO.cjs",
+      "sizeBytes": 30501,
+      "sha256": "5c3c0acc97e849a4523f396d8e2b3311b7b2952a74bfb620b15198d3f04438a6",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C5C-SELECAO-TECNICO-PRONTO.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C5D-RELATORIO-LUCRO-TECNICO.cjs",
+      "sizeBytes": 105606,
+      "sha256": "ca6fd362af8b89d6313392fa2cb624531f4bf707f85491e0b499e15e0b49f14e",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C5D-RELATORIO-LUCRO-TECNICO.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA3C5E-ABA-LUCRO-POR-TECNICO.cjs",
+      "sizeBytes": 122506,
+      "sha256": "57c9c5416278ee6749e570613edef81dbdf3cdce9ec95593066963811df4e707",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA3C5E-ABA-LUCRO-POR-TECNICO.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA4A12B-CLIENTE-LAN-SEGURO.cjs",
+      "sizeBytes": 49757,
+      "sha256": "74d41414841cea54af6c40f156b6c599967cec97cd6e7f2c7f140d4af04d1fea",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA4A12B-CLIENTE-LAN-SEGURO.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA4A13B-HARDENING-LAN-AUTH.cjs",
+      "sizeBytes": 21369,
+      "sha256": "085f9d4bbedadbb869c990d5c834afb795cc9c8daee5371ca244c080adb4c04a",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA4A13B-HARDENING-LAN-AUTH.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA4A7A-RUNTIME-LOCALAPPDATA.cjs",
+      "sizeBytes": 24097,
+      "sha256": "650993663f75cc3eef3ffcb10b23cfd4800c0d4be83305ca03b231c463e51a93",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA4A7A-RUNTIME-LOCALAPPDATA.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-ETAPA4A7B-SEED-SQLITE-LIMPO.cjs",
+      "sizeBytes": 12550,
+      "sha256": "18330582bbfe5a512387699ccdc1151f801c92b47cb0b5be948e2ef0dc1e318d",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-ETAPA4A7B-SEED-SQLITE-LIMPO.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-MENU-GRUPOS-OS-PRODUTOS-V2.cjs",
+      "sizeBytes": 19161,
+      "sha256": "4eca583c0c84eb5cb448268536db3fb38af038c979830d0daa9b0214b943ac24",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-MENU-GRUPOS-OS-PRODUTOS-V2.cjs"
+    },
+    {
+      "source": "IMPLEMENTAR-MENU-GRUPOS-OS-PRODUTOS.cjs",
+      "sizeBytes": 17489,
+      "sha256": "fb2d67bc42cdc67402f49a0ed4b3ee6424657630257959f9d579e5d3475fb533",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/IMPLEMENTAR-MENU-GRUPOS-OS-PRODUTOS.cjs"
+    },
+    {
+      "source": "INSPECIONAR-ETAPA4A-APPDATA.cjs",
+      "sizeBytes": 7928,
+      "sha256": "45895e8be4e61d101749b6c55575b842037b626b7bf4b0cb58d68c69a51011c1",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/INSPECIONAR-ETAPA4A-APPDATA.cjs"
+    },
+    {
+      "source": "INSPECIONAR-ETAPA4A1-MAPA-BANCOS.cjs",
+      "sizeBytes": 7157,
+      "sha256": "84fb496f5dcee4efd24c5e12dbad5ac1d9061a7bf7d39b589a1c9c2f8b7ac7fa",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/INSPECIONAR-ETAPA4A1-MAPA-BANCOS.cjs"
+    },
+    {
+      "source": "INSPECIONAR-ETAPA4A10D1-RUNTIME-CANDIDATO.cjs",
+      "sizeBytes": 10919,
+      "sha256": "9110ce4d734ae39359895e23c2ab33593dc4c1fab0871a2a5ab81589976d3d72",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/INSPECIONAR-ETAPA4A10D1-RUNTIME-CANDIDATO.cjs"
+    },
+    {
+      "source": "INSPECIONAR-ETAPA4A14D1-RESIDUO-INSTALACAO.cjs",
+      "sizeBytes": 5139,
+      "sha256": "cda7367924bd1d28fce6f4ddac31fe8344dae46dbf6d8c1317dc6aa33f664f82",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/INSPECIONAR-ETAPA4A14D1-RESIDUO-INSTALACAO.cjs"
+    },
+    {
+      "source": "INSPECIONAR-ETAPA4A14D2-POS-INSTALACAO.cjs",
+      "sizeBytes": 6577,
+      "sha256": "5184e16c171237c169cd13c7a7b539de0dee7840a5298cb1fd4b36bda8ec67d6",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/INSPECIONAR-ETAPA4A14D2-POS-INSTALACAO.cjs"
+    },
+    {
+      "source": "INSPECIONAR-ETAPA4A2-COMPARAR-BANCOS.cjs",
+      "sizeBytes": 5615,
+      "sha256": "e0b9ee4c90f590496e4fae7e0c5d801046c7d15c55591ffd732a3c3cdb8fc759",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/INSPECIONAR-ETAPA4A2-COMPARAR-BANCOS.cjs"
+    },
+    {
+      "source": "INSPECIONAR-ETAPA4A3-DIFERENCAS-REGISTROS.cjs",
+      "sizeBytes": 9045,
+      "sha256": "11606091ae9d1ccfcc85c234cf95eccd539ed716b5cfe8b57dfbb0d6e7982834",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/INSPECIONAR-ETAPA4A3-DIFERENCAS-REGISTROS.cjs"
+    },
+    {
+      "source": "INSPECIONAR-ETAPA4A4-PLANO-MERGE.cjs",
+      "sizeBytes": 11073,
+      "sha256": "89b1433ab6d40cc056f703adbe650aa9f06b913d67eadcc86df519d74426d5c1",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/INSPECIONAR-ETAPA4A4-PLANO-MERGE.cjs"
+    },
+    {
+      "source": "INSPECIONAR-ETAPA4A5A-CONFLITOS-UNIQUE.cjs",
+      "sizeBytes": 7658,
+      "sha256": "f6da935eeb1153c5c2a4028fe755f6b2c0880be9508aa9e816cb6cdd6d4801d6",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/INSPECIONAR-ETAPA4A5A-CONFLITOS-UNIQUE.cjs"
+    },
+    {
+      "source": "INSPECIONAR-ETAPA4A8-MIDIAS-DESTINO.cjs",
+      "sizeBytes": 8983,
+      "sha256": "c3156dcfc80421c1e63448fc0c69e820b873400aa647165d8ea8aa59c10c752e",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/INSPECIONAR-ETAPA4A8-MIDIAS-DESTINO.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A10D-BOOT-EMPACOTADO.cjs",
+      "sizeBytes": 20075,
+      "sha256": "79f1bba826d1d35015e54b3da6688b53d75bfe513d6a238675dff4d6e33520bd",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A10D-BOOT-EMPACOTADO.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A13C2-AUTORIZACAO-API.cjs",
+      "sizeBytes": 10439,
+      "sha256": "88f1f33ab7ddf69610aefb449b8d92f2370f995fd47867a6204a76d63a230159",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A13C2-AUTORIZACAO-API.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A13C3-AUTORIZACAO-API.cjs",
+      "sizeBytes": 13478,
+      "sha256": "b64a40ad8da226cce38e685e980972795b2d4a1bd828188a02401566102fb075",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A13C3-AUTORIZACAO-API.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A14B-INSTALADOR-V2.cjs",
+      "sizeBytes": 6849,
+      "sha256": "7f7f60f801e2c54d8dc50e334dbc16ebf65d5b12b052ccbc3e978206ef8de0d0",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A14B-INSTALADOR-V2.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A14B-INSTALADOR.cjs",
+      "sizeBytes": 6467,
+      "sha256": "ee532ac795a16c9c7337334d4e8e8b3e9160bd74e30df68c085c3e7077d1d13b",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A14B-INSTALADOR.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A14C-INSTALACAO-CONTROLADA.cjs",
+      "sizeBytes": 13635,
+      "sha256": "0559b9b1de17baa78e4f3a2716dafe48d104559acb39689ae65d7f30fc116724",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A14C-INSTALACAO-CONTROLADA.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A14C2-INSTALACAO-CONTROLADA.cjs",
+      "sizeBytes": 12755,
+      "sha256": "f935219534dea281da88560296cce9840a73a3e6d0bb75df95c76171a17bcba6",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A14C2-INSTALACAO-CONTROLADA.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A14D-SUBSTITUICAO-LIMPA.cjs",
+      "sizeBytes": 17332,
+      "sha256": "a03b065a1da5d4e6d40c7cda7c4eca652df3c2ef4f949cf23a606bb653b7ed18",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A14D-SUBSTITUICAO-LIMPA.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A14E-BOOT-INSTALADO.cjs",
+      "sizeBytes": 10547,
+      "sha256": "dafa3f6328e85919d48eda5e231e527a725c6c63cbb01f7c94f25b1980c1576d",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A14E-BOOT-INSTALADO.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A16C-FECHAMENTO-RELEASE-011.cjs",
+      "sizeBytes": 11469,
+      "sha256": "2b4ecaa50b1f97fce8d0696c09c27f05d86a514500db1934b9bb33bc7229f0f0",
+      "proposedAction": "keep-at-root",
+      "target": null
+    },
+    {
+      "source": "VALIDAR-ETAPA4A6-BANCO-CANDIDATO.cjs",
+      "sizeBytes": 21634,
+      "sha256": "5fcc75c252e9470e3d54bc2527c03d88f8b6a83b6517e9158f5feaac84854389",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A6-BANCO-CANDIDATO.cjs"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A9-PRIMEIRO-BOOT-CONTROLADO.cjs",
+      "sizeBytes": 12909,
+      "sha256": "f30681fdd5d52a15d4c4e9aee8022fcf830fbbd85c33579a604e8dd652fecc77",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/scripts/VALIDAR-ETAPA4A9-PRIMEIRO-BOOT-CONTROLADO.cjs"
+    }
+  ],
+  "reports": [
+    {
+      "source": "ETAPA4A_INSPECAO_APPDATA.json",
+      "sizeBytes": 1509100,
+      "sha256": "2a50bc7b783ab9e8db4cf19c8a33fbea4203cbf2f69f36d50aec6cdd0ce07810",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A_INSPECAO_APPDATA.json"
+    },
+    {
+      "source": "ETAPA4A1_MAPA_BANCOS_APPDATA.json",
+      "sizeBytes": 4335,
+      "sha256": "a232093fefb2df324fec9bee238a6582d00a9330ef9585b808e100f1c048af1b",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A1_MAPA_BANCOS_APPDATA.json"
+    },
+    {
+      "source": "ETAPA4A10A_DESKTOP_BUILD_FONTES.json",
+      "sizeBytes": 53352,
+      "sha256": "4df13d678359039275126b9ee95b0971c30a93d85d0a7f61eedeeb6b7cd0d0df",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A10A_DESKTOP_BUILD_FONTES.json"
+    },
+    {
+      "source": "ETAPA4A10D1_COMPARAR_RUNTIME_CANDIDATO.json",
+      "sizeBytes": 13605,
+      "sha256": "d2f91fae1b7b0e83729b0c9ce3dfa7ae1019a5a87af4c0115bced0685afd3610",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A10D1_COMPARAR_RUNTIME_CANDIDATO.json"
+    },
+    {
+      "source": "ETAPA4A10D2_BOOT_EMPACOTADO.json",
+      "sizeBytes": 2768,
+      "sha256": "9cd3d625fc05ba2171922fd15265f9ba1d1383d0b2bd253743b67575a5b82b8f",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A10D2_BOOT_EMPACOTADO.json"
+    },
+    {
+      "source": "ETAPA4A11_REDE_LAN_SERVIDOR.json",
+      "sizeBytes": 1306,
+      "sha256": "6af86d9f0aa4b897cc9587ab2cfe4299a45d172990f499a77155aa11e3197d23",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A11_REDE_LAN_SERVIDOR.json"
+    },
+    {
+      "source": "ETAPA4A12_CLIENTE_DESKTOP_FONTES.json",
+      "sizeBytes": 42460,
+      "sha256": "699a102067c31a5e3b0c1303f5e56753cef0643864faca9bcfdb012a74be479f",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A12_CLIENTE_DESKTOP_FONTES.json"
+    },
+    {
+      "source": "ETAPA4A13A_SEGURANCA_LAN_FONTES.json",
+      "sizeBytes": 72947,
+      "sha256": "1e57850cce303875b916e2eb55911ecb39dd0cacf5ee86dfdfdad0ebde811615",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A13A_SEGURANCA_LAN_FONTES.json"
+    },
+    {
+      "source": "ETAPA4A13C_AUDITORIA_AUTORIZACAO_API.json",
+      "sizeBytes": 450235,
+      "sha256": "7f7e8384e7bcb643741660f6621d7f2b2e660889b26acf4b9b13d521baf54995",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A13C_AUDITORIA_AUTORIZACAO_API.json"
+    },
+    {
+      "source": "ETAPA4A14B_VALIDACAO_INSTALADOR.json",
+      "sizeBytes": 1659,
+      "sha256": "afe3c0e5f9f03c84af1f70ad8394d8630416aaf0d8a6e00dfb1a8a4d35bbcca2",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A14B_VALIDACAO_INSTALADOR.json"
+    },
+    {
+      "source": "ETAPA4A14C_BASELINE_INSTALACAO.json",
+      "sizeBytes": 1293,
+      "sha256": "36f3394ae195ee0e982e433dfd67c2071e65d543b1eaa063de80251d98a2bc34",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A14C_BASELINE_INSTALACAO.json"
+    },
+    {
+      "source": "ETAPA4A14D_SUBSTITUICAO_LIMPA_BASELINE.json",
+      "sizeBytes": 1296,
+      "sha256": "bef9007d767fdde38cbd7107b90a6347e6b17b6eb730c24232cf05904a3a5d8a",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A14D_SUBSTITUICAO_LIMPA_BASELINE.json"
+    },
+    {
+      "source": "ETAPA4A14D_SUBSTITUICAO_LIMPA.json",
+      "sizeBytes": 1141,
+      "sha256": "d9e28f46c0f81c0ea432623720f15879f6442ee09f5ec88c236f949ba7c7c2dc",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A14D_SUBSTITUICAO_LIMPA.json"
+    },
+    {
+      "source": "ETAPA4A14E_BOOT_INSTALADO.json",
+      "sizeBytes": 1106,
+      "sha256": "29365a4a5c8c7b046341eb895e55812fafc4228d31b58a4c2c94030b144f23fa",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A14E_BOOT_INSTALADO.json"
+    },
+    {
+      "source": "ETAPA4A15A_DIAGNOSTICO_FIREWALL_LAN.json",
+      "sizeBytes": 1755,
+      "sha256": "1759845e58da0020b8cad8a3a7d002850f0069578f21a4c629c46776f43945e6",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A15A_DIAGNOSTICO_FIREWALL_LAN.json"
+    },
+    {
+      "source": "ETAPA4A15A2_DIAGNOSTICO_PERFIL_REDE.json",
+      "sizeBytes": 2433,
+      "sha256": "0e21a4c464a66a4a03bc7872c47260ae5ca09481e365ff552e5045432df9367c",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A15A2_DIAGNOSTICO_PERFIL_REDE.json"
+    },
+    {
+      "source": "ETAPA4A15B_FIREWALL_LAN_SEGURO.json",
+      "sizeBytes": 1255,
+      "sha256": "9b937bf74cf692989a0f77526a910a2b1856dd1eecdcba2e75b0b3c7a08da117",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A15B_FIREWALL_LAN_SEGURO.json"
+    },
+    {
+      "source": "ETAPA4A16A_FECHAMENTO_RELEASE_011.json",
+      "sizeBytes": 7608,
+      "sha256": "31a57da2cfa7935c02e8a78a35faf6a2ad3b9306f2a6fa8c39fa6320c0bc2f5f",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A16A_FECHAMENTO_RELEASE_011.json"
+    },
+    {
+      "source": "ETAPA4A16B_DIAGNOSTICO_ESTOQUE_FIREWALL.json",
+      "sizeBytes": 149161,
+      "sha256": "50a28a4b4a4dc94e8e465fc39a6a223142e7427fc2bac739e95582763181dbec",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A16B_DIAGNOSTICO_ESTOQUE_FIREWALL.json"
+    },
+    {
+      "source": "ETAPA4A16B2_DIAGNOSTICO_TOGGLE_ESTOQUE_FIREWALL.json",
+      "sizeBytes": 2095,
+      "sha256": "bd5785c61f151a87baf8178839a053f1a1ed8f3d16a0a9a6c1765cda1a11269f",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A16B2_DIAGNOSTICO_TOGGLE_ESTOQUE_FIREWALL.json"
+    },
+    {
+      "source": "ETAPA4A16B3_FIREWALL_PERSISTENTE.json",
+      "sizeBytes": 308,
+      "sha256": "499a83657a4dd6241f62dabcaa23a4d2afa8e8d37d001ddb8b53ce1e0628ad75",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A16B3_FIREWALL_PERSISTENTE.json"
+    },
+    {
+      "source": "ETAPA4A16C_FECHAMENTO_RELEASE_011.json",
+      "sizeBytes": 2121,
+      "sha256": "7cce6e3406efd059b4160aa9816cc805f6b2b9cacb6fd3c5b63b80b6350a45c1",
+      "proposedAction": "keep-at-root",
+      "target": null
+    },
+    {
+      "source": "ETAPA4A16D_PLANO_LIMPEZA_RELEASE_011.json",
+      "sizeBytes": 75363,
+      "sha256": "723bf9c3063fee05b4a0ca5e034e4afbfd03bfe51dfab428b834bf0bb2712d56",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A16D_PLANO_LIMPEZA_RELEASE_011.json"
+    },
+    {
+      "source": "ETAPA4A2_COMPARACAO_BANCOS.json",
+      "sizeBytes": 11097,
+      "sha256": "84578ed358e01635c2e85f8dacf27d529a95fe11188936915e944e7f5938e5e3",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A2_COMPARACAO_BANCOS.json"
+    },
+    {
+      "source": "ETAPA4A3_DIFERENCAS_REGISTROS.json",
+      "sizeBytes": 14455,
+      "sha256": "a94f693c81dad96b67737538a939e50dfda23fbb0b075164d53d5e242514f866",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A3_DIFERENCAS_REGISTROS.json"
+    },
+    {
+      "source": "ETAPA4A4_PLANO_MERGE_READONLY.json",
+      "sizeBytes": 48829,
+      "sha256": "0728e69818dc351a42249265fe838a374d0dcdab2b8347f2048d88002e83fb67",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A4_PLANO_MERGE_READONLY.json"
+    },
+    {
+      "source": "ETAPA4A5A_CONFLITOS_UNIQUE.json",
+      "sizeBytes": 6326,
+      "sha256": "d8535345da3676fe3e8d30284f3e02390d6c160de72154d80ea9f436058c462f",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A5A_CONFLITOS_UNIQUE.json"
+    },
+    {
+      "source": "ETAPA4A5B_MERGE_PREVIEW-2026-08-11T15-55-30-510Z.json",
+      "sizeBytes": 3774,
+      "sha256": "430e50035482383d64d98f423f41c6439c286cfad27e20e6dc77871649d63d43",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A5B_MERGE_PREVIEW-2026-08-11T15-55-30-510Z.json"
+    },
+    {
+      "source": "ETAPA4A6_VALIDACAO_CANDIDATO.json",
+      "sizeBytes": 5101,
+      "sha256": "94b766c35d76f0fef09024b3b0ddcc8e4669c60bcc2fe17f5f2056342a35e533",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A6_VALIDACAO_CANDIDATO.json"
+    },
+    {
+      "source": "ETAPA4A7_RUNTIME_PATHS_FONTES.json",
+      "sizeBytes": 194785,
+      "sha256": "a0eb4dbcc4b4594596f00c13b3a7e6ea94c838e1a34cf2456d5dae1ee7254635",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A7_RUNTIME_PATHS_FONTES.json"
+    },
+    {
+      "source": "ETAPA4A8_INSPECAO_MIDIAS_DESTINO.json",
+      "sizeBytes": 10173,
+      "sha256": "57cba1f04681965b8e9e183f23e06ae572669e46b2e741803194d4a6b997c08e",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A8_INSPECAO_MIDIAS_DESTINO.json"
+    },
+    {
+      "source": "ETAPA4A8_PROMOCAO_LOCALAPPDATA.json",
+      "sizeBytes": 1665,
+      "sha256": "042726d168e92785d2e85bbc59669f89836cd432167ec58fd6b57f7e17a9a099",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A8_PROMOCAO_LOCALAPPDATA.json"
+    },
+    {
+      "source": "ETAPA4A9_PRIMEIRO_BOOT_CONTROLADO.json",
+      "sizeBytes": 1791,
+      "sha256": "5fd7676bd078b131160879c3ab004e2e9c3a23814200c1ede02ff010e10d5a59",
+      "proposedAction": "archive",
+      "target": "docs/release-0.1.1/auditoria/relatorios/ETAPA4A9_PRIMEIRO_BOOT_CONTROLADO.json"
+    }
+  ],
+  "backups": [
+    {
+      "source": "app/api/auth/login/route.ts.bak-4a13b-2026-08-12T11-59-37-334Z",
+      "sizeBytes": 4320,
+      "sha256": "f10f40871d29e63c2534abd22124ed96bde368d903180f9e1bee04c6afbcc7ef",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/auth/login/route.ts.bak-4a13b-2026-08-12T11-59-37-334Z"
+    },
+    {
+      "source": "app/api/auth/setup/route.ts.bak-4a13b-2026-08-12T11-59-37-334Z",
+      "sizeBytes": 3746,
+      "sha256": "a80d24c39b8c1cb6bda29a6f62c0719d5d809f1f179dcf8269917a86cf2dc538",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/auth/setup/route.ts.bak-4a13b-2026-08-12T11-59-37-334Z"
+    },
+    {
+      "source": "app/api/configuracoes/logo/route.ts.bak-v11c-uploads",
+      "sizeBytes": 2916,
+      "sha256": "ea211ae6da213b6199914b17b24f016256802bcbdd3b47fe493e912970f204f3",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/configuracoes/logo/route.ts.bak-v11c-uploads"
+    },
+    {
+      "source": "app/api/local/health/route.ts.bak-4a12b-2026-08-11T21-32-36-885Z",
+      "sizeBytes": 543,
+      "sha256": "4d3ff404d5240e0721e79aeff6a2505c32097d50acb26ed3ffa7bff2595c73f2",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/local/health/route.ts.bak-4a12b-2026-08-11T21-32-36-885Z"
+    },
+    {
+      "source": "app/api/local/health/route.ts.bak-v3-health-2026-07-26T12-19-21-915Z",
+      "sizeBytes": 543,
+      "sha256": "4d3ff404d5240e0721e79aeff6a2505c32097d50acb26ed3ffa7bff2595c73f2",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/local/health/route.ts.bak-v3-health-2026-07-26T12-19-21-915Z"
+    },
+    {
+      "source": "app/api/ordens/[id]/anexos/[anexoId]/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 2860,
+      "sha256": "915803efb7b337719d663acff6ccd30fb586c1f9374b713888f610f6c84224f4",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/ordens/[id]/anexos/[anexoId]/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "app/api/ordens/[id]/anexos/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 7419,
+      "sha256": "827afa97081d1cb161fd164aa7ce20c3704ac8ea8ae134ce911e21145f85bf37",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/ordens/[id]/anexos/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "app/api/ordens/[id]/garantia/route.ts.bak-v11c-uploads",
+      "sizeBytes": 8933,
+      "sha256": "6e8bab14ecaca60b548c62d1a2caac7728368bc39e2c7801099c62c9da0e6c04",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/ordens/[id]/garantia/route.ts.bak-v11c-uploads"
+    },
+    {
+      "source": "app/api/ordens/[id]/imprimir/route.ts.bak-v11c-uploads",
+      "sizeBytes": 11564,
+      "sha256": "f127d3a513cfb9ef8f9356a58fd2a68ef50a4550134b0f0b09b6365e89dac831",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/ordens/[id]/imprimir/route.ts.bak-v11c-uploads"
+    },
+    {
+      "source": "app/api/ordens/[id]/recibo/route.ts.bak-v11c-uploads",
+      "sizeBytes": 13503,
+      "sha256": "649f303a01d5e1fe0199a2273370354ab8178a7502f61e14876d88c6a5e0a9b5",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/ordens/[id]/recibo/route.ts.bak-v11c-uploads"
+    },
+    {
+      "source": "app/api/ordens/[id]/route.ts.bak-3c35b-2026-08-09T22-30-16-956Z",
+      "sizeBytes": 10740,
+      "sha256": "cb649f90fd390327b1bcb05623012a13517f67d5bffc102c952c0ef044d518a3",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/ordens/[id]/route.ts.bak-3c35b-2026-08-09T22-30-16-956Z"
+    },
+    {
+      "source": "app/api/ordens/[id]/status/route.ts.bak-3c5a-2026-08-10T22-31-57-763Z",
+      "sizeBytes": 10038,
+      "sha256": "930117b15c5ad30cf0a4fa134b4c53e20e0ab263ef06b22eb7fda53293fc5abb",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/ordens/[id]/status/route.ts.bak-3c5a-2026-08-10T22-31-57-763Z"
+    },
+    {
+      "source": "app/api/ordens/[id]/status/route.ts.bak-3c5c-2026-08-10T23-32-22-096Z",
+      "sizeBytes": 10376,
+      "sha256": "aa5f50e045eaff9d4ebe79057edaffc170c70119c8d5c77ec6c9b4ed05b16395",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/ordens/[id]/status/route.ts.bak-3c5c-2026-08-10T23-32-22-096Z"
+    },
+    {
+      "source": "app/api/ordens/route.ts.bak-3c4d-2026-08-10T15-57-34-933Z",
+      "sizeBytes": 8228,
+      "sha256": "e7e537b2891d3ab482322445549af4923d7c40b706045c546f6c9d8db7633c9b",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/ordens/route.ts.bak-3c4d-2026-08-10T15-57-34-933Z"
+    },
+    {
+      "source": "app/api/produtos/upload/[arquivo]/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 1465,
+      "sha256": "5d4825d6ff8c43ce34cc8e6b9a2237bfe9832fa71c00f09dea33dea3004dfcdd",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/produtos/upload/[arquivo]/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "app/api/produtos/upload/route.ts.bak-v11c-uploads",
+      "sizeBytes": 3129,
+      "sha256": "c30efbad3dae67cd86f337798562202c41b05563c91b0ec23e322b4c3467eb05",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/produtos/upload/route.ts.bak-v11c-uploads"
+    },
+    {
+      "source": "app/api/relatorios/pdf/route.ts.bak-3c4e-2026-08-10T16-30-38-747Z",
+      "sizeBytes": 19339,
+      "sha256": "f16b838649dcf990530295f0b95727cb3a6c24faf03f9b3c61ede8b1462d4a31",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/relatorios/pdf/route.ts.bak-3c4e-2026-08-10T16-30-38-747Z"
+    },
+    {
+      "source": "app/api/relatorios/pdf/route.ts.bak-3c5d-2026-08-10T23-54-20-829Z",
+      "sizeBytes": 21551,
+      "sha256": "edfc24b46a911f552e3c8daa807f99195f706c867ad39136391721f53045540b",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/relatorios/pdf/route.ts.bak-3c5d-2026-08-10T23-54-20-829Z"
+    },
+    {
+      "source": "app/api/relatorios/pdf/route.ts.bak-3c5e-2026-08-11T10-34-59-981Z",
+      "sizeBytes": 26182,
+      "sha256": "2394a2ef0b876c7b853725fc40985eca55c2716f0855428cd8051b9ae660f83d",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/relatorios/pdf/route.ts.bak-3c5e-2026-08-11T10-34-59-981Z"
+    },
+    {
+      "source": "app/api/relatorios/pdf/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 32342,
+      "sha256": "4dbb22ab90eae55a585c2ae0668b1ee8c072a55335ada73a7dd8b73d89614bdb",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/relatorios/pdf/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "app/api/relatorios/route.ts.bak-3c4e-2026-08-10T16-30-38-747Z",
+      "sizeBytes": 13563,
+      "sha256": "a5df73b94fe2c3746504febc153fbb583e0eb807b8157f519411336cc6890d95",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/relatorios/route.ts.bak-3c4e-2026-08-10T16-30-38-747Z"
+    },
+    {
+      "source": "app/api/relatorios/route.ts.bak-3c5d-2026-08-10T23-54-20-829Z",
+      "sizeBytes": 16786,
+      "sha256": "a3df8f9a212203250a8c32fa3d54b3b26137eeeda9c8324584e0169880a32877",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/relatorios/route.ts.bak-3c5d-2026-08-10T23-54-20-829Z"
+    },
+    {
+      "source": "app/api/relatorios/route.ts.bak-3c5e-2026-08-11T10-34-59-981Z",
+      "sizeBytes": 22712,
+      "sha256": "e3d1d6dfba2c75beffff595114299d88a35f6b66e9f363eac3b03a28beecc808",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/relatorios/route.ts.bak-3c5e-2026-08-11T10-34-59-981Z"
+    },
+    {
+      "source": "app/api/runtime/uploads/[...path]/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 2956,
+      "sha256": "7181c7f0f89a2bec7bf567dfe7484b0a78c720b614943e0dba4f2ed5da4d8eb6",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/runtime/uploads/[...path]/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "app/api/uploads/anexos/[arquivo]/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 3436,
+      "sha256": "f46c93edef2353eac28297c086be73cf673d5c660f6329062a1d6fc6247f7476",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/uploads/anexos/[arquivo]/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "app/api/uploads/produtos/[arquivo]/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 1610,
+      "sha256": "bbacc1d19544cc2f15363a10cabbb6aac37a21365ed9e419f7f7e1ee71a8cdff",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/uploads/produtos/[arquivo]/route.ts.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "app/api/usuarios-sistema/[id]/route.ts.bak-3c5b-2026-08-10T23-12-20-631Z",
+      "sizeBytes": 6760,
+      "sha256": "a0efe588c6deda1d0c8a8987071764f889e9667a5edc76c9c1f344dcd6e534f9",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/usuarios-sistema/[id]/route.ts.bak-3c5b-2026-08-10T23-12-20-631Z"
+    },
+    {
+      "source": "app/api/usuarios-sistema/route.ts.bak-3c5b-2026-08-10T23-12-20-631Z",
+      "sizeBytes": 5194,
+      "sha256": "3785efb326032be6727924f14ac6b423fe1f902582a10d2173d22a8acbf4f0cf",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/api/usuarios-sistema/route.ts.bak-3c5b-2026-08-10T23-12-20-631Z"
+    },
+    {
+      "source": "app/AuthGuard.tsx.bak-3c4b-2026-08-10T11-21-47-736Z",
+      "sizeBytes": 12259,
+      "sha256": "fdaff692e77f74fa2f9a1d0701247432bd5132c074be65a022985d73d475a886",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/AuthGuard.tsx.bak-3c4b-2026-08-10T11-21-47-736Z"
+    },
+    {
+      "source": "app/ordens/[id]/page.tsx.bak-3c35b-2026-08-09T22-30-16-956Z",
+      "sizeBytes": 36934,
+      "sha256": "2dc08ad1696ddf24ab25e18c0065d2cc7bf5f5eb608477ab1815c520f11a84f2",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/ordens/[id]/page.tsx.bak-3c35b-2026-08-09T22-30-16-956Z"
+    },
+    {
+      "source": "app/ordens/[id]/page.tsx.bak-3c4c-2026-08-10T11-52-29-805Z",
+      "sizeBytes": 38006,
+      "sha256": "11dbc6fc2cb9cb59ffd14c5ba03f28cb38aef5e348fd3fa34cc1861641a25c86",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/ordens/[id]/page.tsx.bak-3c4c-2026-08-10T11-52-29-805Z"
+    },
+    {
+      "source": "app/ordens/[id]/StatusRapidoOS.tsx.bak-3c5c-2026-08-10T23-32-22-096Z",
+      "sizeBytes": 8912,
+      "sha256": "089b0f1c2736c1a6e013e6eb23667cb7858aff4808e249e7d4fc26fead380cb3",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/ordens/[id]/StatusRapidoOS.tsx.bak-3c5c-2026-08-10T23-32-22-096Z"
+    },
+    {
+      "source": "app/ordens/nova/page.tsx.bak-3c4d-2026-08-10T15-57-34-933Z",
+      "sizeBytes": 28846,
+      "sha256": "21529adeae009685fcaaae8e6cd2e01a0c53c3593d3dc3913981f98d42bbc442",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/ordens/nova/page.tsx.bak-3c4d-2026-08-10T15-57-34-933Z"
+    },
+    {
+      "source": "app/public/uploads/[...path]/route.ts.bak-v11n-1785186762847",
+      "sizeBytes": 134,
+      "sha256": "48063b948d65afc05d3209a188418da3e4f45cb63a4088567cc99311856fd6bd",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/public/uploads/[...path]/route.ts.bak-v11n-1785186762847"
+    },
+    {
+      "source": "app/relatorios/page.tsx.bak-3c4e-2026-08-10T16-30-38-747Z",
+      "sizeBytes": 33920,
+      "sha256": "9f66e88d778838f87afca9dacafe5cb4610e7fd071287cd96be207d487a5868e",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/relatorios/page.tsx.bak-3c4e-2026-08-10T16-30-38-747Z"
+    },
+    {
+      "source": "app/relatorios/page.tsx.bak-3c5d-2026-08-10T23-54-20-829Z",
+      "sizeBytes": 38188,
+      "sha256": "b591e70277f26a1a197f3829cc055ae667be9cb54e7dec3249d539a251a300ff",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/relatorios/page.tsx.bak-3c5d-2026-08-10T23-54-20-829Z"
+    },
+    {
+      "source": "app/relatorios/page.tsx.bak-3c5e-2026-08-11T10-34-59-981Z",
+      "sizeBytes": 45154,
+      "sha256": "9ee4d335b9e0ab70c582708a6d351ca480842db4700b83e41ec91a0a5060dee3",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/relatorios/page.tsx.bak-3c5e-2026-08-11T10-34-59-981Z"
+    },
+    {
+      "source": "app/SistemaFrame.tsx.bak-3c4b-2026-08-10T11-21-47-736Z",
+      "sizeBytes": 11264,
+      "sha256": "4e1b71bc301cce2b50f2f2d1042178b8a5fc15a2bf0599eeb313075ecc8fc87e",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/SistemaFrame.tsx.bak-3c4b-2026-08-10T11-21-47-736Z"
+    },
+    {
+      "source": "app/SistemaFrame.tsx.bak-4a11",
+      "sizeBytes": 11404,
+      "sha256": "64308f2e1ff3b75115ebdc6d7f40376373311a4f889771744f587f9f0022e7af",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/SistemaFrame.tsx.bak-4a11"
+    },
+    {
+      "source": "app/SistemaFrame.tsx.bak-menu-grupos-v2-2026-08-11T21-08-43-478Z",
+      "sizeBytes": 14411,
+      "sha256": "10652d42ff60c93e0e5ed35a1059d63e283088c5653df43c6041d0a1c6532c11",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/SistemaFrame.tsx.bak-menu-grupos-v2-2026-08-11T21-08-43-478Z"
+    },
+    {
+      "source": "app/uploads/[...path]/route.ts.bak-v11n-1785186762845",
+      "sizeBytes": 2063,
+      "sha256": "97be098a19f1730c49d64910280f7be5f881a2168144fe7e91881e85059073ba",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/uploads/[...path]/route.ts.bak-v11n-1785186762845"
+    },
+    {
+      "source": "app/usuarios-sistema/page.tsx.bak-3c5b-2026-08-10T23-12-20-631Z",
+      "sizeBytes": 35656,
+      "sha256": "83e77584b8038b2522a3aec792de980e2010448137c137d2899c6817c9bc0ff8",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/app/usuarios-sistema/page.tsx.bak-3c5b-2026-08-10T23-12-20-631Z"
+    },
+    {
+      "source": "desktop/main.cjs.bak-4a12b-2026-08-11T21-32-36-885Z",
+      "sizeBytes": 24763,
+      "sha256": "78ac7f4de280690b152f0c8200f6dd82fc0bea2ce926e3ed79456e9135071d3e",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/main.cjs.bak-4a12b-2026-08-11T21-32-36-885Z"
+    },
+    {
+      "source": "desktop/main.cjs.bak-4a13b-2026-08-12T11-59-37-334Z",
+      "sizeBytes": 30601,
+      "sha256": "654045a2a253b6f96c0b60cd5c0d8d8c9a39ade33f7a9142d8f3f7d47995d321",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/main.cjs.bak-4a13b-2026-08-12T11-59-37-334Z"
+    },
+    {
+      "source": "desktop/main.cjs.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 23529,
+      "sha256": "82d285b54cd1cc293e9ae0674402ac8f7106277a31499e696a7c0a0d62047a45",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/main.cjs.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "desktop/main.cjs.bak-v11-dados",
+      "sizeBytes": 20477,
+      "sha256": "2ee640a1bcfc929cfd44fb704e2f0a7d34065d104bfc32cdedd4d7296c6a0ee3",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/main.cjs.bak-v11-dados"
+    },
+    {
+      "source": "desktop/main.cjs.bak-v11-fix-sintaxe",
+      "sizeBytes": 20479,
+      "sha256": "ff1bc8f9a57691ad4f83fb0e4315a7b5b5dc98f10e17ad6ba538b8443293e7a7",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/main.cjs.bak-v11-fix-sintaxe"
+    },
+    {
+      "source": "desktop/main.cjs.bak-v11b-seguro",
+      "sizeBytes": 20479,
+      "sha256": "ff1bc8f9a57691ad4f83fb0e4315a7b5b5dc98f10e17ad6ba538b8443293e7a7",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/main.cjs.bak-v11b-seguro"
+    },
+    {
+      "source": "desktop/main.cjs.bak-v5",
+      "sizeBytes": 14380,
+      "sha256": "d93471fffccb6fe90620862cee0a0fa9f77a01ff36d754220c07d9467083045b",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/main.cjs.bak-v5"
+    },
+    {
+      "source": "desktop/main.cjs.bak-v6-pdf-2026-07-26T16-21-42-977Z",
+      "sizeBytes": 14380,
+      "sha256": "d93471fffccb6fe90620862cee0a0fa9f77a01ff36d754220c07d9467083045b",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/main.cjs.bak-v6-pdf-2026-07-26T16-21-42-977Z"
+    },
+    {
+      "source": "desktop/main.cjs.bak-v7-20260726-133334",
+      "sizeBytes": 16323,
+      "sha256": "2146fbf90289cab5b1593f54e1625aeccf85f3c9deaed14bf6fefa244d58b1de",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/main.cjs.bak-v7-20260726-133334"
+    },
+    {
+      "source": "desktop/main.cjs.bak-v8-2026-07-26T16-38-28-530Z",
+      "sizeBytes": 13915,
+      "sha256": "41e2ea4fdc8e39a72fb44914286ad5ddc69a630299deb0335e8720e892362951",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/main.cjs.bak-v8-2026-07-26T16-38-28-530Z"
+    },
+    {
+      "source": "desktop/preload.cjs.bak-4a12b-2026-08-11T21-32-36-885Z",
+      "sizeBytes": 566,
+      "sha256": "4cbd6cc2a39312df4ca81319b65b48bc325addf886b740562b53dce6df564d34",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/preload.cjs.bak-4a12b-2026-08-11T21-32-36-885Z"
+    },
+    {
+      "source": "desktop/preload.cjs.bak-v11-dados",
+      "sizeBytes": 566,
+      "sha256": "4cbd6cc2a39312df4ca81319b65b48bc325addf886b740562b53dce6df564d34",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/preload.cjs.bak-v11-dados"
+    },
+    {
+      "source": "desktop/preload.cjs.bak-v11-fix-sintaxe",
+      "sizeBytes": 566,
+      "sha256": "4cbd6cc2a39312df4ca81319b65b48bc325addf886b740562b53dce6df564d34",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/preload.cjs.bak-v11-fix-sintaxe"
+    },
+    {
+      "source": "desktop/preload.cjs.bak-v11b-seguro",
+      "sizeBytes": 566,
+      "sha256": "4cbd6cc2a39312df4ca81319b65b48bc325addf886b740562b53dce6df564d34",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/preload.cjs.bak-v11b-seguro"
+    },
+    {
+      "source": "desktop/preload.cjs.bak-v7-20260726-133334",
+      "sizeBytes": 623,
+      "sha256": "ba5623e01e7331671572a5843f818e73c606c729feb46db7019c3aadde9653bd",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/preload.cjs.bak-v7-20260726-133334"
+    },
+    {
+      "source": "desktop/seletor.html.bak-4a12b-2026-08-11T21-32-36-885Z",
+      "sizeBytes": 8564,
+      "sha256": "9c0fdfb82d40a588b636caa0509bf16f5bd9ee26a9bb37fb120bdbbadea3b0af",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/seletor.html.bak-4a12b-2026-08-11T21-32-36-885Z"
+    },
+    {
+      "source": "desktop/seletor.html.bak-v11-dados",
+      "sizeBytes": 8564,
+      "sha256": "9c0fdfb82d40a588b636caa0509bf16f5bd9ee26a9bb37fb120bdbbadea3b0af",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/seletor.html.bak-v11-dados"
+    },
+    {
+      "source": "desktop/seletor.html.bak-v11-fix-sintaxe",
+      "sizeBytes": 8564,
+      "sha256": "9c0fdfb82d40a588b636caa0509bf16f5bd9ee26a9bb37fb120bdbbadea3b0af",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/seletor.html.bak-v11-fix-sintaxe"
+    },
+    {
+      "source": "desktop/seletor.html.bak-v11b-seguro",
+      "sizeBytes": 8564,
+      "sha256": "9c0fdfb82d40a588b636caa0509bf16f5bd9ee26a9bb37fb120bdbbadea3b0af",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/seletor.html.bak-v11b-seguro"
+    },
+    {
+      "source": "desktop/seletor.html.bak-v7-20260726-133334",
+      "sizeBytes": 8159,
+      "sha256": "d39ab1ed9156aa06c04093b1f099bd68ca48ba8157ef24669bbe14bd2520144c",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/desktop/seletor.html.bak-v7-20260726-133334"
+    },
+    {
+      "source": "lib/authSistema.ts.bak-4a13b-2026-08-12T11-59-37-334Z",
+      "sizeBytes": 4923,
+      "sha256": "5b4de9ca4e074f810bdff9ec609b9ec70d842ef8e775a1df66ae58974d8abfb6",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/authSistema.ts.bak-4a13b-2026-08-12T11-59-37-334Z"
+    },
+    {
+      "source": "lib/configuracoesSistema.ts.bak-v11c",
+      "sizeBytes": 3643,
+      "sha256": "0534ab2d4e1db3f297fa853278dbe78e1f159cab19c36840ead73ce5f4b72ffd",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/configuracoesSistema.ts.bak-v11c"
+    },
+    {
+      "source": "lib/estoqueTecnico/errors.ts.bak-3c35a-a2-2026-08-09T21-59-24-945Z",
+      "sizeBytes": 4086,
+      "sha256": "c27eaab01071c5744b489196d6a0e23977a0da6a35721c01020eb7727513e128",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/estoqueTecnico/errors.ts.bak-3c35a-a2-2026-08-09T21-59-24-945Z"
+    },
+    {
+      "source": "lib/estoqueTecnico/index.ts.bak-3c4a-2026-08-09T22-46-14-437Z",
+      "sizeBytes": 1304,
+      "sha256": "a39b3a6e775617fbea4fb55568dcb97ae929f291ac4558d8afc73e21b979b943",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/estoqueTecnico/index.ts.bak-3c4a-2026-08-09T22-46-14-437Z"
+    },
+    {
+      "source": "lib/estoqueTecnico/movementRepository.ts.bak-3c4a-2026-08-09T22-46-14-437Z",
+      "sizeBytes": 6040,
+      "sha256": "9c61a6327ee34a7d5df38f673abbb574ae876fc090fef94711825b03019f6046",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/estoqueTecnico/movementRepository.ts.bak-3c4a-2026-08-09T22-46-14-437Z"
+    },
+    {
+      "source": "lib/estoqueTecnico/orderCancellationService.ts.bak-3c5a1-2026-08-10T22-51-59-020Z",
+      "sizeBytes": 13008,
+      "sha256": "33c05ffe43dec776f77391a2528b056d741d800ff16666e77cd4b0f743f296ab",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/estoqueTecnico/orderCancellationService.ts.bak-3c5a1-2026-08-10T22-51-59-020Z"
+    },
+    {
+      "source": "lib/estoqueTecnico/orderConsumptionService.ts.bak-3c5a-2026-08-10T22-31-57-763Z",
+      "sizeBytes": 15683,
+      "sha256": "d87c2bc2706849f9f808a286fdc534c9796a348d396b016951ffdd887bcc5c53",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/estoqueTecnico/orderConsumptionService.ts.bak-3c5a-2026-08-10T22-31-57-763Z"
+    },
+    {
+      "source": "lib/estoqueTecnico/orderRepository.ts.bak-3c35a-a2-2026-08-09T21-59-24-945Z",
+      "sizeBytes": 6267,
+      "sha256": "60b4e5712be86c0f959dd37d102f8bbd8d00a60415cfae34426983f5803716de",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/estoqueTecnico/orderRepository.ts.bak-3c35a-a2-2026-08-09T21-59-24-945Z"
+    },
+    {
+      "source": "lib/estoqueTecnico/orderRepository.ts.bak-3c5a-2026-08-10T22-31-57-763Z",
+      "sizeBytes": 6299,
+      "sha256": "573e5f09a173c76da282085d0be0b318ccf327eae85839ec2fbbc2f698ec26f1",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/estoqueTecnico/orderRepository.ts.bak-3c5a-2026-08-10T22-31-57-763Z"
+    },
+    {
+      "source": "lib/estoqueTecnico/types.ts.bak-3c5a-2026-08-10T22-31-57-763Z",
+      "sizeBytes": 7312,
+      "sha256": "036c1e00d9dc14080d6355b825fccfe98b1da85525cd855b71ef56fc27fc62f1",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/estoqueTecnico/types.ts.bak-3c5a-2026-08-10T22-31-57-763Z"
+    },
+    {
+      "source": "lib/numeroSequencial.ts.bak-2026-07-25-21-44-29",
+      "sizeBytes": 920,
+      "sha256": "5be7d61f4d8f115d7fec682a6fb2929a6b4cc2ba9b1c3e35b6c46e10b4d42c82",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/numeroSequencial.ts.bak-2026-07-25-21-44-29"
+    },
+    {
+      "source": "lib/numeroSequencial.ts.bak-v2-2026-07-25-21-47-54",
+      "sizeBytes": 1785,
+      "sha256": "f75a19b715bb730700e63f4e21d3775d0eb79843968f1094e6e60ca056f71a9d",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/numeroSequencial.ts.bak-v2-2026-07-25-21-47-54"
+    },
+    {
+      "source": "lib/runtimeStorage.ts.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 1453,
+      "sha256": "77a737bcfa527eda27c85eba6d54a32d4d485260ef296671c31a6fd3637fccb5",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/runtimeStorage.ts.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "lib/runtimeStorage.ts.bak-v11c-uploads",
+      "sizeBytes": 1408,
+      "sha256": "01aeffa9cadc26488805be2c80e5cc7a7ff5eb86ff78c28b1d685661153104c7",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/runtimeStorage.ts.bak-v11c-uploads"
+    },
+    {
+      "source": "lib/server/usuariosSistemaCore.ts.bak-3c5b-2026-08-10T23-12-20-631Z",
+      "sizeBytes": 3958,
+      "sha256": "7230e4d07aed441a47421731395cf12d5b4dccf5f2a168c26442db7badc81b5d",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/lib/server/usuariosSistemaCore.ts.bak-3c5b-2026-08-10T23-12-20-631Z"
+    },
+    {
+      "source": "package.json.bak-3c4d-2026-08-10T15-57-34-933Z",
+      "sizeBytes": 4349,
+      "sha256": "f96584e5985700055dd45b072b697a9791295a1498e2509b6455cbe45c147c5d",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/package.json.bak-3c4d-2026-08-10T15-57-34-933Z"
+    },
+    {
+      "source": "package.json.bak-4a10b-2026-08-11T20-09-00-260Z",
+      "sizeBytes": 4325,
+      "sha256": "da9bc4a30c55aa6d645b10e1395da6828d4fa2d75adb6461d6a1e04fedd37a32",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/package.json.bak-4a10b-2026-08-11T20-09-00-260Z"
+    },
+    {
+      "source": "package.json.bak-4a14c3-2026-08-12T14-30-16-496Z",
+      "sizeBytes": 3899,
+      "sha256": "e6351cd98b7fafcbc23ee8f7ac3f6caf8a0847a832a26625b8c9348246cb53f0",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/package.json.bak-4a14c3-2026-08-12T14-30-16-496Z"
+    },
+    {
+      "source": "package.json.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 4359,
+      "sha256": "5c372e34202ca8dc8ed6224701c850ca3f601a404df3a562b45cce1a56737897",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/package.json.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "package.json.bak-4a7b-2026-08-11T16-19-08-377Z",
+      "sizeBytes": 4282,
+      "sha256": "123a2bc50dd4d26f47c62ecd8863386be54dbbb57a7d2fa6983c449246cd1cd3",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/package.json.bak-4a7b-2026-08-11T16-19-08-377Z"
+    },
+    {
+      "source": "prisma/schema.prisma.bak-3c5a-2026-08-10T22-31-57-763Z",
+      "sizeBytes": 15538,
+      "sha256": "6d6f61fc5e82587f9b47026a45a85f185f51ea5706f7d7db2b4e71cf8ceab3d1",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/prisma/schema.prisma.bak-3c5a-2026-08-10T22-31-57-763Z"
+    },
+    {
+      "source": "proxy.ts.bak-4a13b-2026-08-12T11-59-37-334Z",
+      "sizeBytes": 3999,
+      "sha256": "79ba9a9e544e48be2848f7917c3b876264be087f7c9b43d9210b030d5acb1ceb",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/proxy.ts.bak-4a13b-2026-08-12T11-59-37-334Z"
+    },
+    {
+      "source": "proxy.ts.bak-v3-health-2026-07-26T12-19-21-933Z",
+      "sizeBytes": 3767,
+      "sha256": "99304a36569f455bce5ad5e9c99becfef86088ac0e653382acdb02f3ab35a6a4",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/proxy.ts.bak-v3-health-2026-07-26T12-19-21-933Z"
+    },
+    {
+      "source": "REDEFINIR-MODO-DESKTOP.bat.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 327,
+      "sha256": "1c15180fe11310d7917cdc5658a70bd3502ba45f33b260854b0a3cd35402957e",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/REDEFINIR-MODO-DESKTOP.bat.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "REDEFINIR-MODO-DESKTOP.ps1.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 421,
+      "sha256": "2974673437c158dd8ee0b43995818bdaafced60125c4ce040030ff1864d846b4",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/REDEFINIR-MODO-DESKTOP.ps1.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "scripts/backup-api.js.bak-v11n-1785186762849",
+      "sizeBytes": 1340,
+      "sha256": "e1d9042a605fe61f04058d0837ad51fbbcbce7dafc98057d096899f607d175cb",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/backup-api.js.bak-v11n-1785186762849"
+    },
+    {
+      "source": "scripts/backup-core.js.bak-v11-dados",
+      "sizeBytes": 13629,
+      "sha256": "e58a32ee7cda80c81bc5547e67f50facdca2f663efa45f1c4522750045e30e51",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/backup-core.js.bak-v11-dados"
+    },
+    {
+      "source": "scripts/criar-seed-sqlite-limpo.cjs.bak-4a7b1-2026-08-11T16-22-28-396Z",
+      "sizeBytes": 6752,
+      "sha256": "2986c48cf062656c326abaf1e0966fa3881411e16f51bb6cf93bf0a3ffae996d",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/criar-seed-sqlite-limpo.cjs.bak-4a7b1-2026-08-11T16-22-28-396Z"
+    },
+    {
+      "source": "scripts/electron-afterpack-v11n.js.bak-4a10b-2026-08-11T20-09-00-260Z",
+      "sizeBytes": 1517,
+      "sha256": "107c41d743f2a500ba408c5431e2f78560c626992652a8da5bc513920c589944",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/electron-afterpack-v11n.js.bak-4a10b-2026-08-11T20-09-00-260Z"
+    },
+    {
+      "source": "scripts/electron-afterpack-v11n.js.bak-4a10b1-2026-08-11T20-16-09-190Z",
+      "sizeBytes": 2494,
+      "sha256": "cc8c922d65b56436860cca968c9a2682490fb9ee2d20d4219d1f9fe028e0abf2",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/electron-afterpack-v11n.js.bak-4a10b1-2026-08-11T20-16-09-190Z"
+    },
+    {
+      "source": "scripts/electron-afterpack-v11n.js.bak-4a14c3-2026-08-12T14-30-16-496Z",
+      "sizeBytes": 3049,
+      "sha256": "a3d24b7823476e0718f42cb2661b8caf2cbd3d0d51d740b2fe60567d444517bc",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/electron-afterpack-v11n.js.bak-4a14c3-2026-08-12T14-30-16-496Z"
+    },
+    {
+      "source": "scripts/electron-afterpack-v11n.js.bak-4a14c4-2026-08-12T15-52-18-018Z",
+      "sizeBytes": 2838,
+      "sha256": "52a6770cd316ef0a52a1c9d12cfdafa68b007496cca5abc1f728f086965998bc",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/electron-afterpack-v11n.js.bak-4a14c4-2026-08-12T15-52-18-018Z"
+    },
+    {
+      "source": "scripts/electron-afterpack-v11n.js.bak-4a14c4v2-2026-08-12T15-59-27-023Z",
+      "sizeBytes": 2838,
+      "sha256": "52a6770cd316ef0a52a1c9d12cfdafa68b007496cca5abc1f728f086965998bc",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/electron-afterpack-v11n.js.bak-4a14c4v2-2026-08-12T15-59-27-023Z"
+    },
+    {
+      "source": "scripts/preparar-env-sqlite-local.js.bak-4a7a-2026-08-11T16-11-53-418Z",
+      "sizeBytes": 2218,
+      "sha256": "33825aae7e3863c932f028cf6c7affcf694b835dc398a6b4eb7063537639ed2d",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/preparar-env-sqlite-local.js.bak-4a7a-2026-08-11T16-11-53-418Z"
+    },
+    {
+      "source": "scripts/preparar-standalone-desktop.js.bak-4a10b1-2026-08-11T20-16-09-190Z",
+      "sizeBytes": 2634,
+      "sha256": "d7f9bfd9cb21facc6cecc87f327ef810917143217b392ba3469ade4ee6dd3ba4",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/preparar-standalone-desktop.js.bak-4a10b1-2026-08-11T20-16-09-190Z"
+    },
+    {
+      "source": "scripts/preparar-standalone-desktop.js.bak-4a14c3-2026-08-12T14-30-16-496Z",
+      "sizeBytes": 3291,
+      "sha256": "514d344eca7314f8fe4464df3748554f2fe93e0b0660067f1ea2679952faa6ae",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/preparar-standalone-desktop.js.bak-4a14c3-2026-08-12T14-30-16-496Z"
+    },
+    {
+      "source": "scripts/preparar-standalone-desktop.js.bak-4a14c4-2026-08-12T15-52-18-018Z",
+      "sizeBytes": 6706,
+      "sha256": "2ca2017d8575d9c881d3fbd3c64c06ccc64a0d344bed20af1564c9fcc543cb18",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/preparar-standalone-desktop.js.bak-4a14c4-2026-08-12T15-52-18-018Z"
+    },
+    {
+      "source": "scripts/preparar-standalone-desktop.js.bak-4a14c4v2-2026-08-12T15-59-27-023Z",
+      "sizeBytes": 6706,
+      "sha256": "2ca2017d8575d9c881d3fbd3c64c06ccc64a0d344bed20af1564c9fcc543cb18",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/preparar-standalone-desktop.js.bak-4a14c4v2-2026-08-12T15-59-27-023Z"
+    },
+    {
+      "source": "scripts/preparar-standalone-desktop.js.bak-v11-dados",
+      "sizeBytes": 2634,
+      "sha256": "d7f9bfd9cb21facc6cecc87f327ef810917143217b392ba3469ade4ee6dd3ba4",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/preparar-standalone-desktop.js.bak-v11-dados"
+    },
+    {
+      "source": "scripts/schema-migrator/migrations.cjs.bak-3c5a-2026-08-10T22-31-57-763Z",
+      "sizeBytes": 35099,
+      "sha256": "e5a5297ee8e24eeed65cc6c9954db22cf9dc2cf35b195885efa8bd0ee176c363",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/schema-migrator/migrations.cjs.bak-3c5a-2026-08-10T22-31-57-763Z"
+    },
+    {
+      "source": "scripts/test-estoque-tecnico/etapa3c35a-estorno-manual.cjs.bak-3c35a-a2-2026-08-09T21-59-24-945Z",
+      "sizeBytes": 29025,
+      "sha256": "94eecc2bbe33897b372aa571c0163281d791aa0dc8455aa76cbd898efc969583",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/test-estoque-tecnico/etapa3c35a-estorno-manual.cjs.bak-3c35a-a2-2026-08-09T21-59-24-945Z"
+    },
+    {
+      "source": "scripts/test-estoque-tecnico/etapa3c4e-resultado-financeiro-os.cjs.bak-3c6a-2026-08-11T14-49-37-854Z",
+      "sizeBytes": 5183,
+      "sha256": "fc005198832e9e4cf8012bd0be0752985baca753b1c684324bcabf5aec5fd613",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/test-estoque-tecnico/etapa3c4e-resultado-financeiro-os.cjs.bak-3c6a-2026-08-11T14-49-37-854Z"
+    },
+    {
+      "source": "scripts/test-estoque-tecnico/etapa3c6-regressao-geral.cjs.bak-3c6a-2026-08-11T14-49-37-854Z",
+      "sizeBytes": 4062,
+      "sha256": "8043f863d7500de986f66068631a36763c21330538fb4d7d2e8ffda34f9c1c46",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/test-estoque-tecnico/etapa3c6-regressao-geral.cjs.bak-3c6a-2026-08-11T14-49-37-854Z"
+    },
+    {
+      "source": "scripts/test-estoque-tecnico/etapa4a10b-empacotamento-seguro.cjs.bak-4a10b1-2026-08-11T20-16-09-190Z",
+      "sizeBytes": 2568,
+      "sha256": "b610a2850cf8c29b07efef1dc246b95cf1f8f5948fe522d1218dd1418a97a764",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/test-estoque-tecnico/etapa4a10b-empacotamento-seguro.cjs.bak-4a10b1-2026-08-11T20-16-09-190Z"
+    },
+    {
+      "source": "scripts/test-estoque-tecnico/etapa4a7b-seed-sqlite.cjs.bak-4a7b1-2026-08-11T16-22-28-396Z",
+      "sizeBytes": 2301,
+      "sha256": "6ec64436902cc06bf5f122edae1894771a0668cd04219ea4827c027335bd0b43",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/test-estoque-tecnico/etapa4a7b-seed-sqlite.cjs.bak-4a7b1-2026-08-11T16-22-28-396Z"
+    },
+    {
+      "source": "scripts/validar-desktop-dir-seguro.cjs.bak-4a10b1-2026-08-11T20-16-09-190Z",
+      "sizeBytes": 5578,
+      "sha256": "be205927815f21a980786ec5a14937d9d08367242b82d4435d8e71a733c05fc4",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/validar-desktop-dir-seguro.cjs.bak-4a10b1-2026-08-11T20-16-09-190Z"
+    },
+    {
+      "source": "scripts/validar-desktop-dir-seguro.cjs.bak-4a14c3-2026-08-12T14-30-16-496Z",
+      "sizeBytes": 6331,
+      "sha256": "9ff64cf6dcbb6f0280b62cdfa9d6e17b4a8f38eb9767e55b0e393fcb05112ada",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/validar-desktop-dir-seguro.cjs.bak-4a14c3-2026-08-12T14-30-16-496Z"
+    },
+    {
+      "source": "scripts/validar-desktop-dir-seguro.cjs.bak-4a14c4-2026-08-12T15-52-18-018Z",
+      "sizeBytes": 5739,
+      "sha256": "534f4a6c34661708338ee0e47869eae8f2e4dea7e60e748a45795558bdb0f939",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/validar-desktop-dir-seguro.cjs.bak-4a14c4-2026-08-12T15-52-18-018Z"
+    },
+    {
+      "source": "scripts/validar-desktop-dir-seguro.cjs.bak-4a14c4v2-2026-08-12T15-59-27-023Z",
+      "sizeBytes": 5739,
+      "sha256": "534f4a6c34661708338ee0e47869eae8f2e4dea7e60e748a45795558bdb0f939",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/scripts/validar-desktop-dir-seguro.cjs.bak-4a14c4v2-2026-08-12T15-59-27-023Z"
+    },
+    {
+      "source": "tsconfig.json.bak-v11h",
+      "sizeBytes": 773,
+      "sha256": "ffbbdfd5c6f316db796fa8f55ba97152f1bc9eee84655722bd9552bbe78737c5",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/tsconfig.json.bak-v11h"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A10D-BOOT-EMPACOTADO.cjs.bak-4a10d2-2026-08-11T20-30-49-324Z",
+      "sizeBytes": 13590,
+      "sha256": "29c5fcc23d0b10565a841d5542531c1a3d614f3e5df98c36281e0a70b64d8496",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/VALIDAR-ETAPA4A10D-BOOT-EMPACOTADO.cjs.bak-4a10d2-2026-08-11T20-30-49-324Z"
+    },
+    {
+      "source": "VALIDAR-ETAPA4A6-BANCO-CANDIDATO.cjs.bak-4a6a-2026-08-11T16-01-34-607Z",
+      "sizeBytes": 21601,
+      "sha256": "924207e899f14a37a13868b0cfc283d70b95f0718da7b301bff5cc58056a1450",
+      "proposedAction": "archive-preserve-relative-path",
+      "target": "backups/release-0.1.1/patches/VALIDAR-ETAPA4A6-BANCO-CANDIDATO.cjs.bak-4a6a-2026-08-11T16-01-34-607Z"
+    }
+  ],
+  "collisions": [],
+  "safety": {
+    "dryRun": true,
+    "filesMoved": false,
+    "filesDeleted": false,
+    "databaseChanged": false,
+    "firewallChanged": false,
+    "buildExecuted": false
+  }
+}

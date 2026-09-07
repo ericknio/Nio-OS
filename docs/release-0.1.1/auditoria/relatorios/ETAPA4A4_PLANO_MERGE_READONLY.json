@@ -1,0 +1,1552 @@
+{
+  "ok": true,
+  "stage": "4A.4-PLANO-MERGE-READONLY",
+  "generatedAt": "2026-08-11T15:34:14.965Z",
+  "safety": {
+    "readOnly": true,
+    "databaseChanged": false,
+    "schemaChanged": false,
+    "migrationExecuted": false,
+    "rawIdsExported": false,
+    "rowValuesExported": false,
+    "personalDataExported": false
+  },
+  "baseline": {
+    "project": {
+      "id": "20260728_000_baseline_sqlite",
+      "checksum": "83c7dce7bd156207533762b7bcedb68233fc56f90a961309529a9828af01955d"
+    },
+    "roaming": {
+      "id": "20260728_000_baseline_sqlite",
+      "checksum": "bb57a0b014ff78230f323c2df6748ac1959721474800b118ce6502d4cdef9efb"
+    },
+    "checksumMatches": false
+  },
+  "tables": {
+    "Customer": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "name",
+          "cpf",
+          "birthDate",
+          "whatsapp",
+          "secondaryPhone",
+          "email",
+          "zipCode",
+          "address",
+          "number",
+          "complement",
+          "district",
+          "city",
+          "state",
+          "notes",
+          "createdAt",
+          "updatedAt"
+        ],
+        "commonRows": 1,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 1,
+        "rows": [
+          {
+            "keyHash": "dd4324c5a88718fcf67b3231778703ec32d65cded971326cb3d11675e471acdb",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [],
+            "insertableAfterDependencies": true
+          }
+        ]
+      }
+    },
+    "ServiceOrder": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [
+          "technicianUserId",
+          "technicianProfitPercentSnapshot"
+        ],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "osNumber",
+          "openedAt",
+          "expectedDeliveryDate",
+          "customerId",
+          "createdById",
+          "equipmentType",
+          "equipmentOther",
+          "brand",
+          "model",
+          "serialNumber",
+          "imei",
+          "devicePassword",
+          "deliveredAccessories",
+          "reportedDefect",
+          "technicalNotes",
+          "requiredParts",
+          "technicianResponsible",
+          "partsCost",
+          "laborCost",
+          "discount",
+          "totalAmount",
+          "paymentMethod",
+          "status",
+          "finalizedAt",
+          "createdAt",
+          "updatedAt",
+          "paidAmount",
+          "paymentPercent",
+          "paymentReceivedAt"
+        ],
+        "commonRows": 2,
+        "commonRowsWithDifferentSharedData": 2,
+        "changedRows": [
+          {
+            "keyHash": "531fff12933401436178e9d64ce8d249f1c6e5d186fd50d04c6666ae61b2bf25",
+            "differingColumns": [
+              "technicianResponsible",
+              "partsCost",
+              "status",
+              "finalizedAt",
+              "updatedAt",
+              "paidAmount",
+              "paymentPercent",
+              "paymentReceivedAt"
+            ]
+          },
+          {
+            "keyHash": "a8b112c454c515fb5a666ee55cebd1901b7c47172bcc19448856548ec7b3c5da",
+            "differingColumns": [
+              "technicianResponsible",
+              "partsCost",
+              "paymentMethod",
+              "status",
+              "finalizedAt",
+              "updatedAt",
+              "paidAmount",
+              "paymentPercent",
+              "paymentReceivedAt"
+            ]
+          }
+        ]
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 1,
+        "rows": [
+          {
+            "keyHash": "2c71abc9d1ae66b90553e2c1c0ce27fcb84eb2574eb95318f170ebf5b5167ef4",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "Customer",
+                "childColumn": "customerId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          }
+        ]
+      }
+    },
+    "ServiceOrderPayment": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "serviceOrderId",
+          "amount",
+          "percent",
+          "paymentMethod",
+          "note",
+          "userName",
+          "createdAt"
+        ],
+        "commonRows": 1,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 2,
+        "rows": [
+          {
+            "keyHash": "602920a4c143515c6c4b52f774a9f29d38369607ceb5095e833d1778a8b3998e",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "b81863a82d5ba00fdc670842c6a2daa19243838a8d0fcdbae682e36457580fa6",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          }
+        ]
+      }
+    },
+    "SystemUser": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [
+          "profitShareEnabled",
+          "profitSharePercent"
+        ],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "name",
+          "username",
+          "email",
+          "passwordHash",
+          "role",
+          "status",
+          "lastLoginAt",
+          "createdAt",
+          "updatedAt"
+        ],
+        "commonRows": 2,
+        "commonRowsWithDifferentSharedData": 2,
+        "changedRows": [
+          {
+            "keyHash": "88efe6cf7f7a514b5b2f45ad13656de3e54f344e23a20f9261a1d741779c0c64",
+            "differingColumns": [
+              "lastLoginAt",
+              "updatedAt"
+            ]
+          },
+          {
+            "keyHash": "7fef7be6812d2c8ea5e8b9699863e2fa83defce53854c2646af5930b7f396103",
+            "differingColumns": [
+              "lastLoginAt",
+              "updatedAt"
+            ]
+          }
+        ]
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 0,
+        "rows": []
+      }
+    },
+    "SystemUserPermission": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "userId",
+          "key",
+          "createdAt"
+        ],
+        "commonRows": 33,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 29,
+        "rows": [
+          {
+            "keyHash": "ae6477a5bc7ab2221b9195ebebe9c67098eee5815e4df3d05e8f7a24bec7536d",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "1f65093a12223aafc3e90a91c5e4df3eed56791167ed62a94be1f004911ed5a7",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "958bd4175c3115168f67571f16c1fb73c928fd7db6f91db70650757dbb9b5b5e",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "3472dda7974f8bcb1375786ddbf154e851ae7d5871a5343fdd6c1e6f00fc0e84",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "92ec8cffab1a5d6f87a54620f7e4cf777dd4d13d6b5d275864211e2824884333",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "3a097672eb292fe77f3e64ac6fadb2b08f6a8704900da1d6c07ac6599a390293",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "33818a80c8f8e922c5a27f2897adf30739e28eb99a94fd36ec7cce5e3085a3d0",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "611d1e69eb1ae45a367dec1a88dcf4d1619e6e2856a35f99627bad43125d8fbd",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "316ad186327ba294649e4979b6609f7820e1537f109151c00dbb8fb0d023dcf0",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "2826b09568b4f4b48c0fbd3d2d2973f54568456727b68d798bf953abd3ef1ef9",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "2128b78bbd6548fa3ed35490715598a9ec6164a9b9b217d7c9259e3621ccb09d",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "9bd589818e5b97889a3409cdc2f7d58dc5a77b4d5c04f32b9af0bc01751b052c",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "35547f0ed4b2a497393cd598b037cb5e8b3365f3b5ce375d158b2eb2279a76f4",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "84e455cb70e559d262df961507d49395f9c9ae365c144d253a7605689d6037d8",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "3da4f723738e3b5b65b6bc456cb2a7d48cec889ac1bafb27c447e0fd0f2fc3b3",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "42e33987bb1d9a394c37bfd7e3a8d3445b46ad257e64709b545d95619b7400f4",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "4d7415e9b592b478a1f8ac4c8c6d3c3f767c3ae35615174087e4a59ea7469759",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "a0f3eaa966ecb2078e239d2174ff4a3fdb49078f4671346313de22928adcc8a6",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "3688037f96940b2797995bac33bfa030ea5bf3144b55fd14774b56a92b47af50",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "cf0c7a4a8fe552142a5f03617f4db5bf259648b8b8c9759a31af36d8f5eb0bb4",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "7b842d2a7798191f3d91559d9906f2abe2257bd6cdb431fb67000d19658b865d",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "44f311b7c4ad94a143f6f180a9ebefae42f49a980f2546acc6844b0be1b7d64c",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "1ad85d08b28436554c732843a2c73070c40008932922b7b0a44c50bc54f988ca",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "cf44fbfc76fe13bafb357871a28a6244eeaa42480d10f9437e777e810580f728",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "e5a42f5a401bb4a805f6b55c76abec6aceffbe1d860252a0d58f1fe05df312b8",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "8f33ce2e1d809d9946a3ff908cf007e652bd574581207c5a971be1eaa1514188",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "aca110836c068a8d8886475ed69eed93f1f0e402255a39c0c41ebd12832c6d59",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "944acea6da6c47133f13e2ce25634680431e2e8b96b40d6fc909d76060200d10",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "76a8bc3c36edf819feb0bb2ecacbce4be7fde8b9b352c4f093b1632b6ec8d029",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "SystemUser",
+                "childColumn": "userId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          }
+        ]
+      }
+    },
+    "Product": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "name",
+          "sku",
+          "category",
+          "description",
+          "imageUrl",
+          "salePrice",
+          "costPrice",
+          "taxPercent",
+          "stockQuantity",
+          "minStock",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ],
+        "commonRows": 1,
+        "commonRowsWithDifferentSharedData": 1,
+        "changedRows": [
+          {
+            "keyHash": "76dec155511ddcb219a0ea8184f2819d3dff4ee623f46224c34e3b07fd0dd8f7",
+            "differingColumns": [
+              "stockQuantity",
+              "updatedAt"
+            ]
+          }
+        ]
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 1,
+        "rows": [
+          {
+            "keyHash": "935e884c289cb5cb93b43da0731aa33cd48f375be918da166558d6fc17858fa6",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [],
+            "insertableAfterDependencies": true
+          }
+        ]
+      }
+    },
+    "ProductSale": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "saleNumber",
+          "soldAt",
+          "customerId",
+          "customerName",
+          "subtotalAmount",
+          "discount",
+          "taxAmount",
+          "costAmount",
+          "profitAmount",
+          "totalAmount",
+          "paymentMethod",
+          "status",
+          "note",
+          "userName",
+          "createdAt",
+          "updatedAt"
+        ],
+        "commonRows": 8,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 2,
+        "rows": [
+          {
+            "keyHash": "7f33b5a11b21c2c91630551c7c88f53bbbbaf2d6ad0b17ce1eda1f55459a574d",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "2c9cbd860d2e34a84e359edd7704a4cca5d557c9aa2b7d924176e4a60a9fc6e0",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "Customer",
+                "childColumn": "customerId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          }
+        ]
+      }
+    },
+    "ProductSaleItem": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "saleId",
+          "productId",
+          "productName",
+          "quantity",
+          "unitPrice",
+          "unitCost",
+          "taxPercent",
+          "subtotalAmount",
+          "taxAmount",
+          "costAmount",
+          "profitAmount",
+          "totalAmount",
+          "createdAt"
+        ],
+        "commonRows": 8,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 2,
+        "rows": [
+          {
+            "keyHash": "df73ce6da596ea5b1ef184184111e0bfb9dde5392a2da1babca18afee3205146",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "Product",
+                "childColumn": "productId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              },
+              {
+                "parentTable": "ProductSale",
+                "childColumn": "saleId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "2c552b854484490a42a02609737756165e7cb2b1b0c769955aed6f0ced737379",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 2,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "Product",
+                "childColumn": "productId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              },
+              {
+                "parentTable": "ProductSale",
+                "childColumn": "saleId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          }
+        ]
+      }
+    },
+    "CompanySettings": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "companyName",
+          "tradeName",
+          "cnpj",
+          "address",
+          "phone",
+          "whatsapp",
+          "email",
+          "website",
+          "instagram",
+          "facebook",
+          "logoUrl",
+          "bannerUrl",
+          "primaryColor",
+          "footerText",
+          "warrantyText",
+          "defaultWarrantyDays",
+          "city",
+          "state",
+          "zipCode",
+          "defaultOperator",
+          "productsModuleEnabled",
+          "businessDays",
+          "businessOpenTime",
+          "businessCloseTime",
+          "createdAt",
+          "updatedAt"
+        ],
+        "commonRows": 1,
+        "commonRowsWithDifferentSharedData": 1,
+        "changedRows": [
+          {
+            "keyHash": "383fb5b58797485c0808563989e48501fe342afa0f13f82da02b810a2a054974",
+            "differingColumns": [
+              "tradeName",
+              "cnpj",
+              "phone",
+              "whatsapp",
+              "email",
+              "website",
+              "instagram",
+              "logoUrl",
+              "updatedAt"
+            ]
+          }
+        ]
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 0,
+        "rows": []
+      }
+    },
+    "HistoricoOrdem": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "ordemId",
+          "acao",
+          "descricao",
+          "criadoEm"
+        ],
+        "commonRows": 0,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 0,
+        "rows": []
+      }
+    },
+    "OrderFinalization": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "serviceOrderId",
+          "repairDescription",
+          "replacedParts",
+          "finalAmount",
+          "warrantyDays",
+          "deliveredAt",
+          "deliveredBy",
+          "paymentMethod",
+          "finalNotes",
+          "createdAt",
+          "updatedAt"
+        ],
+        "commonRows": 0,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 1,
+        "rows": [
+          {
+            "keyHash": "022922d3886bbe3972082f4254a3f948c902be1b1aea94f6288f41bdd19e7f51",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          }
+        ]
+      }
+    },
+    "OrderHistory": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "serviceOrderId",
+          "userName",
+          "action",
+          "description",
+          "oldValue",
+          "newValue",
+          "createdAt"
+        ],
+        "commonRows": 10,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 23,
+        "rows": [
+          {
+            "keyHash": "27cd38e6f90fed51f3bc5a6dc77ef4f44bf87c2ff9603c50734c1d5330695e6c",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "5e3f2ad1aa9543a8abaee92623e907e134a432268ccd182e0480d1c53f29a5d6",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "7e408aa53f4335a47f2dd8bd478b79fce085946312c58fb8ea2f143e3ae6f08e",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "8f8cc41f7628f761f8c56f47363a6a988e9d4866f6a99e053007bedacd925e7d",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "2ae4f0eaedca75fc63a05072d1a2dc6956e66a9afac29d34e25314352ed99792",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "bd4bd6ec5c3840aa469451c4c9c7c474bab2eb6f1339bc296996a878db910606",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "68d77a6dfa7396d9fc05bb71e6f8d3dcdfb5d39c90d44bbd15ec4ee99e7b1c50",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "28b3d7f5737c51750c32645e4787f28a583e1fef9b8a04ac65d3bc59327e1920",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "254107f8c23f06d21d60a2ccb6442106d2ed05cb30cecb2cfb6ee9a094e9c603",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "8b4b70a0639ea3f7e97dca6f5798e5aaf021d0db5d8ae2ff2f10c83e1a5f0f1d",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "3783506fe7f87c69fd9303a52c614203ea1d0ccc8c2c1ad9870c296ddc7d2f85",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "1a11131153daeb9d2cca1dcec98c104b83d2e4c383777cce96ef40b5f1406e0e",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "05f6230dbe25959e79a1e98dca9a2156151a536760e57f7b372fd10a496396d3",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "89330f007e6a4f5d2ca6fa0812c6d48ab5fca146f14e98ca4d7f3b9a7da0db3e",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "e20d6b811695de45bccd056236224d8a935d4677a6af97ccf5ccf8c72e14ee67",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "17027803963f4ccaa818bb4cd59e029c5d1df4f6ce6cf6961a34a3a11ee8f8e6",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "7c17ece244f68c0dbc9171a828f2f4bdc577fbc51c21b73e917447247ef8f181",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "f44c923f981c26c1d96e9c021522fa4116183351ed84cee90dff174fc7a3c5ad",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "cdb8215341f2d1117ad47ead0cfa7f661589a98d680d71588836d07d31c6310d",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "2080ebf2056283a8a74bacfbbc7807e0dd0e3ab22365d4c6e9d4274098b18bfd",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "35c8d30348b69f5df6f7c57a6553e7b4d676fe445a63e81447a24b1f9ae2efbd",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "9e4b3e2c64ce004a0476e62d64ee3a1d86b2250e3ea966acdf31565e5d165a97",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 0,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "4b78567baa1c520b713ca699243b993a33998dde5cb66067d4a6277cb3f385de",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ServiceOrder",
+                "childColumn": "serviceOrderId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          }
+        ]
+      }
+    },
+    "ServiceOrderAttachment": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "serviceOrderId",
+          "fileName",
+          "originalName",
+          "url",
+          "mimeType",
+          "size",
+          "createdAt"
+        ],
+        "commonRows": 1,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 0,
+        "rows": []
+      }
+    },
+    "ServiceOrderInternalNote": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "serviceOrderId",
+          "userName",
+          "note",
+          "createdAt"
+        ],
+        "commonRows": 0,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 0,
+        "rows": []
+      }
+    },
+    "StockMovement": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "productId",
+          "saleId",
+          "type",
+          "quantity",
+          "previousStock",
+          "newStock",
+          "reason",
+          "userName",
+          "createdAt"
+        ],
+        "commonRows": 8,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 2,
+        "rows": [
+          {
+            "keyHash": "23b426f087dd6b02fce974f7989f53af3a0c36a30d677ff068f74c68fb525115",
+            "refsAlreadyInProject": 1,
+            "refsAvailableOnlyInRoaming": 1,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ProductSale",
+                "childColumn": "saleId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              },
+              {
+                "parentTable": "Product",
+                "childColumn": "productId",
+                "parentColumn": "id",
+                "state": "ALREADY_IN_PROJECT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          },
+          {
+            "keyHash": "d17bd7c6acdd1a214103a41f4def01b3e4b763d6191048eafdd06a5c1a07b357",
+            "refsAlreadyInProject": 0,
+            "refsAvailableOnlyInRoaming": 2,
+            "refsMissingEverywhere": 0,
+            "dependencies": [
+              {
+                "parentTable": "ProductSale",
+                "childColumn": "saleId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              },
+              {
+                "parentTable": "Product",
+                "childColumn": "productId",
+                "parentColumn": "id",
+                "state": "NEEDS_PARENT_IMPORT"
+              }
+            ],
+            "insertableAfterDependencies": true
+          }
+        ]
+      }
+    },
+    "User": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "sharedRows": {
+        "projectOnlyColumns": [],
+        "roamingOnlyColumns": [],
+        "commonColumns": [
+          "id",
+          "name",
+          "email",
+          "passwordHash",
+          "role",
+          "active",
+          "createdAt",
+          "updatedAt"
+        ],
+        "commonRows": 0,
+        "commonRowsWithDifferentSharedData": 0,
+        "changedRows": []
+      },
+      "roamingOnly": {
+        "roamingOnlyRows": 0,
+        "rows": []
+      }
+    }
+  },
+  "dependencyEdgesForRoamingOnlyRows": [
+    "Customer->ProductSale",
+    "Customer->ServiceOrder",
+    "Product->ProductSaleItem",
+    "Product->StockMovement",
+    "ProductSale->ProductSaleItem",
+    "ProductSale->StockMovement",
+    "ServiceOrder->OrderFinalization",
+    "ServiceOrder->OrderHistory",
+    "ServiceOrder->ServiceOrderPayment"
+  ]
+}

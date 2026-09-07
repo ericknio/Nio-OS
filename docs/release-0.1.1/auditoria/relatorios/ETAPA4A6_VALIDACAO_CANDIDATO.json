@@ -1,0 +1,230 @@
+{
+  "ok": true,
+  "stage": "4A.6-VALIDACAO-CANDIDATO",
+  "generatedAt": "2026-08-11T16:01:40.941Z",
+  "safety": {
+    "candidateReadOnly": true,
+    "sourceDatabasesReadOnly": true,
+    "liveDatabaseChanged": false,
+    "promotionPerformed": false,
+    "migrationExecuted": false,
+    "prismaSmokeUsedDisposableCopy": true
+  },
+  "sourceHashes": {
+    "project": "ffb4dc202a3ffc67632674fd8690864ad697a6e782bd1eada261e982c6c36fec",
+    "roaming": "bbda6b82df5d74af7e121146355afd8fbc9bec59e9acf6db3c6667906600628f",
+    "candidate": "bb0bf660bfc74528ee5355af787a835aaff75e288d7fe01a022518203569d675"
+  },
+  "candidate": {
+    "path": "C:\\projetos\\sistema-os\\data\\nio-os-merge-preview-4a5b-2026-08-11T15-55-30-510Z.db",
+    "sizeBytes": 557056,
+    "tableCount": 22
+  },
+  "checks": {
+    "integrityCheck": true,
+    "foreignKeys": true,
+    "tableCount": true,
+    "counts": true,
+    "exactCurrentTables": true,
+    "currentRowsSurvive": true,
+    "legacyRowsImported": true,
+    "productMerge": true,
+    "companySettings": true,
+    "renumberedOrder": true,
+    "migrations": true,
+    "uniqueConstraints": true,
+    "prismaSmoke": true
+  },
+  "details": {
+    "integrityCheck": "ok",
+    "foreignKeyViolations": 0,
+    "counts": {
+      "Customer": {
+        "expected": 2,
+        "actual": 2,
+        "ok": true
+      },
+      "Product": {
+        "expected": 2,
+        "actual": 2,
+        "ok": true
+      },
+      "ServiceOrder": {
+        "expected": 6,
+        "actual": 6,
+        "ok": true
+      },
+      "ProductSale": {
+        "expected": 10,
+        "actual": 10,
+        "ok": true
+      },
+      "ProductSaleItem": {
+        "expected": 10,
+        "actual": 10,
+        "ok": true
+      },
+      "ServiceOrderPayment": {
+        "expected": 8,
+        "actual": 8,
+        "ok": true
+      },
+      "OrderFinalization": {
+        "expected": 6,
+        "actual": 6,
+        "ok": true
+      },
+      "OrderHistory": {
+        "expected": 60,
+        "actual": 60,
+        "ok": true
+      },
+      "StockMovement": {
+        "expected": 10,
+        "actual": 10,
+        "ok": true
+      },
+      "SystemUser": {
+        "expected": 2,
+        "actual": 2,
+        "ok": true
+      },
+      "TechnicalPart": {
+        "expected": 2,
+        "actual": 2,
+        "ok": true
+      },
+      "ServiceOrderPart": {
+        "expected": 3,
+        "actual": 3,
+        "ok": true
+      },
+      "TechnicalPartMovement": {
+        "expected": 8,
+        "actual": 8,
+        "ok": true
+      },
+      "TechnicalPartCommandLog": {
+        "expected": 2,
+        "actual": 2,
+        "ok": true
+      },
+      "ServiceOrderTechnicalCommandLog": {
+        "expected": 5,
+        "actual": 5,
+        "ok": true
+      },
+      "NioSchemaMigration": {
+        "expected": 5,
+        "actual": 5,
+        "ok": true
+      }
+    },
+    "exactCurrentTables": {
+      "SystemUser": true,
+      "SystemUserPermission": true,
+      "TechnicalPart": true,
+      "ServiceOrderPart": true,
+      "TechnicalPartMovement": true,
+      "TechnicalPartCommandLog": true,
+      "ServiceOrderTechnicalCommandLog": true,
+      "NioSchemaMigration": true
+    },
+    "currentRowsSurvive": {
+      "Customer": true,
+      "ServiceOrder": true,
+      "ServiceOrderPayment": true,
+      "OrderFinalization": true,
+      "ProductSale": true,
+      "ProductSaleItem": true,
+      "StockMovement": true
+    },
+    "legacyRowsImported": {
+      "Customer": {
+        "ok": true,
+        "expected": 1
+      },
+      "ProductSale": {
+        "ok": true,
+        "expected": 2
+      },
+      "ProductSaleItem": {
+        "ok": true,
+        "expected": 2
+      },
+      "ServiceOrderPayment": {
+        "ok": true,
+        "expected": 2
+      },
+      "OrderFinalization": {
+        "ok": true,
+        "expected": 1
+      },
+      "OrderHistory": {
+        "ok": true,
+        "expected": 23
+      },
+      "StockMovement": {
+        "ok": true,
+        "expected": 2
+      }
+    },
+    "productMerge": {
+      "ok": true,
+      "importedLegacyOnly": 1,
+      "reconciledCommon": 1
+    },
+    "companySettings": {
+      "ok": true
+    },
+    "renumberedOrder": {
+      "ok": true,
+      "oldNumber": 3,
+      "newNumber": 6,
+      "auditRows": 1
+    },
+    "migrations": {
+      "ok": true,
+      "count": 5
+    },
+    "uniqueConstraints": {
+      "ok": true,
+      "checks": [
+        {
+          "table": "ServiceOrder",
+          "columns": [
+            "osNumber"
+          ],
+          "duplicates": 0
+        },
+        {
+          "table": "ProductSale",
+          "columns": [
+            "saleNumber"
+          ],
+          "duplicates": 0
+        },
+        {
+          "table": "OrderFinalization",
+          "columns": [
+            "serviceOrderId"
+          ],
+          "duplicates": 0
+        }
+      ]
+    },
+    "prismaSmoke": {
+      "ok": true,
+      "rows": {
+        "Customer": 2,
+        "ServiceOrder": 6,
+        "ServiceOrderPayment": 8,
+        "SystemUser": 2,
+        "TechnicalPart": 2,
+        "ServiceOrderPart": 3,
+        "Product": 2,
+        "ProductSale": 10
+      }
+    }
+  }
+}

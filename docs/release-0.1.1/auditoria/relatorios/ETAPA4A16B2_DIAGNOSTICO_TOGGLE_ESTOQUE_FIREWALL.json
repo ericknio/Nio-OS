@@ -1,0 +1,84 @@
+{
+  "ok": true,
+  "stage": "4A.16B.2-DIAGNOSTICO-TARGETED",
+  "generatedAt": "2026-08-15T18:45:18.792Z",
+  "source": {
+    "configuracoesPage": {
+      "exists": true,
+      "markers": {
+        "checkboxWritesBoolean": true,
+        "payloadSendsBoolean": true,
+        "putConfiguracoes": true,
+        "writesLocalStorage": true,
+        "reloadsAfterSave": true
+      }
+    },
+    "configuracoesApi": {
+      "exists": true,
+      "markers": {
+        "hasProductsModuleField": true,
+        "parserExists": true,
+        "falseAcceptedLiterally": true,
+        "persistsField": true
+      }
+    },
+    "sistemaFrame": {
+      "exists": true,
+      "markers": {
+        "readsLocalStorage": true,
+        "fetchesConfiguracoes": true,
+        "filtersProductsMenu": true,
+        "technicalStockStandalone": true
+      }
+    },
+    "moduloProdutosGuard": {
+      "path": "app/produtos/ModuloProdutosGuard.tsx",
+      "exists": true,
+      "markers": {
+        "fetchesConfiguracoes": true,
+        "usesProductsModuleEnabled": true,
+        "disabledGuard": true
+      }
+    }
+  },
+  "runtimeDatabase": {
+    "exists": true,
+    "path": "C:/Users/PC/AppData/Local/Nio-OS/data/nio-os.db",
+    "companySettingsTable": true,
+    "rowCount": 1,
+    "rows": [
+      {
+        "id": "cms132pb6000ywhhsd19zi74q",
+        "productsModuleEnabled": true,
+        "rawProductsModuleEnabled": 1,
+        "createdAt": "1785027146659",
+        "updatedAt": "1785191741749"
+      }
+    ],
+    "singleRowExpected": true,
+    "allRowsSameValue": true
+  },
+  "firewall": {
+    "exactRuleFound": false,
+    "exactRule": null,
+    "nioRuleCount": 0,
+    "nioRules": [],
+    "exactCommand": {
+      "status": 0,
+      "stderr": ""
+    },
+    "searchCommand": {
+      "status": 0,
+      "stderr": ""
+    }
+  },
+  "likelyIssues": [
+    "O toggle do módulo de produtos filtra o grupo comercial, mas 'Estoque técnico' está fora desse módulo e permanece visível por arquitetura."
+  ],
+  "safety": {
+    "readOnly": true,
+    "filesChanged": false,
+    "databaseChanged": false,
+    "firewallChanged": false
+  }
+}

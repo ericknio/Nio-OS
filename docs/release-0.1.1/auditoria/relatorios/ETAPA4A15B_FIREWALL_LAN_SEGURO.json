@@ -1,0 +1,41 @@
+{
+  "ok": true,
+  "stage": "4A.15B-FIREWALL-LAN-SEGURO",
+  "generatedAt": "2026-08-12T21:23:54.445Z",
+  "ruleCreated": true,
+  "ruleRepaired": false,
+  "ruleAlreadyCorrect": false,
+  "exactRuleValidated": true,
+  "activePrivateLanInterface": {
+    "InterfaceAlias": "Ethernet",
+    "InterfaceIndex": 18,
+    "IPv4Address": "192.168.1.9",
+    "PrefixLength": 24,
+    "Gateway": "192.168.1.1",
+    "NetworkCategory": "Private"
+  },
+  "broadPort3000RuleCount": 0,
+  "rule": {
+    "Name": "Nio-OS-LAN-TCP-3000",
+    "DisplayName": "Nio-OS - Servidor LAN (TCP 3000)",
+    "Enabled": "True",
+    "Direction": "Inbound",
+    "Action": "Allow",
+    "Profile": "Private",
+    "Program": "C:\\Program Files\\Nio-OS\\Nio-OS.exe",
+    "Protocol": "TCP",
+    "LocalPort": "3000",
+    "RemoteAddress": "LocalSubnet",
+    "EdgeTraversalPolicy": "Block"
+  },
+  "firewallChanged": true,
+  "safety": {
+    "networkProfileChanged": false,
+    "databaseChanged": false,
+    "publicProfileOpened": false,
+    "remoteAddressRestrictedToLocalSubnet": true,
+    "programRestrictedToInstalledNioOS": true,
+    "tcpPortRestrictedTo3000": true
+  },
+  "next": "Abrir o Nio-OS instalado em modo servidor e validar de outro dispositivo da mesma LAN em http://192.168.1.9:3000/login."
+}

@@ -1,0 +1,434 @@
+{
+  "ok": true,
+  "stage": "4A.2-COMPARACAO-BANCOS",
+  "generatedAt": "2026-08-11T15:27:51.332Z",
+  "safety": {
+    "readOnly": true,
+    "databaseChanged": false,
+    "schemaChanged": false,
+    "migrationExecuted": false,
+    "personalRecordsExported": false
+  },
+  "project": {
+    "exists": true,
+    "path": "C:\\projetos\\sistema-os\\data\\nio-os.db",
+    "sizeBytes": 552960,
+    "integrityCheck": "ok",
+    "foreignKeyViolations": 0,
+    "tableCount": 22,
+    "tables": [
+      "CompanySettings",
+      "Customer",
+      "HistoricoOrdem",
+      "NioSchemaMigration",
+      "OrderFinalization",
+      "OrderHistory",
+      "Product",
+      "ProductSale",
+      "ProductSaleItem",
+      "ServiceOrder",
+      "ServiceOrderAttachment",
+      "ServiceOrderInternalNote",
+      "ServiceOrderPart",
+      "ServiceOrderPayment",
+      "ServiceOrderTechnicalCommandLog",
+      "StockMovement",
+      "SystemUser",
+      "SystemUserPermission",
+      "TechnicalPart",
+      "TechnicalPartCommandLog",
+      "TechnicalPartMovement",
+      "User"
+    ],
+    "summary": {
+      "Customer": {
+        "exists": true,
+        "rows": 1,
+        "max_updatedAt": 1785027221546,
+        "max_createdAt": 1785027221546
+      },
+      "ServiceOrder": {
+        "exists": true,
+        "rows": 5,
+        "max_updatedAt": 1786406555400,
+        "max_createdAt": 1786406478675,
+        "max_openedAt": 1786406478675
+      },
+      "ServiceOrderPayment": {
+        "exists": true,
+        "rows": 6,
+        "max_createdAt": 1786406555400
+      },
+      "SystemUser": {
+        "exists": true,
+        "rows": 2,
+        "max_updatedAt": 1786406420708,
+        "max_createdAt": 1785069460294
+      },
+      "TechnicalPart": {
+        "exists": true,
+        "rows": 2,
+        "max_updatedAt": "2026-08-11 00:01:36",
+        "max_createdAt": "2026-08-10 16:51:38"
+      },
+      "ServiceOrderPart": {
+        "exists": true,
+        "rows": 3,
+        "max_updatedAt": "2026-08-11 00:01:37",
+        "max_createdAt": "2026-08-11 00:01:18"
+      },
+      "TechnicalPartMovement": {
+        "exists": true,
+        "rows": 8,
+        "max_createdAt": "2026-08-11 00:01:37"
+      },
+      "TechnicalPartCommandLog": {
+        "exists": true,
+        "rows": 2,
+        "max_createdAt": "2026-08-10 16:51:38"
+      },
+      "ServiceOrderTechnicalCommandLog": {
+        "exists": true,
+        "rows": 5,
+        "max_createdAt": "2026-08-11 00:01:37"
+      },
+      "Product": {
+        "exists": true,
+        "rows": 1,
+        "max_updatedAt": 1785083952875,
+        "max_createdAt": 1785027386423
+      },
+      "ProductSale": {
+        "exists": true,
+        "rows": 8,
+        "max_updatedAt": 1785083952870,
+        "max_createdAt": 1785083952870
+      },
+      "Warranty": {
+        "exists": false
+      },
+      "CompanySettings": {
+        "exists": true,
+        "rows": 1,
+        "max_updatedAt": 1785082244161,
+        "max_createdAt": 1785027146659
+      },
+      "NioSchemaMigration": {
+        "exists": true,
+        "rows": 5
+      }
+    },
+    "migrations": [
+      {
+        "id": "20260728_000_baseline_sqlite",
+        "checksum": "83c7dce7bd156207533762b7bcedb68233fc56f90a961309529a9828af01955d",
+        "appliedAt": "2026-08-10 12:06:36"
+      },
+      {
+        "id": "20260804_001_technical_parts",
+        "checksum": "57ad36c0c07e14457345ae506aa4c0e18dd1dfd28a71fc27d4c4e4639241224c",
+        "appliedAt": "2026-08-10 12:06:36"
+      },
+      {
+        "id": "20260806_002_technical_part_command_log",
+        "checksum": "20013162c5f4f15f08618c72904a970a08e6aa2baa01ad5e3e8b66cdecfe5750",
+        "appliedAt": "2026-08-10 12:06:36"
+      },
+      {
+        "id": "20260806_003_service_order_technical_command_log",
+        "checksum": "e7e05f31ccb1f8664030ea58e0d98172dd30681077e31b4052e1db92298eabd4",
+        "appliedAt": "2026-08-10 12:06:36"
+      },
+      {
+        "id": "20260810_004_technician_profit_share",
+        "checksum": "b3678f0bd3ec0457e73214cf6805ca3ae0e1f98f6437b50c3cbb5329755e8f0e",
+        "appliedAt": "2026-08-10 22:39:17"
+      }
+    ]
+  },
+  "roaming": {
+    "exists": true,
+    "path": "C:\\Users\\PC\\AppData\\Roaming\\Nio-OS\\data\\nio-os.db",
+    "sizeBytes": 364544,
+    "integrityCheck": "ok",
+    "foreignKeyViolations": 0,
+    "tableCount": 17,
+    "tables": [
+      "CompanySettings",
+      "Customer",
+      "HistoricoOrdem",
+      "NioSchemaMigration",
+      "OrderFinalization",
+      "OrderHistory",
+      "Product",
+      "ProductSale",
+      "ProductSaleItem",
+      "ServiceOrder",
+      "ServiceOrderAttachment",
+      "ServiceOrderInternalNote",
+      "ServiceOrderPayment",
+      "StockMovement",
+      "SystemUser",
+      "SystemUserPermission",
+      "User"
+    ],
+    "summary": {
+      "Customer": {
+        "exists": true,
+        "rows": 2,
+        "max_updatedAt": 1785191203112,
+        "max_createdAt": 1785191203112
+      },
+      "ServiceOrder": {
+        "exists": true,
+        "rows": 3,
+        "max_updatedAt": 1785192328372,
+        "max_createdAt": 1785191251751,
+        "max_openedAt": 1785191251751
+      },
+      "ServiceOrderPayment": {
+        "exists": true,
+        "rows": 3,
+        "max_createdAt": 1785191690123
+      },
+      "SystemUser": {
+        "exists": true,
+        "rows": 2,
+        "max_updatedAt": 1785266048715,
+        "max_createdAt": 1785069460294
+      },
+      "TechnicalPart": {
+        "exists": false
+      },
+      "ServiceOrderPart": {
+        "exists": false
+      },
+      "TechnicalPartMovement": {
+        "exists": false
+      },
+      "TechnicalPartCommandLog": {
+        "exists": false
+      },
+      "ServiceOrderTechnicalCommandLog": {
+        "exists": false
+      },
+      "Product": {
+        "exists": true,
+        "rows": 2,
+        "max_updatedAt": 1785775147446,
+        "max_createdAt": 1785191796145
+      },
+      "ProductSale": {
+        "exists": true,
+        "rows": 10,
+        "max_updatedAt": 1785191819888,
+        "max_createdAt": 1785191819888
+      },
+      "Warranty": {
+        "exists": false
+      },
+      "CompanySettings": {
+        "exists": true,
+        "rows": 1,
+        "max_updatedAt": 1785191741749,
+        "max_createdAt": 1785027146659
+      },
+      "NioSchemaMigration": {
+        "exists": true,
+        "rows": 1
+      }
+    },
+    "migrations": [
+      {
+        "id": "20260728_000_baseline_sqlite",
+        "checksum": "bb57a0b014ff78230f323c2df6748ac1959721474800b118ce6502d4cdef9efb",
+        "appliedAt": "2026-08-02 20:51:04"
+      }
+    ]
+  },
+  "comparison": {
+    "onlyProject": [
+      "ServiceOrderPart",
+      "ServiceOrderTechnicalCommandLog",
+      "TechnicalPart",
+      "TechnicalPartCommandLog",
+      "TechnicalPartMovement"
+    ],
+    "onlyRoaming": [],
+    "rowDifferences": {
+      "Customer": {
+        "project": {
+          "exists": true,
+          "rows": 1,
+          "max_updatedAt": 1785027221546,
+          "max_createdAt": 1785027221546
+        },
+        "roaming": {
+          "exists": true,
+          "rows": 2,
+          "max_updatedAt": 1785191203112,
+          "max_createdAt": 1785191203112
+        },
+        "sameRowCount": false
+      },
+      "ServiceOrder": {
+        "project": {
+          "exists": true,
+          "rows": 5,
+          "max_updatedAt": 1786406555400,
+          "max_createdAt": 1786406478675,
+          "max_openedAt": 1786406478675
+        },
+        "roaming": {
+          "exists": true,
+          "rows": 3,
+          "max_updatedAt": 1785192328372,
+          "max_createdAt": 1785191251751,
+          "max_openedAt": 1785191251751
+        },
+        "sameRowCount": false
+      },
+      "ServiceOrderPayment": {
+        "project": {
+          "exists": true,
+          "rows": 6,
+          "max_createdAt": 1786406555400
+        },
+        "roaming": {
+          "exists": true,
+          "rows": 3,
+          "max_createdAt": 1785191690123
+        },
+        "sameRowCount": false
+      },
+      "SystemUser": {
+        "project": {
+          "exists": true,
+          "rows": 2,
+          "max_updatedAt": 1786406420708,
+          "max_createdAt": 1785069460294
+        },
+        "roaming": {
+          "exists": true,
+          "rows": 2,
+          "max_updatedAt": 1785266048715,
+          "max_createdAt": 1785069460294
+        },
+        "sameRowCount": true
+      },
+      "TechnicalPart": {
+        "project": {
+          "exists": true,
+          "rows": 2,
+          "max_updatedAt": "2026-08-11 00:01:36",
+          "max_createdAt": "2026-08-10 16:51:38"
+        },
+        "roaming": {
+          "exists": false
+        },
+        "sameRowCount": false
+      },
+      "ServiceOrderPart": {
+        "project": {
+          "exists": true,
+          "rows": 3,
+          "max_updatedAt": "2026-08-11 00:01:37",
+          "max_createdAt": "2026-08-11 00:01:18"
+        },
+        "roaming": {
+          "exists": false
+        },
+        "sameRowCount": false
+      },
+      "TechnicalPartMovement": {
+        "project": {
+          "exists": true,
+          "rows": 8,
+          "max_createdAt": "2026-08-11 00:01:37"
+        },
+        "roaming": {
+          "exists": false
+        },
+        "sameRowCount": false
+      },
+      "TechnicalPartCommandLog": {
+        "project": {
+          "exists": true,
+          "rows": 2,
+          "max_createdAt": "2026-08-10 16:51:38"
+        },
+        "roaming": {
+          "exists": false
+        },
+        "sameRowCount": false
+      },
+      "ServiceOrderTechnicalCommandLog": {
+        "project": {
+          "exists": true,
+          "rows": 5,
+          "max_createdAt": "2026-08-11 00:01:37"
+        },
+        "roaming": {
+          "exists": false
+        },
+        "sameRowCount": false
+      },
+      "Product": {
+        "project": {
+          "exists": true,
+          "rows": 1,
+          "max_updatedAt": 1785083952875,
+          "max_createdAt": 1785027386423
+        },
+        "roaming": {
+          "exists": true,
+          "rows": 2,
+          "max_updatedAt": 1785775147446,
+          "max_createdAt": 1785191796145
+        },
+        "sameRowCount": false
+      },
+      "ProductSale": {
+        "project": {
+          "exists": true,
+          "rows": 8,
+          "max_updatedAt": 1785083952870,
+          "max_createdAt": 1785083952870
+        },
+        "roaming": {
+          "exists": true,
+          "rows": 10,
+          "max_updatedAt": 1785191819888,
+          "max_createdAt": 1785191819888
+        },
+        "sameRowCount": false
+      },
+      "CompanySettings": {
+        "project": {
+          "exists": true,
+          "rows": 1,
+          "max_updatedAt": 1785082244161,
+          "max_createdAt": 1785027146659
+        },
+        "roaming": {
+          "exists": true,
+          "rows": 1,
+          "max_updatedAt": 1785191741749,
+          "max_createdAt": 1785027146659
+        },
+        "sameRowCount": true
+      },
+      "NioSchemaMigration": {
+        "project": {
+          "exists": true,
+          "rows": 5
+        },
+        "roaming": {
+          "exists": true,
+          "rows": 1
+        },
+        "sameRowCount": false
+      }
+    }
+  }
+}

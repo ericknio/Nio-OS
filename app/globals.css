@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #f8fafc; /* slate-50 */
+  --foreground: #0f172a; /* slate-900 */
+}
+
+.dark {
+  --background: #020617; /* slate-950 */
+  --foreground: #f8fafc; /* slate-50 */
+}
+
+/*
+  Escala visual global do Nio-OS
+
+  Padrão:
+  - Full HD/Desktop: 80% do tamanho original
+  - Notebook 1366x768 / telas baixas: menor ainda
+  - Telas muito pequenas: compacto, mas sem ficar ilegível demais
+
+  Como o Tailwind usa rem em textos, paddings, botões, cards e larguras,
+  isso reduz o sistema inteiro sem precisar editar página por página.
+*/
+html {
+  font-size: 80%;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Notebook comum: 1366x768 / 720p */
+@media (max-width: 1366px), (max-height: 820px) {
+  html {
+    font-size: 75%;
+  }
+}
+
+/* Telas ainda mais apertadas */
+@media (max-width: 1180px), (max-height: 740px) {
+  html {
+    font-size: 72.5%;
+  }
+}
+
+/* Celular/tablet pequeno: mantém compacto, mas não microscópico */
+@media (max-width: 767px) {
+  html {
+    font-size: 76%;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+/* Scrollbar fina e moderna */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.4);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 85, 105, 0.7);
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.dark .glass-panel {
+  background-color: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glow-indigo {
+  box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.25);
+}
+
+.glow-blue {
+  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.25);
+}

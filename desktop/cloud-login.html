@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+  />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login Cloud Nio-OS</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --azul: #2563eb;
+      --azul2: #1d4ed8;
+      --texto: #0f172a;
+      --muted: #64748b;
+      --borda: #e2e8f0;
+      --fundo: #0f172a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--fundo);
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--texto);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+    }
+
+    .card {
+      width: min(1080px, 100%);
+      min-height: 560px;
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      overflow: hidden;
+      border-radius: 28px;
+      background: white;
+      box-shadow: 0 30px 80px rgba(0,0,0,.22);
+    }
+
+    .left {
+      padding: 44px;
+      color: white;
+      background: linear-gradient(150deg, #172554, #2563eb);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .badge {
+      width: max-content;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .18em;
+    }
+
+    h1 {
+      margin: 24px 0 14px;
+      font-size: 42px;
+      line-height: 1.05;
+      letter-spacing: -1.4px;
+    }
+
+    .left p {
+      margin: 0;
+      max-width: 400px;
+      color: rgba(255,255,255,.88);
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .right {
+      padding: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: -1px;
+    }
+
+    .desc {
+      margin: 12px 0 24px;
+      max-width: 540px;
+      color: #475569;
+      font-size: 15px;
+      line-height: 1.55;
+      font-weight: 800;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      padding: 16px 18px;
+      font-size: 15px;
+      font-weight: 800;
+      outline: none;
+      width: 100%;
+      background: #f8fafc;
+      color: var(--texto);
+      transition: .15s ease;
+    }
+
+    input:focus {
+      background: white;
+      border-color: var(--azul);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+
+    button.primary {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 18px;
+      font-size: 16px;
+      font-weight: 950;
+      cursor: pointer;
+      background: var(--azul);
+      color: white;
+      transition: .15s ease;
+    }
+
+    button.primary:hover:not(:disabled) {
+      background: var(--azul2);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(37,99,235,.22);
+    }
+
+    button.primary:disabled {
+      cursor: not-allowed;
+      opacity: .65;
+    }
+
+    .status {
+      min-height: 52px;
+      margin-top: 18px;
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      background: #f8fafc;
+      padding: 14px 16px;
+      color: #1e293b;
+      font-size: 13px;
+      font-weight: 850;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    .status.visivel { display: block; }
+    .status.erro { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    .status.sucesso { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+    .status.info { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+
+    .tools {
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .linkbtn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 4px;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .linkbtn:hover { color: var(--texto); }
+
+    @media (max-width: 900px) {
+      body { padding: 16px; }
+      .card { grid-template-columns: 1fr; }
+      .left { display: none; }
+      .right { padding: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <section class="left">
+      <div class="badge">NIO-OS CLOUD</div>
+      <h1>Ativação em Nuvem</h1>
+      <p>
+        Conecte sua conta do Nio-OS para ativar a licença de Servidor deste computador.
+        A validação é feita diretamente com nosso website cloud de forma rápida e segura.
+      </p>
+    </section>
+
+    <section class="right">
+      <h2>Entrar na sua conta</h2>
+      <p class="desc">
+        Informe o e-mail e a senha cadastrados no website da nuvem para ativar a loja.
+      </p>
+
+      <div class="form-group">
+        <input id="email" type="email" placeholder="Seu E-mail da conta" autocomplete="email" />
+        <input id="senha" type="password" placeholder="Sua Senha" autocomplete="current-password" />
+      </div>
+
+      <button id="btnLogin" class="primary" type="button">🔑 Ativar Licença e Iniciar Servidor</button>
+
+      <div id="status" class="status"></div>
+
+      <div class="tools">
+        <button id="btnCancelar" class="linkbtn" type="button">← Voltar ao seletor de modo</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const emailInput = document.getElementById("email");
+    const senhaInput = document.getElementById("senha");
+    const btnLogin = document.getElementById("btnLogin");
+    const btnCancelar = document.getElementById("btnCancelar");
+    const statusEl = document.getElementById("status");
+
+    function setTravado(valor) {
+      emailInput.disabled = valor;
+      senhaInput.disabled = valor;
+      btnLogin.disabled = valor;
+      btnCancelar.disabled = valor;
+    }
+
+    function setStatus(texto, tipo) {
+      if (!texto) {
+        statusEl.classList.remove("visivel");
+        return;
+      }
+      statusEl.textContent = texto;
+      statusEl.className = "status visivel" + (tipo ? " " + tipo : "");
+    }
+
+    btnLogin.addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      const senha = senhaInput.value;
+
+      if (!email || !senha) {
+        setStatus("Preencha o e-mail e a senha da sua conta.", "erro");
+        return;
+      }
+
+      if (senha.length < 8) {
+        setStatus("A senha deve ter no mínimo 8 caracteres.", "erro");
+        return;
+      }
+
+      setTravado(true);
+      setStatus("Autenticando e ativando licença na nuvem...", "info");
+
+      try {
+        const resultado = await window.nioOS.cloudLogin({ email, password: senha });
+        
+        if (resultado.ok) {
+          setStatus("Licença ativada com sucesso! Iniciando servidor...", "sucesso");
+          setTimeout(async () => {
+            const startRes = await window.nioOS.iniciarServidor();
+            if (startRes && !startRes.ok) {
+              setTravado(false);
+              setStatus(startRes.message || "Erro ao iniciar o servidor após ativação.", "erro");
+            }
+          }, 600);
+        } else {
+          setTravado(false);
+          setStatus(resultado.message || "Falha na autenticação.", "erro");
+        }
+      } catch (error) {
+        setTravado(false);
+        setStatus("Erro de comunicação interna. Tente novamente.", "erro");
+      }
+    });
+
+    btnCancelar.addEventListener("click", async () => {
+      setTravado(true);
+      if (window.nioOS?.voltarSeletor) {
+        await window.nioOS.voltarSeletor();
+      } else if (window.nioOS?.fecharLogin) {
+        window.nioOS.fecharLogin();
+      } else {
+        window.location.href = "seletor.html";
+      }
+    });
+
+    emailInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        senhaInput.focus();
+      }
+    });
+
+    senhaInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        btnLogin.click();
+      }
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      emailInput.focus();
+    });
+  </script>
+</body>
+</html>

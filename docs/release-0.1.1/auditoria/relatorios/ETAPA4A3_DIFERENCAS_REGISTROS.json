@@ -1,0 +1,419 @@
+{
+  "ok": true,
+  "stage": "4A.3-DIFERENCAS-REGISTROS",
+  "generatedAt": "2026-08-11T15:31:38.812Z",
+  "safety": {
+    "readOnly": true,
+    "databaseChanged": false,
+    "schemaChanged": false,
+    "migrationExecuted": false,
+    "rawIdsExported": false,
+    "personalDataExported": false,
+    "rowContentsExported": false
+  },
+  "project": {
+    "path": "C:\\projetos\\sistema-os\\data\\nio-os.db",
+    "integrityCheck": "ok",
+    "foreignKeyViolations": 0
+  },
+  "roaming": {
+    "path": "C:\\Users\\PC\\AppData\\Roaming\\Nio-OS\\data\\nio-os.db",
+    "integrityCheck": "ok",
+    "foreignKeyViolations": 0
+  },
+  "migrations": {
+    "comparable": true,
+    "onlyProject": [
+      "20260804_001_technical_parts",
+      "20260806_002_technical_part_command_log",
+      "20260806_003_service_order_technical_command_log",
+      "20260810_004_technician_profit_share"
+    ],
+    "onlyRoaming": [],
+    "checksumMismatch": [
+      {
+        "id": "20260728_000_baseline_sqlite",
+        "projectChecksum": "83c7dce7bd156207533762b7bcedb68233fc56f90a961309529a9828af01955d",
+        "roamingChecksum": "bb57a0b014ff78230f323c2df6748ac1959721474800b118ce6502d4cdef9efb"
+      }
+    ]
+  },
+  "tables": {
+    "Customer": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 1,
+      "roamingRows": 2,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 1,
+      "common": 1,
+      "commonSameRow": 1,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [
+        "887fac5b5814f4eb4e03ab7b4d10b7c275ba7a29e5913ea5dc1d6c0a21bb80b3"
+      ],
+      "commonDifferentKeyHashes": []
+    },
+    "ServiceOrder": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 5,
+      "roamingRows": 3,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 3,
+      "onlyRoaming": 1,
+      "common": 2,
+      "commonSameRow": 0,
+      "commonDifferentRow": 2,
+      "onlyProjectKeyHashes": [
+        "47da1babff3ad095d0fdbc8b541bd85a920469fb41b8ad384ea06067c7f5c9bf",
+        "6c23ee7b5983b05ea7be40770246e853b17e8e2227adb51b407446816d02c59d",
+        "9c058501089ff3eee1685d4cb2d81c91c6f4c107bb7a94cee199e5f03def62f2"
+      ],
+      "onlyRoamingKeyHashes": [
+        "b1aa4990fce8a397af8e76789cbf4003efe27983c60a18e5311edf6cda4bee8a"
+      ],
+      "commonDifferentKeyHashes": [
+        "3b65dbf80c47cff9bb156a1fcd12b56676a007aba1217d8689082ecbf906fe49",
+        "eb3a31e7d06f67c75a00146f1134453c04fb9c0a730298a2950a2aa76d78fdbb"
+      ]
+    },
+    "ServiceOrderPayment": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 6,
+      "roamingRows": 3,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 5,
+      "onlyRoaming": 2,
+      "common": 1,
+      "commonSameRow": 1,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [
+        "6387db4e5a1f5d8610af4c8f784cb4c4eb242344e3c7c0a62af43357dad4f56b",
+        "85b2e924738d97f49b67339144b2cee35102fc41a715035c4ad99be2165c17a3",
+        "7a1730dcc83a103f81927336075b9f4e5b18e1328a20ad32df65448ab7e715a7",
+        "b6b70c5089a32f9e8cb036f770d1fa6954eb243a5e16677a157afafe11460751",
+        "99ed2511d23fa8eeb9bfc2b4e6ee8166bc1aab01f681a081b8256e4ef466d81f"
+      ],
+      "onlyRoamingKeyHashes": [
+        "a01322780907ca901104283fb5362dd3868d63a4cd6245f21d66e1272b00bd36",
+        "c03544d545bb2cd15823da0884368f749a53c288dbbc6bac42bd5e789b6827b0"
+      ],
+      "commonDifferentKeyHashes": []
+    },
+    "SystemUser": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 2,
+      "roamingRows": 2,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 0,
+      "common": 2,
+      "commonSameRow": 0,
+      "commonDifferentRow": 2,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [],
+      "commonDifferentKeyHashes": [
+        "75cce12fbe03f3fccf3f149c9a3e8894fe94d1a849f9da078dbbd3102ba0b1d8",
+        "60bac4ba643fe738eaabf9f5651c372b1f0fe07e2858fc8befd067bdf2a5d223"
+      ]
+    },
+    "Product": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 1,
+      "roamingRows": 2,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 1,
+      "common": 1,
+      "commonSameRow": 0,
+      "commonDifferentRow": 1,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [
+        "c489671f287dd4bb63b6eb047bb8e189a79ed6990269884d86cb28241c6b6ec2"
+      ],
+      "commonDifferentKeyHashes": [
+        "50333353f6fbd607c487ea939784ceb916646458bf41721cc9d65bc5921360f4"
+      ]
+    },
+    "ProductSale": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 8,
+      "roamingRows": 10,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 2,
+      "common": 8,
+      "commonSameRow": 8,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [
+        "7bdbf61b2c16874d61a026496527239a6f6e51c65fc7236e5a1dd39ec7628d8a",
+        "c9ab171e793b0a02f42a817df465a3c34c35c181df72db525ce78c699c893a26"
+      ],
+      "commonDifferentKeyHashes": []
+    },
+    "ProductSaleItem": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 8,
+      "roamingRows": 10,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 2,
+      "common": 8,
+      "commonSameRow": 8,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [
+        "a72805f2815da3891d9778017f03506e3b338c39fd53b544ac792d4972ded034",
+        "e55da5e2ed0568b05b045d145a6241b7588fbc084e5baf030589747e1cc75196"
+      ],
+      "commonDifferentKeyHashes": []
+    },
+    "CompanySettings": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 1,
+      "roamingRows": 1,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 0,
+      "common": 1,
+      "commonSameRow": 0,
+      "commonDifferentRow": 1,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [],
+      "commonDifferentKeyHashes": [
+        "551684129b2cbcfac91cfa41b14521cdfb23be46f16ef1063a6f8fcb2c57eed1"
+      ]
+    },
+    "HistoricoOrdem": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 0,
+      "roamingRows": 0,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 0,
+      "common": 0,
+      "commonSameRow": 0,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [],
+      "commonDifferentKeyHashes": []
+    },
+    "OrderFinalization": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 5,
+      "roamingRows": 1,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 5,
+      "onlyRoaming": 1,
+      "common": 0,
+      "commonSameRow": 0,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [
+        "8a2caeed7ae1882110fa6529152c32374eb2081342f1e48734f9887c3abbde5f",
+        "1dccb5e8f37219f44a913887f8a4aecad3ebe3ae52009209f831c0abd8f2a9b9",
+        "e34afc580420b02b44097d2a2167d93b082ca937c84afa3d5e7ce5676fd316b2",
+        "3d8b72436cafe9a895bc53db670e513c6168711f7d5e679939176d6b0a8509a5",
+        "6ced1fcff499981a0dcdd03314133f1ebd8698358873aaf24f55209c595b2922"
+      ],
+      "onlyRoamingKeyHashes": [
+        "1c2f3c2f09a1a2137b86c3bcdedf07647087f00ecf974a07f3b9a4d766de50db"
+      ],
+      "commonDifferentKeyHashes": []
+    },
+    "OrderHistory": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 36,
+      "roamingRows": 33,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 26,
+      "onlyRoaming": 23,
+      "common": 10,
+      "commonSameRow": 10,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [
+        "4ef2ed13e2b31861b925dd4dc08e6ea2c315e5b98a30492d837747e052ebad92",
+        "392120a236200551459ebed58e5185588e42966fc348bc8cef00c8c20a0e44c9",
+        "a15efe3576f19a03707cbe2269b8a7ea560bdb8aff4f749c87ef7cdc36ebc114",
+        "12e447f4365a5d2fa9522ec961ad369ca53bfe45610c0fd223d0c5b6c84ee4e6",
+        "37f520bc063c40f12f712174e09c40a3d892749435f037b413072d934e351302",
+        "050595210d46bd015a644af86df543da7977249fa62334a5264d23a33e4d79d2",
+        "f08350683de43a2ad9a129295537edb13a5566c1d659ba26d8a42e6c8f117cba",
+        "f57971b7e0ffc9a33ee6066b2ef87b17fa48ed726f0409f081ff2e59b0220c9c",
+        "0a65a57dbb554c702ef63a121441915ce7131cff7ed91cd29874f7509281207c",
+        "28e2bdadf23e5b7169010e89aac174b35d2759a699f9ee573d0ac06b81e02758",
+        "87d66eea6effd59d33af10ade8c560deea56a3b786827d6eccabf7253e00e4b6",
+        "5165cc9d305d26d7dc680afcd381dd0b6452eddb3fa65ff8b5d679bf59d42b65",
+        "2b1147d27afbc9c386a17abaeed0f2f73a1711403f337cdf7392588982f98e3f",
+        "92f9deabdaf9e1d7156d5f6fca0b01a67a52bb2e9302cb34c4e2febd1713caf8",
+        "4ff1f35cebb41e41e03c797ec7a36292ae5c3f567c9afa1dc23d58c9bdf4dfdf",
+        "1bf3f984a009b9309f1a04702e4c8b259881fc9de225f4f01a1e4dc543d9a3f3",
+        "3097b9770fe0e7fae84d8d1990fe51aab4e579868c6944843fce4cdeb523ffd0",
+        "8979f706a7aeaae2ba9f863e78b07d4b9a57f9d806a6d3604706c00228cc56a6",
+        "1b5d7bdd3dc8257d905cc8295f680bc92920f796333d2694761c2f786621bda8",
+        "9093d12e813892a3e372def7bbeeee77e1b5576caac5652834f946ae248cb1cc",
+        "ad4995fc9d1ab0e6bfd2660b883e43970b80c61824f44c078432babc26b632de",
+        "4eec7bd86362d6ded623fbe8a9359f7c30f61f194f335f00238e209a19213dbf",
+        "e2e0eab6044aa951f744f0f1bf7a5834685b19351b161902ef481007b72f91e7",
+        "d40f3005943443b4f41730ae215ed0b03244651a7f0ce3f20d8443f6391c5b68",
+        "75ebe47ff5b8e7d0d5da4ee72ecd4a551da0968b56010f951e9b06f0e4279d46",
+        "67244a238a131397372f1764e5b128be2eebf4596d276a5687e368eddbfad454"
+      ],
+      "onlyRoamingKeyHashes": [
+        "13f84af1b99125025881ee43a085d322a8fcc91e5777d8fb334f8358b2f30873",
+        "dec9a78849d3317fcb8db64be9222ca1f29f3bf9e07f185dcc2e7f3d454113da",
+        "0f4222e7a73f65750d65508089b8091eb558187ee1c77265792198078916c750",
+        "c825c84509067989311fc93cf2ca0a51ebe513777b20a56688d3917ff6aff96b",
+        "329a052fe80f4c1951c9d74731307b0f505e93e7476abe49447ce18d13c2a2d2",
+        "fc24f7e6bebaa6510a09ac34663e68220443ce2f506816383c4087fe213bdf6f",
+        "e8ae3239939b225284c43f510286710faf7a72440a77b50bb890bd10fe8aa1a6",
+        "49b57dfb7a83f74d3ca229db6f498af5970c2aea22543b802b8e40d79802fba9",
+        "7ebaca7208fbc1fb19b85b1e14ee0f2b0a4a322de38c0dcfa8ed10ad792fbc99",
+        "ac2b78961674a3d0105b94a35b054a8b3b53f190019f86a00ef048170186a7c9",
+        "0477dc776ce84b6876226b610118986f727458704887edd77aaf1517d71964b7",
+        "ed3cd2fc76be93ba339025bb303c9f45171a7e067ac6b5fc2e892eb67ec0477e",
+        "bb7f171eec618ec62e8ac50f53a023861f0cd2034b4e84b225fbf334a1f0bc33",
+        "ea0b7254ff07ce4f9d7735513faf1a90135f542de7a0a05df76d326e3c6c8cfb",
+        "ddfcecb1fefd58aaa6032f3c8e7df6aea12dcae56bbae3bd1a018e18d9ebfd3f",
+        "3cd0a24c871913073ed40a175457c9eb32002979a502a0310b060d5d42bb4346",
+        "3c5dcbf2516f7d2825767a4d734d69eae79dc06f2cc9cde4da0edc44135c349f",
+        "4421f66046de50b343cd0e0b8f789c8863ff26c49cfe5885af7fa06ebef9d387",
+        "f7a7e3d3396cf97513c6bad3ba601487becf9c8ff576ca45bf9d95648024b7de",
+        "0e6c6b0dde1e2ccbbee4fcca60a5ec2bc64c3fd125f4999c3113b9b171bdd4f1",
+        "a01d76f180055780911b13bd518a3d6d0e5e4ff7922985d7e8971919ba9695bb",
+        "47f15e3296de9356f9592b43fe06b44fa2cbc40e7f700682e095557857929f39",
+        "3eec9be59f03302ceaae09b60b65e65e34bda89d603737094bb42884a4388b72"
+      ],
+      "commonDifferentKeyHashes": []
+    },
+    "ServiceOrderAttachment": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 1,
+      "roamingRows": 1,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 0,
+      "common": 1,
+      "commonSameRow": 1,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [],
+      "commonDifferentKeyHashes": []
+    },
+    "ServiceOrderInternalNote": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 0,
+      "roamingRows": 0,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 0,
+      "common": 0,
+      "commonSameRow": 0,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [],
+      "commonDifferentKeyHashes": []
+    },
+    "StockMovement": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 8,
+      "roamingRows": 10,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 2,
+      "common": 8,
+      "commonSameRow": 8,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [
+        "ba1431efa7e0484a3ad5a9bfc1247d12a55b23b67b915da2e477533c30297fdf",
+        "b47a4fe2d34d8a0dd59f8faa2bdb58fbdceb1ae99cb1fd58c4b47b4eb599042f"
+      ],
+      "commonDifferentKeyHashes": []
+    },
+    "User": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 0,
+      "roamingRows": 0,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 0,
+      "onlyRoaming": 0,
+      "common": 0,
+      "commonSameRow": 0,
+      "commonDifferentRow": 0,
+      "onlyProjectKeyHashes": [],
+      "onlyRoamingKeyHashes": [],
+      "commonDifferentKeyHashes": []
+    },
+    "NioSchemaMigration": {
+      "existsProject": true,
+      "existsRoaming": true,
+      "projectRows": 5,
+      "roamingRows": 1,
+      "primaryKeyColumns": [
+        "id"
+      ],
+      "onlyProject": 4,
+      "onlyRoaming": 0,
+      "common": 1,
+      "commonSameRow": 0,
+      "commonDifferentRow": 1,
+      "onlyProjectKeyHashes": [
+        "948af0890d10d7cb90cb801f0dc1962f043eecad26521fc9573f3043619a5eba",
+        "1d7dbe0e4d78533bc747a8294221582e07bb7080d7783f365f5e07dccd173b4e",
+        "04e4a9c4c94cfaa3375e53d51372c0c548e17fb52502a202be9e121201a7ff7d",
+        "10b0e984dc09ead17b468a96ac1a54f97062a3fcc01403c34945b205a4af300c"
+      ],
+      "onlyRoamingKeyHashes": [],
+      "commonDifferentKeyHashes": [
+        "a69f963d8b3fbb8a1d0515c21f0d082470f3531c576fb32169732378067b7b44"
+      ]
+    }
+  }
+}

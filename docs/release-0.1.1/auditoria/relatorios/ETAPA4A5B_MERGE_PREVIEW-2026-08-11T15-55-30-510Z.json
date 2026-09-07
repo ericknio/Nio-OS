@@ -1,0 +1,156 @@
+{
+  "ok": true,
+  "stage": "4A.5B-MERGE-PREVIEW",
+  "generatedAt": "2026-08-11T15:55:30.591Z",
+  "safety": {
+    "sourceDatabasesReadOnly": true,
+    "projectDatabaseChanged": false,
+    "roamingDatabaseChanged": false,
+    "candidateOnly": true,
+    "livePromotionPerformed": false,
+    "schemaChanged": false,
+    "migrationExecuted": false
+  },
+  "sourceHashes": {
+    "project": "ffb4dc202a3ffc67632674fd8690864ad697a6e782bd1eada261e982c6c36fec",
+    "roaming": "bbda6b82df5d74af7e121146355afd8fbc9bec59e9acf6db3c6667906600628f"
+  },
+  "candidate": {
+    "path": "C:\\projetos\\sistema-os\\data\\nio-os-merge-preview-4a5b-2026-08-11T15-55-30-510Z.db",
+    "sha256": "bb0bf660bfc74528ee5355af787a835aaff75e288d7fe01a022518203569d675",
+    "sizeBytes": 557056
+  },
+  "policy": {
+    "base": "PROJECT_CURRENT_SCHEMA",
+    "currentSystemUsers": "KEEP",
+    "currentPermissions": "KEEP",
+    "currentMigrationHistory": "KEEP",
+    "commonServiceOrders": "KEEP_CURRENT",
+    "distinctServiceOrderNumberCollision": "IMPORT_WITH_NEXT_AVAILABLE_OS_NUMBER",
+    "commonProductStock": "USE_NEWER_LEGACY_ONLY_WHEN_DIFFERENCE_IS_STOCK_AND_UPDATEDAT",
+    "legacyCommercialStockZero": "NORMALIZE_TO_NULL",
+    "companySettings": "USE_NEWER_UPDATEDAT"
+  },
+  "imported": {
+    "Customer": {
+      "imported": 1
+    },
+    "Product": {
+      "imported": 1
+    },
+    "ServiceOrder": {
+      "imported": 1,
+      "renumbered": [
+        {
+          "oldNumber": 3,
+          "newNumber": 6,
+          "differingIdentityFields": [
+            "openedAt",
+            "customerId",
+            "equipmentType",
+            "brand",
+            "model",
+            "reportedDefect"
+          ],
+          "auditHistoryCreated": true
+        }
+      ]
+    },
+    "ProductSale": {
+      "imported": 2
+    },
+    "ProductSaleItem": {
+      "imported": 2
+    },
+    "ServiceOrderPayment": {
+      "imported": 2
+    },
+    "OrderFinalization": {
+      "imported": 1
+    },
+    "OrderHistory": {
+      "imported": 23
+    },
+    "StockMovement": {
+      "imported": 2
+    }
+  },
+  "productReconciliation": {
+    "updated": 1,
+    "decisions": [
+      {
+        "action": "USE_NEWER_LEGACY_STOCK",
+        "differingColumns": [
+          "stockQuantity",
+          "updatedAt"
+        ],
+        "legacyIsNewer": true,
+        "legacyZeroNormalizedToNull": false
+      }
+    ]
+  },
+  "settingsReconciliation": {
+    "updated": 1,
+    "decisions": [
+      {
+        "action": "USE_NEWER_LEGACY_SETTINGS",
+        "legacyIsNewer": true,
+        "columnsCopied": [
+          "companyName",
+          "tradeName",
+          "cnpj",
+          "address",
+          "phone",
+          "whatsapp",
+          "email",
+          "website",
+          "instagram",
+          "facebook",
+          "logoUrl",
+          "bannerUrl",
+          "primaryColor",
+          "footerText",
+          "warrantyText",
+          "defaultWarrantyDays",
+          "city",
+          "state",
+          "zipCode",
+          "defaultOperator",
+          "productsModuleEnabled",
+          "businessDays",
+          "businessOpenTime",
+          "businessCloseTime",
+          "updatedAt"
+        ]
+      }
+    ]
+  },
+  "counts": {
+    "before": {
+      "Customer": 1,
+      "Product": 1,
+      "ServiceOrder": 5,
+      "ProductSale": 8,
+      "ProductSaleItem": 8,
+      "ServiceOrderPayment": 6,
+      "OrderFinalization": 5,
+      "OrderHistory": 36,
+      "StockMovement": 8
+    },
+    "after": {
+      "Customer": 2,
+      "Product": 2,
+      "ServiceOrder": 6,
+      "ProductSale": 10,
+      "ProductSaleItem": 10,
+      "ServiceOrderPayment": 8,
+      "OrderFinalization": 6,
+      "OrderHistory": 60,
+      "StockMovement": 10
+    }
+  },
+  "validation": {
+    "integrityCheck": "ok",
+    "foreignKeyViolations": 0
+  }
+}

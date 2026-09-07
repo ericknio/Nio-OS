@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+  />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nio-OS Desktop</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --azul: #2563eb;
+      --azul2: #1d4ed8;
+      --texto: #0f172a;
+      --muted: #64748b;
+      --borda: #e2e8f0;
+      --fundo: #0f172a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--fundo);
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--texto);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+    }
+
+    .card {
+      width: min(1080px, 100%);
+      min-height: 560px;
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      overflow: hidden;
+      border-radius: 28px;
+      background: white;
+      box-shadow: 0 30px 80px rgba(0,0,0,.22);
+    }
+
+    .left {
+      padding: 44px;
+      color: white;
+      background: linear-gradient(150deg, #172554, #2563eb);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .badge {
+      width: max-content;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .18em;
+    }
+
+    h1 {
+      margin: 24px 0 14px;
+      font-size: 44px;
+      line-height: .98;
+      letter-spacing: -1.6px;
+    }
+
+    .left p {
+      margin: 0;
+      max-width: 380px;
+      color: rgba(255,255,255,.88);
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .right {
+      padding: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: -1px;
+    }
+
+    .desc {
+      margin: 12px 0 26px;
+      max-width: 580px;
+      color: #475569;
+      font-size: 16px;
+      line-height: 1.55;
+      font-weight: 800;
+    }
+
+    .acoes { display: grid; gap: 14px; }
+
+    button {
+      width: 100%;
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      padding: 20px;
+      text-align: left;
+      cursor: pointer;
+      background: #f8fafc;
+      color: var(--texto);
+      transition: .15s ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 34px rgba(15,23,42,.12);
+    }
+
+    button:disabled { cursor: not-allowed; opacity: .7; }
+
+    .primary {
+      background: var(--azul);
+      color: white;
+      border-color: var(--azul);
+    }
+
+    .btn-title {
+      display: block;
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: -.2px;
+    }
+
+    .btn-sub {
+      display: block;
+      margin-top: 7px;
+      font-size: 13px;
+      font-weight: 800;
+      color: inherit;
+      opacity: .86;
+      line-height: 1.35;
+    }
+
+    .manual {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+
+    input {
+      min-width: 0;
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--azul);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+
+    .manual button {
+      width: auto;
+      padding: 14px 18px;
+      text-align: center;
+      font-weight: 950;
+    }
+
+    .status {
+      min-height: 60px;
+      margin-top: 22px;
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      background: #f8fafc;
+      padding: 16px 18px;
+      color: #1e293b;
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .status.erro { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    .status.sucesso { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+
+    .tools {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .linkbtn {
+      width: auto;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 2px;
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: none !important;
+    }
+
+    @media (max-width: 900px) {
+      body { padding: 16px; }
+      .card { grid-template-columns: 1fr; }
+      .left { display: none; }
+      .right { padding: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <section class="left">
+      <div class="badge">NIO-OS DESKTOP</div>
+      <h1>Sistema instalado da loja</h1>
+      <p>
+        Escolha se este computador vai guardar o banco da loja ou se vai apenas
+        conectar em outro servidor da rede.
+      </p>
+    </section>
+
+    <section class="right">
+      <h2>Como deseja abrir?</h2>
+      <p class="desc">
+        O mesmo programa funciona como servidor ou cliente.
+        Após escolher, o Nio-OS lembra este modo nas próximas aberturas.
+      </p>
+
+      <div class="acoes">
+        <button id="servidor" class="primary" type="button">
+          <span class="btn-title">🖥️ Este computador será o SERVIDOR</span>
+          <span class="btn-sub">Usa SQLite local, inicia o sistema e recebe os outros dispositivos.</span>
+        </button>
+
+        <button id="cliente" type="button">
+          <span class="btn-title">🔎 Este computador será CLIENTE</span>
+          <span class="btn-sub">Procura somente servidores Nio-OS válidos na rede local e conecta em janela própria.</span>
+        </button>
+      </div>
+
+      <div class="manual">
+        <input id="urlManual" maxlength="64" autocomplete="off" spellcheck="false" placeholder="Servidor manual: 192.168.1.6:3000" />
+        <button id="manual" type="button">Conectar</button>
+      </div>
+
+      <div id="status" class="status">Pronto para iniciar.</div>
+
+      <div class="tools">
+        <button id="redefinir" class="linkbtn" type="button">Redefinir escolha de modo</button>
+        <button id="log" class="linkbtn" type="button">Abrir log técnico</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const servidorBtn = document.getElementById("servidor");
+    const clienteBtn = document.getElementById("cliente");
+    const manualBtn = document.getElementById("manual");
+    const urlManual = document.getElementById("urlManual");
+    const logBtn = document.getElementById("log");
+    const redefinirBtn = document.getElementById("redefinir");
+
+    function setTravado(valor) {
+      servidorBtn.disabled = valor;
+      clienteBtn.disabled = valor;
+      manualBtn.disabled = valor;
+      urlManual.disabled = valor;
+      redefinirBtn.disabled = valor;
+    }
+
+    function setStatus(texto, tipo) {
+      statusEl.textContent = texto || "";
+      statusEl.className = "status" + (tipo ? " " + tipo : "");
+    }
+
+    window.nioOS.onStatus((payload) => {
+      setStatus(payload.mensagem || "Processando...", payload.tipo);
+    });
+
+    servidorBtn.addEventListener("click", async () => {
+      setTravado(true);
+      setStatus("Verificando licença e iniciando servidor...", "info");
+
+      const result = await window.nioOS.iniciarServidor();
+
+      if (result?.precisaAtivacao) {
+        window.location.href = "cloud-login.html";
+        return;
+      }
+
+      if (!result?.ok) {
+        setTravado(false);
+        setStatus(result?.message || "Erro ao iniciar servidor.", "erro");
+      }
+    });
+
+    clienteBtn.addEventListener("click", async () => {
+      setTravado(true);
+      setStatus("Procurando servidor na rede local...", "info");
+
+      const result = await window.nioOS.iniciarCliente("");
+
+      if (!result?.ok) {
+        setTravado(false);
+        setStatus(result?.message || "Nenhum servidor Nio-OS encontrado na rede.", "erro");
+      }
+    });
+
+    manualBtn.addEventListener("click", async () => {
+      setTravado(true);
+      setStatus("Conectando ao servidor informado...", "info");
+
+      const result = await window.nioOS.iniciarCliente(urlManual.value);
+
+      if (!result?.ok) {
+        setTravado(false);
+        setStatus(result?.message || "Não foi possível conectar.", "erro");
+      }
+    });
+
+    logBtn.addEventListener("click", () => {
+      window.nioOS.abrirLog();
+    });
+
+    redefinirBtn.addEventListener("click", async () => {
+      setTravado(true);
+      await window.nioOS.redefinirModo();
+      setTravado(false);
+      setStatus("Escolha redefinida. Selecione servidor ou cliente.", "sucesso");
+    });
+  </script>
+</body>
+</html>
