@@ -1,5 +1,29 @@
+/**
+ * @file reconciliarEstornos.ts
+ * @description Módulo de reconciliação financeira para Ordens de Serviço canceladas no Nio-OS.
+ * 
+ * Garante a integridade do fluxo de caixa da assistência técnica: se uma O.S. que já possuía
+ * adiantamentos ou pagamentos parciais for cancelada, gera automaticamente o lançamento
+ * negativo de devolução ao cliente, zera o saldo pago da O.S. e registra no histórico de auditoria.
+ */
+
 import { prisma } from "./prisma";
 
+/**
+ * Localiza todas as Ordens de Serviço com status CANCELADO que ainda possuam pagamentos
+ * não estornados e executa a transação atômica de devolução financeira.
+ * 
+ * Etapas da reconciliação:
+ * 1. Calcula o montante financeiro residual pago pelo cliente.
+ * 2. Cria um registro de pagamento com valor negativo (devolução ao caixa).
+ * 3. Zera o saldo `paidAmount` da Ordem de Serviço.
+ * 4. Grava um registro no histórico de auditoria (`OrderHistory`) para prestação de contas.
+ *
+ * @returns Objeto com a quantidade de ordens reconciliadas e o valor total estornado em reais
+ * @example
+ * const resultado = await reconciliarEstornosOrdensCanceladas();
+ * console.log(`Reconciliadas: ${resultado.reconciliadas}, Total: R$ ${resultado.totalEstornado}`);
+ */
 export async function reconciliarEstornosOrdensCanceladas(): Promise<{
   reconciliadas: number;
   totalEstornado: number;

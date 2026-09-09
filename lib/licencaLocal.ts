@@ -1,14 +1,34 @@
+/**
+ * @file licencaLocal.ts
+ * @description Módulo de verificação e leitura da licença de uso local do Nio-OS.
+ * 
+ * Responsável por validar se a instalação possui um arquivo de licença assinado criptograficamente
+ * (.nio), verificar se a licença não expirou em relação à data atual e extrair os dados do plano
+ * e cliente contratante sem depender de conexão contínua com a internet (Offline-First).
+ */
+
 import fs from "node:fs";
 import path from "node:path";
 
+/**
+ * Estrutura de dados representativa do estado da licença local.
+ */
 export type DadosLicencaLocal = {
+  /** Indica se a licença está válida, assinada e dentro do prazo de vigência */
   ativa: boolean;
+  /** Data limite de validade da licença no formato ISO (AAAA-MM-DD) */
   vencimento: string | null;
+  /** Nome ou razão social da assistência técnica licenciada */
   cliente: string | null;
+  /** Plano contratado (ex: PRO, ENTERPRISE) */
   plano: string | null;
+  /** Identificador único do contrato de licença */
   licenseId: string | null;
 };
 
+/**
+ * Assinatura da função externa do Desktop que valida a criptografia da licença contra o hardware.
+ */
 type VerificadorAssinatura = (
   envelope: unknown,
   userDataDir?: string,
@@ -17,15 +37,23 @@ type VerificadorAssinatura = (
 
 let verifyLicenseObject: VerificadorAssinatura | null = null;
 try {
+  // Carrega o motor criptográfico do Electron caso disponível
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const core = require("../desktop/license-core.cjs");
   if (typeof core?.verifyLicenseObject === "function") {
     verifyLicenseObject = core.verifyLicenseObject;
   }
 } catch {
-  // Ignora se o arquivo core não estiver acessível neste contexto
+  // Ignora se o arquivo core não estiver acessível neste contexto (ex: testes isolados)
 }
 
+/**
+ * Valida a autenticidade e integridade criptográfica do envelope da licença.
+ *
+ * @param envelope - Objeto JSON decodificado da licença (.nio)
+ * @param dataDir - Diretório de dados onde reside a identidade do hardware
+ * @returns true se a assinatura for válida ou se expirada (mantendo integridade); false se for forjada
+ */
 function envelopeValido(envelope: unknown, dataDir: string): boolean {
   if (!verifyLicenseObject) return true;
   try {
@@ -36,6 +64,16 @@ function envelopeValido(envelope: unknown, dataDir: string): boolean {
   }
 }
 
+/**
+ * Lê e avalia a licença local do Nio-OS.
+ * 
+ * Ordem de verificação:
+ * 1. Arquivo de licença físico oficial: `license/license.nio` na pasta de dados do sistema.
+ * 2. Variáveis de ambiente configuradas no servidor local (NIO_OS_LICENSE_*).
+ * 3. Arquivo `.nio` presente na raiz da aplicação.
+ *
+ * @returns Objeto com o status de ativação, data de vencimento e identificação do cliente
+ */
 export function obterLicencaLocal(): DadosLicencaLocal {
   const hoje = new Date().toISOString().slice(0, 10);
   const dataDir = process.env.NIO_OS_DATA_DIR || process.cwd();
@@ -45,6 +83,7 @@ export function obterLicencaLocal(): DadosLicencaLocal {
     path.join(process.cwd(), "license.nio"),
   ];
 
+  // 1. Verificação nos caminhos prioritários da pasta de dados
   for (const filePath of candidatePaths) {
     if (fs.existsSync(filePath)) {
       try {
@@ -97,9 +136,10 @@ export function obterLicencaLocal(): DadosLicencaLocal {
       }
     }
   } catch {
-    // Ignora
+    // Ignora erros de leitura de diretório
   }
 
+  // Retorno padrão quando não há nenhuma licença válida detectada
   return {
     ativa: false,
     vencimento: null,
@@ -108,4 +148,3 @@ export function obterLicencaLocal(): DadosLicencaLocal {
     licenseId: null,
   };
 }
-

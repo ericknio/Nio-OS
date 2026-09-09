@@ -1,3 +1,15 @@
+/**
+ * @file permissoesSistema.ts
+ * @description Definição da matriz de permissões de acesso (RBAC - Role-Based Access Control)
+ * para os usuários do sistema local Nio-OS.
+ * 
+ * Controla granularmente o que cada funcionário (Administrador, Atendente, Técnico, Financeiro)
+ * pode visualizar ou executar nas telas e menus do sistema.
+ */
+
+/**
+ * Lista exaustiva de todas as permissões atômicas disponíveis no sistema.
+ */
 export const TODAS_PERMISSOES = [
   "dashboard.ver",
 
@@ -43,8 +55,14 @@ export const TODAS_PERMISSOES = [
   "usuarios.gerenciar",
 ] as const;
 
+/**
+ * Tipo literal que representa qualquer permissão válida no sistema.
+ */
 export type PermissaoSistema = (typeof TODAS_PERMISSOES)[number];
 
+/**
+ * Permissões básicas para operações com produtos e frente de caixa.
+ */
 const PERMISSOES_PRODUTOS_OPERACAO: PermissaoSistema[] = [
   "produtos.ver",
   "estoque.ver",
@@ -52,6 +70,9 @@ const PERMISSOES_PRODUTOS_OPERACAO: PermissaoSistema[] = [
   "vendas.registrar",
 ];
 
+/**
+ * Permissões padrão atribuídas a funcionários da recepção/atendimento.
+ */
 const PERMISSOES_OS_ATENDIMENTO: PermissaoSistema[] = [
   "clientes.ver",
   "clientes.criar",
@@ -66,6 +87,9 @@ const PERMISSOES_OS_ATENDIMENTO: PermissaoSistema[] = [
   "garantias.ver",
 ];
 
+/**
+ * Permissões padrão atribuídas a técnicos de bancada.
+ */
 const PERMISSOES_OS_TECNICO: PermissaoSistema[] = [
   "clientes.ver",
   "ordens.ver",
@@ -77,6 +101,9 @@ const PERMISSOES_OS_TECNICO: PermissaoSistema[] = [
   "garantias.ver",
 ];
 
+/**
+ * Permissões padrão atribuídas ao setor financeiro/gerencial.
+ */
 const PERMISSOES_FINANCEIRO: PermissaoSistema[] = [
   "clientes.ver",
   "ordens.ver",
@@ -90,6 +117,10 @@ const PERMISSOES_FINANCEIRO: PermissaoSistema[] = [
   "garantias.ver",
 ];
 
+/**
+ * Agrupamento visual de permissões com títulos e rótulos para exibição na tela
+ * de cadastro e edição de usuários do sistema.
+ */
 export const GRUPOS_PERMISSOES = [
   {
     titulo: "Painel inicial",
@@ -265,10 +296,27 @@ export const GRUPOS_PERMISSOES = [
   },
 ] as const;
 
+/**
+ * Remove duplicatas de um vetor de permissões.
+ *
+ * @param permissoes - Lista de permissões possivelmente com duplicatas
+ * @returns Lista contendo apenas itens únicos
+ */
 function unicas(permissoes: PermissaoSistema[]) {
   return Array.from(new Set(permissoes));
 }
 
+/**
+ * Retorna o conjunto recomendado de permissões com base no cargo do usuário (Role).
+ * 
+ * - ADMIN: Acesso irrestrito a 100% dos recursos do sistema.
+ * - ATENDENTE: Gestão de clientes, abertura de OS, impressão e recebimento de pagamentos.
+ * - TECNICO: Visualização de OS, mudança de status para pronto, anexos e observações técnicas.
+ * - FINANCEIRO: Fluxo de caixa, relatórios financeiros de margem e cancelamento de vendas.
+ *
+ * @param role - Perfil do usuário ("ADMIN", "ATENDENTE", "TECNICO", "FINANCEIRO")
+ * @returns Lista de permissões atribuídas por padrão
+ */
 export function permissoesPadraoPorPerfil(role: string) {
   const perfil = String(role || "").toUpperCase();
 
@@ -303,6 +351,14 @@ export function permissoesPadraoPorPerfil(role: string) {
   return unicas(["dashboard.ver", ...PERMISSOES_PRODUTOS_OPERACAO]);
 }
 
+/**
+ * Sanitiza e normaliza uma lista de permissões recebida do banco de dados ou formulário.
+ * Garante que administradores sempre tenham acesso total e que permissões inexistentes sejam descartadas.
+ *
+ * @param valor - Vetor de permissões brutas recebidas
+ * @param role - Cargo do usuário
+ * @returns Vetor de permissões válidas e únicas
+ */
 export function normalizarPermissoes(valor: unknown, role: string) {
   const perfil = String(role || "").toUpperCase();
 

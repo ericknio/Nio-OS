@@ -1,3 +1,12 @@
+/**
+ * @file uiConstantes.ts
+ * @description Dicionários de termos, badges de status e classes visuais compartilhadas
+ * na interface do usuário do Nio-OS (Next.js + TailwindCSS).
+ */
+
+/**
+ * Mapeamento dos códigos internos de status da Ordem de Serviço para rótulos legíveis em português.
+ */
 export const nomesStatus: Record<string, string> = {
   RECEBIDO: "Recebido",
   EM_ANALISE: "Em análise",
@@ -11,6 +20,9 @@ export const nomesStatus: Record<string, string> = {
   SEM_CONSERTO: "Sem conserto",
 };
 
+/**
+ * Mapeamento das formas de pagamento aceitas pelo sistema para exibição visual.
+ */
 export const nomesPagamento: Record<string, string> = {
   DINHEIRO: "Dinheiro",
   PIX: "PIX",
@@ -22,6 +34,9 @@ export const nomesPagamento: Record<string, string> = {
   ISENTO: "Isento",
 };
 
+/**
+ * Mapeamento dos cargos/perfis de usuários do sistema.
+ */
 export const nomesCargo: Record<string, string> = {
   ADMIN: "Administrador",
   ATENDENTE: "Atendente",
@@ -29,12 +44,22 @@ export const nomesCargo: Record<string, string> = {
   FINANCEIRO: "Financeiro",
 };
 
+/**
+ * Mapeamento da situação cadastral de operadores do sistema.
+ */
 export const nomesStatusUsuario: Record<string, string> = {
   ATIVO: "Ativo",
   INATIVO: "Inativo",
   BLOQUEADO: "Bloqueado",
 };
 
+/**
+ * Retorna as classes Tailwind para estilização de badges coloridos de acordo com o status da O.S.
+ * Suporta modo claro e modo escuro (Dark Mode).
+ *
+ * @param status - Código do status da O.S. (ex: "ENTREGUE", "PRONTO", "CANCELADO")
+ * @returns Classes CSS do Tailwind (cores de fundo, texto e anel)
+ */
 export function classeStatus(status?: string | null): string {
   const s = String(status || "").toUpperCase();
 
@@ -66,6 +91,12 @@ export function classeStatus(status?: string | null): string {
   return "bg-slate-500/10 text-slate-700 dark:text-slate-300 ring-slate-500/30";
 }
 
+/**
+ * Retorna as classes Tailwind para estilização de badges de status de usuários do sistema.
+ *
+ * @param status - Situação do usuário ("ATIVO", "BLOQUEADO", "INATIVO")
+ * @returns Classes CSS do Tailwind
+ */
 export function classeStatusUsuario(status?: string | null): string {
   const s = String(status || "").toUpperCase();
 
@@ -80,8 +111,14 @@ export function classeStatusUsuario(status?: string | null): string {
   return "bg-amber-500/10 text-amber-700 dark:text-amber-300 ring-amber-500/30";
 }
 
+/**
+ * Estilização padrão e unificada de inputs textuais para formulários do sistema.
+ */
 export const inputClass =
   "w-full rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 px-4 py-2.5 text-xs font-semibold text-slate-900 dark:text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-slate-100 dark:disabled:bg-slate-800/50 disabled:text-slate-400 dark:disabled:text-slate-500";
 
+/**
+ * Estilização padrão de caixas de texto com múltiplas linhas (textarea).
+ */
 export const textareaClass =
   "w-full resize-none rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 px-4 py-2.5 text-xs font-semibold text-slate-900 dark:text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-slate-100 dark:disabled:bg-slate-800/50 disabled:text-slate-400 dark:disabled:text-slate-500";
