@@ -1,3 +1,14 @@
+/**
+ * @file app/ordens/[id]/cancelar/page.tsx
+ * @description Tela de Cancelamento Seguro de Ordem de Serviço (Frontend).
+ * 
+ * Funcionalidades:
+ * - Exige motivo detalhado de cancelamento (mínimo 10 caracteres) para auditoria.
+ * - Liberação imediata de peças técnicas reservadas de volta ao estoque disponível.
+ * - Opção explícita de estorno e retorno físico de peças já consumidas (`returnConsumedParts`).
+ * - Proteção por chave de idempotência para evitar duplicidade de estornos no banco de dados.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -82,6 +93,12 @@ function CampoResumo({
   );
 }
 
+/**
+ * Componente principal da Tela de Cancelamento de O.S.
+ * 
+ * Gerencia as confirmações de cancelamento, validação de justificativa,
+ * opção de devolução de peças ao estoque físico e chamada à API.
+ */
 export default function CancelarOrdemPage() {
   const params = useParams();
   const router = useRouter();

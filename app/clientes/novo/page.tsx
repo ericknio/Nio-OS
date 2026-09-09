@@ -1,3 +1,15 @@
+/**
+ * @file app/clientes/novo/page.tsx
+ * @description Tela de Cadastro de Novo Cliente (Frontend).
+ * 
+ * Funcionalidades:
+ * - Formulário completo para registro de novos clientes.
+ * - Coleta dados pessoais (Nome, CPF) e contatos múltiplos (WhatsApp, telefone, e-mail).
+ * - Coleta endereço completo estruturado para fins de entrega ou localização.
+ * - Validação prévia de ao menos uma forma de contato antes do envio via POST `/api/clientes`.
+ * - Pré-visualização em tempo real das informações preenchidas em cartões de resumo.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -150,6 +162,12 @@ function CampoResumo({
   );
 }
 
+/**
+ * Componente principal da Tela de Cadastro de Novo Cliente.
+ * 
+ * Gerencia o estado dos campos cadastrais, validações de contato mínimo
+ * e envio dos dados para o backend via POST.
+ */
 export default function NovoClientePage() {
   const router = useRouter();
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();

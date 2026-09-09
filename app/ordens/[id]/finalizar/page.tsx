@@ -1,3 +1,15 @@
+/**
+ * @file app/ordens/[id]/finalizar/page.tsx
+ * @description Tela de Encerramento e Entrega de Equipamento da O.S. (Frontend).
+ * 
+ * Funcionalidades:
+ * - Registro do laudo técnico de reparo executado (`repairDescription`).
+ * - Definição do prazo legal de garantia do serviço (padrão de 90 dias - CDC).
+ * - Identificação de quem realizou a entrega ao cliente e data/hora do fechamento.
+ * - Conferência final de saldo restante a pagar e método de liquidação.
+ * - Transição de status para ENTREGUE com emissão de recibo e termo de garantia.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -199,6 +211,12 @@ function CampoTextarea({
   );
 }
 
+/**
+ * Componente principal da Tela de Finalização da O.S.
+ * 
+ * Gerencia o formulário de entrega, laudo final de reparo, cálculo de saldo
+ * residual e submissão via POST para `/api/ordens/${id}/finalizar`.
+ */
 export default function FinalizarOrdemPage() {
   const params = useParams();
   const router = useRouter();

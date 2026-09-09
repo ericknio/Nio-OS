@@ -1,3 +1,15 @@
+/**
+ * @file app/clientes/page.tsx
+ * @description Tela de Gestão de Clientes da Assistência Técnica (Frontend).
+ * 
+ * Funcionalidades:
+ * - Lista todos os clientes cadastrados via GET `/api/clientes`.
+ * - Busca inteligente por nome, CPF, WhatsApp, telefone e e-mail.
+ * - Filtros rápidos de contato (Todos, Com WhatsApp, Com E-mail, Sem Contato).
+ * - Indicadores numéricos no topo da tela.
+ * - Ações de cadastro, visualização do histórico de O.S., edição cadastral e exclusão.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -108,6 +120,12 @@ function CampoResumo({
   );
 }
 
+/**
+ * Componente da Tela de Clientes.
+ * 
+ * Controla o estado de busca, filtragem por tipo de contato, exibição da lista
+ * de clientes e diálogo de exclusão segura com tratamento de dependências de O.S.
+ */
 export default function ClientesPage() {
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();
 

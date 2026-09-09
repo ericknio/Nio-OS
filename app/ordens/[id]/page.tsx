@@ -1,3 +1,18 @@
+/**
+ * @file app/ordens/[id]/page.tsx
+ * @description Tela de Detalhes e Gestão Operacional da Ordem de Serviço (Frontend).
+ * 
+ * Funcionalidades:
+ * - Painel central de atendimento da O.S.: informações completas do cliente e do aparelho.
+ * - Ciclo de vida e status rápido (`StatusRapidoOS`): RECEBIDO, EM_ANALISE, APROVADO, EM_MANUTENCAO, PRONTO, ENTREGUE, CANCELADO.
+ * - Gestão de Peças Técnicas (`GerenciarPecasTecnicasOS` / `PecasTecnicasOS`): consumo e reserva em tempo real.
+ * - Registro e visualização de anexos fotográficos e documentos do aparelho (`AnexosOS`).
+ * - Notas técnicas preliminares e observações internas sigilosas (`ObservacoesInternasOS`).
+ * - Ações financeiras: registro de pagamento, visualização de comissão técnica e emissão de recibo/termo.
+ * - Comunicação facilitada via WhatsApp com mensagens pré-formatadas (`WhatsAppOS`).
+ * - Impressão de ordem, etiquetas de identificação térmica e termo de garantia.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -251,6 +266,12 @@ function BotaoAcao({
   );
 }
 
+/**
+ * Componente principal da Tela de Detalhes da Ordem de Serviço.
+ * 
+ * Orquestra o carregamento assíncrono dos dados completos da O.S.,
+ * subcomponentes de fotos, peças, notas técnicas, histórico e ações de fechamento.
+ */
 export default function DetalhesOrdemPage() {
   const params = useParams();
   const router = useRouter();

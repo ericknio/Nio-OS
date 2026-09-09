@@ -1,3 +1,14 @@
+/**
+ * @file app/ordens/[id]/PecasTecnicasOS.tsx
+ * @description Componente de Visualização e Estorno de Peças Técnicas da O.S.
+ * 
+ * Funcionalidades:
+ * - Exibe a lista de peças associadas à O.S. com badges de estado (Reservada, Consumida, Liberada, Estornada).
+ * - Fornece fluxo seguro de estorno de peças consumidas (ex: peça com defeito trocada na bancada).
+ * - Suporta devolução física ao estoque com recalculo de custos e registro na trilha de auditoria.
+ * - Proteção por bloqueio de pagamento e trava contra duplo envio via chave de idempotência.
+ */
+
 "use client";
 
 import { useRef, useState } from "react";
@@ -70,6 +81,16 @@ function classeEstado(estado: PecaTecnicaOS["state"]) {
   return "bg-blue-50 text-blue-700 dark:text-blue-400 dark:bg-blue-900/30 dark:text-blue-400 ring-blue-200 dark:ring-blue-500/30";
 }
 
+/**
+ * Componente que exibe a tabela de peças vinculadas e modal de estorno técnico.
+ * 
+ * @param props.ordemId - Identificador da ordem de serviço
+ * @param props.itens - Lista de peças alocadas na O.S.
+ * @param props.podeEstornar - Se o usuário logado tem permissão para estornar
+ * @param props.bloqueadoPorPagamento - Flag de trava se já houver pagamento
+ * @param props.finalizada - Se a ordem já foi encerrada
+ * @param props.aoAlterar - Callback para atualizar a tela pai após o estorno
+ */
 export default function PecasTecnicasOS({
   ordemId,
   itens,

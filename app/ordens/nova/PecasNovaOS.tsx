@@ -1,3 +1,14 @@
+/**
+ * @file app/ordens/nova/PecasNovaOS.tsx
+ * @description Componente de Seleção de Peças Técnicas na Abertura de Nova O.S.
+ * 
+ * Funcionalidades:
+ * - Consulta assíncrona ao catálogo de peças ativas via `/api/ordens/nova/pecas-tecnicas`.
+ * - Checagem de disponibilidade em tempo real (saldo disponível > 0 ou estoque ilimitado).
+ * - Adição e ajuste de quantidade de peças no carrinho prévio da O.S.
+ * - Disparo de callbacks para recálculo automático do custo de peças na tela de abertura.
+ */
+
 "use client";
 
 import { useState } from "react";
@@ -38,6 +49,14 @@ function estoque(peca: PecaCatalogo | PecaNovaOSSelecionada) {
   return `${peca.quantityAvailable ?? 0} disponível(is)`;
 }
 
+/**
+ * Componente de seleção e carrinho de peças técnicas na abertura de O.S.
+ * 
+ * @param props.itens - Lista atual de peças adicionadas à ordem em criação
+ * @param props.onChange - Handler para atualizar o array de itens selecionados
+ * @param props.onSelecionarPeca - Callback opcional para disparar eventos adicionais
+ * @param props.disabled - Se os controles devem permanecer desabilitados
+ */
 export default function PecasNovaOS({
   itens,
   onChange,

@@ -1,3 +1,16 @@
+/**
+ * @file app/estoque-tecnico/page.tsx
+ * @description Tela de Gestão de Estoque Técnico e Peças de Reparo (Frontend).
+ * 
+ * Funcionalidades:
+ * - Cadastro e catálogo de peças técnicas, componentes e insumos de bancada.
+ * - Controle triplo de saldo: Físico (em mãos), Reservado (em O.S. abertas) e Disponível.
+ * - Suporte a componentes de estoque controlado vs. insumos de estoque ilimitado (ex: solda, pasta térmica).
+ * - Histórico completo de auditoria e movimentações por peça (entradas, saídas, consumos e estornos).
+ * - Ajustes manuais de estoque com exigência de motivo auditável e controle de idempotência.
+ * - Filtros rápidos por status de alerta (estoque baixo, zerado, inativo).
+ */
+
 "use client";
 
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
@@ -238,6 +251,13 @@ function Field({
   );
 }
 
+/**
+ * Componente principal da Tela de Estoque Técnico.
+ * 
+ * Gerencia a listagem paginada de componentes técnicos, busca facetada por
+ * marca/modelo/categoria, operações de entrada/saída com chave de idempotência
+ * e visualização da trilha de auditoria e movimentos em tempo real.
+ */
 export default function EstoqueTecnicoPage() {
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();
 

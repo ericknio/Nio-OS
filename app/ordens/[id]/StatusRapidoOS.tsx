@@ -1,3 +1,13 @@
+/**
+ * @file app/ordens/[id]/StatusRapidoOS.tsx
+ * @description Componente de Troca Rápida de Status da Ordem de Serviço.
+ * 
+ * Funcionalidades:
+ * - Permite avançar ou retroceder os estágios operacionais da O.S. (Recebido, Em análise, Aguardando peça, Em reparo, Pronto).
+ * - Ao marcar como "PRONTO", exige a confirmação do técnico responsável e dispara a conversão das peças de RESERVADAS para CONSUMIDAS.
+ * - Utiliza chaves de idempotência para evitar duplicidade em disparos de rede.
+ */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -35,6 +45,12 @@ function mensagemEhSucesso(mensagem: string) {
   return mensagem.toLowerCase().includes("sucesso");
 }
 
+/**
+ * Componente que renderiza a barra de status rápida e modal de confirmação de conclusão técnica.
+ * 
+ * @param props.ordemId - Identificador da ordem de serviço
+ * @param props.statusAtual - Status atual registrado no banco
+ */
 export default function StatusRapidoOS({
   ordemId,
   statusAtual,

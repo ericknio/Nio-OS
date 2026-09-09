@@ -1,3 +1,17 @@
+/**
+ * @file app/ordens/nova/page.tsx
+ * @description Tela de Abertura de Nova Ordem de Serviço (Frontend).
+ * 
+ * Funcionalidades:
+ * - Seleção de cliente cadastrado ou modal de criação rápida de cliente.
+ * - Dados do aparelho: Tipo de equipamento, marca, modelo, número de série, IMEI, senha e acessórios entregues.
+ * - Registro do defeito relatado pelo cliente e notas técnicas preliminares.
+ * - Seleção de peças técnicas com reserva imediata no estoque (`PecasNovaOS`).
+ * - Cálculo automático do valor total: (Peças + Mão de obra - Desconto).
+ * - Seleção do técnico responsável e pré-visualização de comissão.
+ * - Envio dos dados via POST para `/api/ordens`.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -257,6 +271,12 @@ function CampoResumo({
   );
 }
 
+/**
+ * Componente da Tela de Abertura de Nova Ordem de Serviço.
+ * 
+ * Gerencia os dados do formulário de entrada, validação de campos obrigatórios,
+ * seleção e alocação de peças técnicas, e envio para a API de criação.
+ */
 export default function NovaOrdemPage() {
   const router = useRouter();
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();

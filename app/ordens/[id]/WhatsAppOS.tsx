@@ -1,3 +1,14 @@
+/**
+ * @file app/ordens/[id]/WhatsAppOS.tsx
+ * @description Componente de Envio Rápido de Mensagens via WhatsApp para o Cliente.
+ * 
+ * Funcionalidades:
+ * - Sanitização automática do telefone do cliente para o padrão internacional DDI 55 (Brasil).
+ * - Modelos de mensagens dinâmicos: Boas-vindas/Inicial, Orçamento Pronto, Aguardando Peça, Aparelho Pronto e Cobrança.
+ * - Pré-visualização e edição livre do texto antes do envio.
+ * - Abertura direta do WhatsApp Web ou App via deep link `https://wa.me/`.
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -112,6 +123,11 @@ Aqui é da assistência técnica. Estou entrando em contato sobre sua Ordem de S
 Equipamento: ${item}.`;
 }
 
+/**
+ * Componente que renderiza a caixa de disparo rápido de WhatsApp da O.S.
+ * 
+ * @param props - Dados do cliente, número da O.S., equipamento e valor total
+ */
 export default function WhatsAppOS({
   clienteNome,
   whatsapp,

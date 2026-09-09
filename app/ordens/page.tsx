@@ -1,3 +1,15 @@
+/**
+ * @file app/ordens/page.tsx
+ * @description Tela de Listagem e Gestão de Ordens de Serviço (Frontend).
+ * 
+ * Funcionalidades:
+ * - Consulta as ordens via endpoint GET `/api/ordens` com filtros e busca textual em tempo real.
+ * - Filtros rápidos por status (Recebido, Em análise, Em reparo, Pronto, Entregue, Cancelado).
+ * - Filtro por tipo de equipamento (Notebook, Computador, Celular, Console, etc.).
+ * - Destaque visual para ordens atrasadas com prazo de entrega vencido.
+ * - Ações contextuais de visualização, edição, impressão e mudança de status.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -88,6 +100,12 @@ function statusEditavel(ordem: Ordem) {
   return !["ENTREGUE", "CANCELADO"].includes(ordem.status);
 }
 
+/**
+ * Componente principal da Tela de Ordens de Serviço.
+ * 
+ * Gerencia a busca assíncrona, filtros de status e equipamento, cálculo de prazos
+ * e renderização da grade de ordens com ações de edição e impressão de comprovantes.
+ */
 export default function OrdensPage() {
   const router = useRouter();
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();

@@ -1,3 +1,15 @@
+/**
+ * @file app/clientes/[id]/page.tsx
+ * @description Tela de Detalhes, Histórico de O.S. e Edição do Cliente (Frontend).
+ * 
+ * Funcionalidades:
+ * - Painel 360° do cliente: dados cadastrais, endereço e observações internas de atendimento.
+ * - Indicadores analíticos do cliente (total de ordens, em aberto, finalizadas e canceladas).
+ * - Histórico completo de Ordens de Serviço contratadas pelo cliente ao longo do tempo.
+ * - Edição de dados cadastrais com validação e salvamento via PUT `/api/clientes/${id}`.
+ * - Ação de exclusão segura com tratamento de dependências de O.S. vinculadas.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -253,6 +265,12 @@ function CardIndicador({
   );
 }
 
+/**
+ * Componente principal da Tela de Detalhes e Edição do Cliente.
+ * 
+ * Gerencia a consulta do perfil do cliente, cálculo das métricas de histórico de O.S.,
+ * formulário de alteração de cadastro e ações de exclusão segura.
+ */
 export default function ClienteDetalhePage() {
   const params = useParams();
   const router = useRouter();

@@ -1,3 +1,15 @@
+/**
+ * @file app/ordens/[id]/editar/page.tsx
+ * @description Tela de Edição e Retificação de Ordem de Serviço (Frontend).
+ * 
+ * Funcionalidades:
+ * - Edição dos dados do cliente vinculado e detalhes do equipamento (marca, modelo, serial, IMEI, senha, acessórios).
+ * - Atualização do laudo técnico e defeito relatado.
+ * - Ajuste de valores: mão de obra, custos e desconto com recálculo do total da O.S.
+ * - Atribuição de técnico responsável e recálculo da porcentagem de comissão.
+ * - Validações: impede alteração caso a ordem já tenha sido entregue ou cancelada.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -293,6 +305,12 @@ function CampoResumo({
   );
 }
 
+/**
+ * Componente principal da Tela de Edição de Ordem de Serviço.
+ * 
+ * Gerencia o formulário reativo de edição com preenchimento prévio dos dados,
+ * cálculo de comissões técnicas e submissão via PUT/PATCH para a API.
+ */
 export default function EditarOrdemPage() {
   const params = useParams();
   const router = useRouter();

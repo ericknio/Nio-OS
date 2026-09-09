@@ -1,3 +1,14 @@
+/**
+ * @file app/ordens/[id]/pagamento/page.tsx
+ * @description Tela de Recebimento e Registro de Pagamento da O.S. (Frontend).
+ * 
+ * Funcionalidades:
+ * - Registro de pagamentos parciais (sinais de entrada para compra de peças) ou liquidação total (100%).
+ * - Métodos suportados: PIX, Dinheiro, Cartão e Parcelado.
+ * - Recálculo em tempo real do percentual pago, valor já quitado e saldo restante.
+ * - Exibição da tabela histórica com todos os lançamentos financeiros vinculados à ordem.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -91,6 +102,12 @@ function CardResumo({
   );
 }
 
+/**
+ * Componente principal da Tela de Pagamento da O.S.
+ * 
+ * Gerencia o cálculo de parcelas/sinais, seleção de método financeiro
+ * e envio do lançamento para a API de pagamentos da ordem.
+ */
 export default function PagamentoOrdemPage() {
   const params = useParams();
   const router = useRouter();

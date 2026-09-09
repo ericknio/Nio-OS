@@ -1,3 +1,15 @@
+/**
+ * @file app/ordens/[id]/GerenciarPecasTecnicasOS.tsx
+ * @description Componente de Alocação e Gestão de Peças Técnicas da O.S.
+ * 
+ * Funcionalidades:
+ * - Busca de peças ativas no estoque com verificação de saldo físico e disponível em tempo real.
+ * - Adição de peças com reserva imediata no estoque e recálculo do total da O.S.
+ * - Edição de quantidade com checagem de saldo e motivo obrigatório em caso de redução/aumento.
+ * - Remoção/Liberação de peças devolvendo o saldo reservado ao estoque.
+ * - Proteção com chave de idempotência e bloqueio caso a ordem já tenha pagamento registrado ou esteja finalizada.
+ */
+
 "use client";
 
 import { useRef, useState } from "react";
@@ -73,6 +85,17 @@ function saldo(item: PecaBusca) {
     : `${item.quantityAvailable ?? 0} disponível(is)`;
 }
 
+/**
+ * Componente modal e inline para manipulação das peças técnicas de uma O.S.
+ * 
+ * @param props.ordemId - Identificador da ordem de serviço
+ * @param props.itens - Lista de itens/peças atualmente vinculados à ordem
+ * @param props.bloqueadoPorPagamento - Flag indicando se pagamentos já foram capturados (bloqueando alterações)
+ * @param props.finalizada - Flag se a O.S. já foi entregue/cancelada
+ * @param props.statusOrdem - Status atual da ordem (ex: RECEBIDO, EM_MANUTENCAO)
+ * @param props.valorPecasAtual - Subtotal corrente das peças técnicas
+ * @param props.aoAlterar - Callback disparado após sucesso para atualizar a O.S. pai
+ */
 export default function GerenciarPecasTecnicasOS({
   ordemId,
   itens,

@@ -1,3 +1,14 @@
+/**
+ * @file app/ordens/atrasadas/page.tsx
+ * @description Tela de Gestão e Monitoramento de Ordens de Serviço Atrasadas (Frontend).
+ * 
+ * Funcionalidades:
+ * - Filtra ordens em aberto cujo prazo estimado de entrega (`expectedDeliveryDate`) já expirou.
+ * - Cálculo dinâmico dos dias de atraso com destaque de criticidade em cores (amarelo/laranja/vermelho).
+ * - Indicadores consolidados: total de O.S. atrasadas, maior tempo de espera e montante financeiro represado.
+ * - Ações diretas de cobrança, contato via WhatsApp e abertura imediata do atendimento.
+ */
+
 "use client";
 
 // app/ordens/atrasadas/page.tsx
@@ -191,7 +202,12 @@ function CampoResumo({
   );
 }
 
-
+/**
+ * Componente principal da Tela de Ordens Atrasadas.
+ * 
+ * Gerencia a requisição para `/api/ordens/atrasadas`, exibição dos cartões de resumo
+ * e grid operacional com cálculo de dias de atraso e links para atendimento.
+ */
 export default function OrdensAtrasadasPage() {
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();
 

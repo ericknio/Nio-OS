@@ -1,3 +1,12 @@
+/**
+ * @file app/ordens/[id]/ObservacoesInternasOS.tsx
+ * @description Componente de Notas e Observações Internas da O.S. (Sigilosas).
+ * 
+ * Permite que técnicos e atendentes troquem recados e apontamentos internos que
+ * NÃO aparecem na via impressa do cliente nem no comprovante em PDF.
+ * Requer permissão explícita `ordens.observacoes`.
+ */
+
 "use client";
 
 // app/ordens/[id]/ObservacoesInternasOS.tsx
@@ -41,6 +50,11 @@ function CardMensagem({ mensagem }: { mensagem: string }) {
   );
 }
 
+/**
+ * Componente que gerencia o feed e criação de notas internas da O.S.
+ * 
+ * @param props.ordemId - Identificador da ordem de serviço
+ */
 export default function ObservacoesInternasOS({
   ordemId,
 }: ObservacoesInternasOSProps) {

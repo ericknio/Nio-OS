@@ -1,3 +1,11 @@
+/**
+ * @file app/ordens/[id]/AnexosOS.tsx
+ * @description Componente de Gestão de Anexos e Fotos da Ordem de Serviço.
+ * 
+ * Permite aos técnicos anexar fotos do estado do aparelho na entrada (riscos, trincados),
+ * fotos da placa durante o reparo e laudos em PDF, com validação de formato e tamanho máximo (5MB).
+ */
+
 "use client";
 
 import Image from "next/image";
@@ -56,6 +64,11 @@ function ehImagem(anexo: Anexo) {
   return Boolean(anexo.mimeType?.startsWith("image/"));
 }
 
+/**
+ * Componente que renderiza a galeria de fotos/documentos da O.S.
+ * 
+ * @param props.ordemId - ID da ordem de serviço pai
+ */
 export default function AnexosOS({ ordemId }: AnexosOSProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 

@@ -1,3 +1,11 @@
+/**
+ * @file app/ordens/[id]/HistoricoOS.tsx
+ * @description Componente de Trilha de Auditoria e Linha do Tempo da O.S.
+ * 
+ * Exibe a cronologia de eventos ocorridos na ordem (abertura, alterações de status,
+ * peças adicionadas, pagamentos registrados e impressões de comprovantes).
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -31,6 +39,11 @@ function formatarDataHora(data: string) {
   return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
 }
 
+/**
+ * Componente que renderiza a lista de eventos cronológicos da O.S.
+ * 
+ * @param props.ordemId - ID da ordem de serviço
+ */
 export default function HistoricoOS({ ordemId }: HistoricoOSProps) {
   const [historico, setHistorico] = useState<HistoricoItem[]>([]);
   const [carregando, setCarregando] = useState(true);
