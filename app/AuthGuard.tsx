@@ -1,3 +1,15 @@
+/**
+ * @file app/AuthGuard.tsx
+ * @description Guardião de Autenticação e Autorização no Cliente (React/Next.js).
+ * 
+ * Intercepta a navegação no frontend e executa as seguintes validações:
+ * 1. Primeiro Acesso: Se não houver administrador cadastrado, redireciona para `/primeiro-acesso`.
+ * 2. Autenticação: Valida sessão via `/api/auth/me`. Se deslogado, redireciona para `/login`.
+ * 3. Status da Conta: Bloqueia operadores inativos ou suspensos.
+ * 4. Permissões de Rota (RBAC): Se o usuário não tiver permissão para a tela acessada,
+ *    exibe tela amigável de acesso negado com botão para o primeiro módulo liberado.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -340,6 +352,14 @@ function TelaSemPermissao({
   );
 }
 
+/**
+ * Componente Guardião de Autenticação.
+ * 
+ * Envolve a aplicação para validar login, primeiro acesso e autorização por rota.
+ *
+ * @param props.children - Conteúdo da página
+ * @returns Tela verificando, tela de acesso negado ou o próprio conteúdo liberado
+ */
 export default function AuthGuard({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();

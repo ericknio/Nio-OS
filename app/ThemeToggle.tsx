@@ -1,8 +1,22 @@
+/**
+ * @file app/ThemeToggle.tsx
+ * @description Botão de alternância de tema (Claro / Escuro / Sistema).
+ * 
+ * Utiliza a biblioteca `next-themes` e trata a montagem segura no lado do cliente
+ * (`mounted`) para evitar erros de hidratação (Hydration Mismatch) entre SSR e cliente.
+ */
+
 "use client";
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
+/**
+ * Componente ThemeToggle.
+ * 
+ * Exibe ícone do Sol (quando em modo escuro) ou da Lua (quando em modo claro),
+ * alternando a classe `.dark` no elemento raiz HTML ao ser clicado.
+ */
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);

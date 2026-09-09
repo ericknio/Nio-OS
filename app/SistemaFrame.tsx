@@ -1,3 +1,15 @@
+/**
+ * @file app/SistemaFrame.tsx
+ * @description Moldura visual e Menu Lateral de Navegação do Nio-OS Desktop.
+ * 
+ * Renderiza:
+ * - Sidebar colapsável com seções (Gestão, Ordens de Serviço, Estoque Técnico, PDV, Relatórios).
+ * - Badges com contadores em tempo real (OS abertas, atrasadas, garantias a vencer).
+ * - Filtro dinâmico de módulos (permite desativar módulo de produtos ou módulo de OS).
+ * - Alternador de tema Dark/Light e card do operador logado (`UsuarioLogadoBox`).
+ * - Modal automático de novidades e notas de atualização (`ModalPatchNotes`).
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -283,6 +295,12 @@ function lerModuloOSCache() {
   return valor === "true";
 }
 
+/**
+ * Componente SistemaFrame que encapsula as telas do aplicativo desktop.
+ *
+ * @param props.children - Conteúdo da tela correspondente à rota ativa
+ * @returns Layout completo com sidebar e área principal de conteúdo
+ */
 export default function SistemaFrame({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { carregando: carregandoPermissoes, tem, usuario } = useUsuarioPermissoes();

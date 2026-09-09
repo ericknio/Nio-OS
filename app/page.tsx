@@ -1,3 +1,16 @@
+/**
+ * @file app/page.tsx
+ * @description Painel Principal (Dashboard) do Nio-OS.
+ * 
+ * Centraliza os principais indicadores operacionais e financeiros da assistência técnica:
+ * - Contadores de Ordens de Serviço (Recebidas, Em análise, Em reparo, Prontas, Atrasadas).
+ * - Faturamento e receitas do mês com alternador de visibilidade (ocultar/mostrar valores).
+ * - Alertas de estoque técnico e produtos com estoque baixo.
+ * - Atalhos rápidos para abertura de OS, cadastro de clientes, PDV e relatórios.
+ * - Controle de permissões (RBAC): redireciona automaticamente para a primeira rota
+ *   permitida caso o operador logado não possua acesso ao painel geral.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -239,6 +252,12 @@ function MiniFila({
   );
 }
 
+/**
+ * Componente da Página Inicial / Dashboard.
+ * 
+ * Gerencia a carga de métricas via `/api/dashboard`, avalia as permissões do operador,
+ * controla a exibição de dados financeiros e renderiza cards de resumo e tabelas de atividades recentes.
+ */
 export default function HomePage() {
   const router = useRouter();
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();

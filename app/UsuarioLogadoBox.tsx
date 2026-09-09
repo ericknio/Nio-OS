@@ -1,3 +1,12 @@
+/**
+ * @file app/UsuarioLogadoBox.tsx
+ * @description Widget de perfil do operador logado exibido na barra lateral.
+ * 
+ * Exibe o avatar estilizado com a inicial do operador, nome, username e botão de logout.
+ * Ao clicar em sair, limpa o cache local de permissões, invalida o cookie de sessão no backend
+ * e redireciona para a tela de login.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -7,6 +16,12 @@ import {
   useUsuarioPermissoes,
 } from "./Permissao";
 
+/**
+ * Retorna a primeira letra do nome do operador em maiúscula para compor o avatar visual.
+ *
+ * @param nome - Nome completo do operador
+ * @returns Letra inicial maiúscula ou "U" como fallback
+ */
 function inicialNome(nome?: string | null) {
   const limpo = String(nome || "").trim();
 
@@ -15,10 +30,18 @@ function inicialNome(nome?: string | null) {
   return limpo.charAt(0).toUpperCase();
 }
 
+/**
+ * Componente UsuarioLogadoBox.
+ * 
+ * Renderiza o card do usuário logado na parte inferior da sidebar com atalho para 'Minha Conta' e botão de logout.
+ */
 export default function UsuarioLogadoBox() {
   const router = useRouter();
   const { usuario, carregando } = useUsuarioPermissoes();
 
+  /**
+   * Encerra a sessão do operador: limpa cache em memória e chama a rota de logout.
+   */
   async function sair() {
     limparCacheUsuarioPermissoes();
 
