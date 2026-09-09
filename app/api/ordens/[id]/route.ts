@@ -1,3 +1,13 @@
+/**
+ * @file app/api/ordens/[id]/route.ts
+ * @description Operações específicas de uma Ordem de Serviço por ID (Consulta, Edição e Exclusão).
+ * 
+ * Regras principais:
+ * - GET: Retorna a OS com cliente, histórico de auditoria, pagamentos, anexos e peças técnicas.
+ * - PUT: Permite atualizar dados cadastrais (defeito, laudo, peças, mão de obra, técnico e prazos) recalculando totais.
+ * - DELETE: Bloqueia exclusão de OS que possua pagamentos, anexos ou finalização, exigindo cancelamento formal.
+ */
+
 import { NextResponse } from "next/server";
 import { EquipmentType, OrderStatus, PaymentMethod } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -17,6 +27,9 @@ type RouteContext = {
 
 type UsuarioSessao = NonNullable<Parameters<typeof usuarioTemPermissao>[0]>;
 
+/**
+ * Calcula o valor total cobrado na OS (Peças + Mão de Obra - Desconto).
+ */
 function calcularTotal(partsCost: number, laborCost: number, discount: number) {
   return Math.max(partsCost + laborCost - discount, 0);
 }
@@ -54,6 +67,17 @@ function dataOuNulo(valor: unknown) {
   return data;
 }
 
+/**
+ * Endpoint GET /api/ordens/[id]
+ * 
+ * Busca os dados completos de uma Ordem de Serviço específica por ID.
+ * Inclui dados do cliente, histórico de movimentações, pagamentos parciais,
+ * fotos/anexos e peças técnicas alocadas.
+ *
+ * @param _request - Requisição HTTP
+ * @param context - Contexto dinâmico com ID da OS
+ * @returns Objeto da OS detalhada em JSON
+ */
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.ver");
@@ -112,6 +136,17 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Endpoint PUT /api/ordens/[id]
+ * 
+ * Atualiza os dados de uma Ordem de Serviço (defeito relatado, laudo técnico,
+ * custos de peças/serviço, desconto, técnico responsável e prazo de entrega).
+ * Recalcula o saldo financeiro da OS e grava entrada no histórico de auditoria.
+ *
+ * @param request - Requisição HTTP com os campos atualizados
+ * @param context - Contexto com ID da OS
+ * @returns Objeto da OS atualizada
+ */
 export async function PUT(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.editar");
@@ -400,6 +435,18 @@ export async function PUT(request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Endpoint DELETE /api/ordens/[id]
+ * 
+ * Exclui permanentemente uma Ordem de Serviço recém-aberta sem histórico.
+ * REGRA DE SEGURANÇA: Bloqueia a exclusão caso a OS possua pagamentos registrados,
+ * fotos/anexos vinculados ou já tenha sido entregue/finalizada. Nesses casos,
+ * o sistema obriga o cancelamento formal via rota PATCH /cancelar.
+ *
+ * @param _request - Requisição HTTP
+ * @param context - Contexto com ID da OS
+ * @returns Confirmação de exclusão ou bloqueio (HTTP 400)
+ */
 export async function DELETE(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.cancelar");

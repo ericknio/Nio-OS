@@ -1,3 +1,11 @@
+/**
+ * @file app/api/clientes/[id]/route.ts
+ * @description Operações pontuais por ID do cliente (Leitura detalhada, Edição e Exclusão).
+ * 
+ * Implementa mascaramento de dados financeiros sensíveis com base na permissão do usuário
+ * e proteção de integridade referencial (impede exclusão de clientes com O.S. vinculadas).
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
@@ -14,12 +22,18 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Contexto da rota dinâmica do Next.js contendo o ID do cliente.
+ */
 type RouteContext = {
   params: Promise<{
     id: string;
   }>;
 };
 
+/**
+ * Representação interna de usuário para validação de privilégios.
+ */
 type UsuarioPermissao = {
   id: string;
   name: string;
@@ -29,10 +43,16 @@ type UsuarioPermissao = {
   permissions?: string[];
 };
 
+/**
+ * Verifica se o usuário tem permissão para visualizar o histórico de O.S. do cliente.
+ */
 function podeVerOrdensDoCliente(usuario: UsuarioPermissao) {
   return usuarioTemPermissao(usuario, "ordens.ver");
 }
 
+/**
+ * Verifica se o usuário pode visualizar os valores financeiros das O.S. do cliente.
+ */
 function podeVerFinanceiro(usuario: UsuarioPermissao) {
   return usuarioTemPermissao(usuario, [
     "pagamentos.ver",
@@ -41,6 +61,16 @@ function podeVerFinanceiro(usuario: UsuarioPermissao) {
   ]);
 }
 
+/**
+ * Endpoint GET /api/clientes/[id]
+ * 
+ * Retorna os dados completos do cliente e seu histórico recente de Ordens de Serviço.
+ * Se o usuário não tiver permissão financeira, omite os valores monetários (`totalAmount = null`).
+ *
+ * @param _request - Requisição HTTP
+ * @param context - Parâmetros da rota contendo o ID do cliente
+ * @returns JSON com dados cadastrais e lista de ordens do cliente
+ */
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi([
@@ -102,6 +132,16 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Endpoint PUT /api/clientes/[id]
+ * 
+ * Atualiza os dados cadastrais do cliente existente.
+ * Valida duplicidade de CPF, WhatsApp e e-mail desconsiderando o próprio registro em edição.
+ *
+ * @param request - Requisição HTTP com os novos dados em JSON
+ * @param context - Parâmetros da rota contendo o ID do cliente
+ * @returns Objeto do cliente atualizado
+ */
 export async function PUT(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("clientes.editar");
@@ -170,6 +210,17 @@ export async function PUT(request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Endpoint DELETE /api/clientes/[id]
+ * 
+ * Remove o cadastro de um cliente do sistema.
+ * REGRA DE SEGURANÇA: Bloqueia a exclusão caso o cliente possua qualquer Ordem de Serviço
+ * cadastrada no histórico, preservando a integridade fiscal e os relatórios da assistência.
+ *
+ * @param _request - Requisição HTTP
+ * @param context - Parâmetros da rota com o ID a ser removido
+ * @returns Mensagem de sucesso (HTTP 200) ou bloqueio referencial (HTTP 400)
+ */
 export async function DELETE(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("clientes.excluir");

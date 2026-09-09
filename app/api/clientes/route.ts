@@ -1,3 +1,11 @@
+/**
+ * @file app/api/clientes/route.ts
+ * @description Rota de API para listagem com busca e cadastro de novos clientes no Nio-OS.
+ * 
+ * Suporta busca textual em múltiplos campos (nome, documento, telefone, WhatsApp, e-mail)
+ * e validação estrita anti-duplicidade antes de persistir no banco de dados SQLite.
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { exigirPermissaoApi } from "@/lib/permissaoApi";
@@ -10,6 +18,15 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Endpoint GET /api/clientes
+ * 
+ * Lista os clientes cadastrados com paginação/limite e filtro de busca opcional.
+ * Exige que o usuário logado possua permissão de visualização de clientes ou edição de O.S.
+ *
+ * @param request - Requisição HTTP com parâmetros de busca opcionais (?busca=...&limite=...)
+ * @returns Lista de clientes sanitizados em JSON
+ */
 export async function GET(request: Request) {
   try {
     const acesso = await exigirPermissaoApi([
@@ -59,6 +76,15 @@ export async function GET(request: Request) {
   }
 }
 
+/**
+ * Endpoint POST /api/clientes
+ * 
+ * Cadastra um novo cliente no sistema.
+ * Realiza sanitização de dados, formatação de telefone/documento e checagem anti-duplicidade.
+ *
+ * @param request - Requisição HTTP contendo o payload JSON com os dados do cliente
+ * @returns Objeto do cliente criado (HTTP 201) ou mensagem de erro de validação (HTTP 400/500)
+ */
 export async function POST(request: Request) {
   try {
     const acesso = await exigirPermissaoApi("clientes.criar");

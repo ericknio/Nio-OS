@@ -1,3 +1,13 @@
+/**
+ * @file app/api/ordens/[id]/status/route.ts
+ * @description Transição controlada de status da Ordem de Serviço (PATCH).
+ * 
+ * Regras principais:
+ * - Mudança para PRONTO: consome peças técnicas do estoque e grava o percentual de comissão do técnico.
+ * - Mudanças intermediárias: atualiza o status (Recebido, Em análise, Aguardando peça, Em reparo) e registra auditoria.
+ * - Idempotência: exige chave de idempotência para evitar dupla baixa de estoque.
+ */
+
 import { NextResponse } from "next/server";
 import { OrderStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -125,6 +135,17 @@ function validarComandoPronto(body: Record<string, unknown>) {
   return null;
 }
 
+/**
+ * Endpoint PATCH /api/ordens/[id]/status
+ * 
+ * Altera o status operacional da Ordem de Serviço.
+ * Se o novo status for PRONTO, consome as peças técnicas alocadas do estoque,
+ * valida a chave de idempotência e salva o snapshot de lucro do técnico.
+ *
+ * @param request - Requisição HTTP com novo status e confirmação
+ * @param context - Contexto dinâmico com o ID da O.S.
+ * @returns Objeto da OS com status atualizado
+ */
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const body = (await request.json().catch(() => null)) as Record<

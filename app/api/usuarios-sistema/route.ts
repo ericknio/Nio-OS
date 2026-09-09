@@ -1,3 +1,12 @@
+/**
+ * @file app/api/usuarios-sistema/route.ts
+ * @description Gestão de usuários e operadores do sistema Nio-OS (Listagem e Cadastro).
+ * 
+ * Exclusivo para administradores: gerencia login, hash de senha com bcrypt,
+ * atribuição de cargos (Admin, Técnico, Atendente, Financeiro), permissões atômicas
+ * e percentuais de comissão/participação nos lucros para técnicos e atendentes.
+ */
+
 import { NextResponse } from "next/server";
 import { SystemUserRole, SystemUserStatus, type Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -22,6 +31,15 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Endpoint GET /api/usuarios-sistema
+ * 
+ * Lista todos os operadores do sistema com filtros opcionais por busca, cargo ou status.
+ * Exige perfil de Administrador com status ATIVO.
+ *
+ * @param request - Requisição HTTP contendo query params (?busca=...&role=...&status=...)
+ * @returns Lista de usuários com senhas omitidas
+ */
 export async function GET(request: Request) {
   try {
     const acesso = await exigirGerenciarUsuarios();
@@ -105,6 +123,16 @@ export async function GET(request: Request) {
   }
 }
 
+/**
+ * Endpoint POST /api/usuarios-sistema
+ * 
+ * Cadastra um novo operador ou funcionário no sistema local.
+ * Criptografa a senha com hash seguro (bcrypt), define permissões atômicas baseadas
+ * no cargo e configura o percentual de comissão sobre serviços (técnicos) ou vendas (atendentes).
+ *
+ * @param request - Requisição HTTP com os dados do usuário (nome, login, senha, cargo, comissões)
+ * @returns Dados do usuário criado com HTTP 201
+ */
 export async function POST(request: Request) {
   try {
     const acesso = await exigirGerenciarUsuarios();

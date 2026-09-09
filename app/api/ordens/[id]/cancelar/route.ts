@@ -1,3 +1,14 @@
+/**
+ * @file app/api/ordens/[id]/cancelar/route.ts
+ * @description Fluxo de cancelamento seguro de Ordem de Serviço (PATCH).
+ * 
+ * Regras principais:
+ * 1. Exige motivo detalhado (mínimo 10 caracteres e máximo 1000).
+ * 2. Devolve peças reservadas ou consumidas de volta ao estoque técnico físico via `cancelServiceOrderAndReleaseReservedTechnicalParts`.
+ * 3. Utiliza cabeçalho 'Idempotency-Key' para prevenir duplicação de estorno em caso de instabilidade de rede.
+ * 4. Registra operador e histórico completo de auditoria.
+ */
+
 import { NextResponse } from "next/server";
 import { OrderStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -131,6 +142,17 @@ function validarPayloadCancelamento(body: Record<string, unknown>) {
   return null;
 }
 
+/**
+ * Endpoint PATCH /api/ordens/[id]/cancelar
+ * 
+ * Cancela a Ordem de Serviço informada pelo ID.
+ * Exige justificativa formal, confirmação e chave de idempotência no header.
+ * Libera e devolve as peças reservadas de volta para o estoque técnico disponível.
+ *
+ * @param request - Requisição HTTP com JSON: { motivo, expectedCurrentStatus, confirmation, returnConsumedParts }
+ * @param context - Contexto com ID da OS
+ * @returns Objeto da OS atualizada para CANCELADO
+ */
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.cancelar");

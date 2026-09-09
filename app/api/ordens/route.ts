@@ -1,3 +1,11 @@
+/**
+ * @file app/api/ordens/route.ts
+ * @description Rota central de Ordens de Serviço (Listagem geral e Abertura de Nova OS).
+ * 
+ * Integração completa com geração atômica de número sequencial (ex: 001, 002),
+ * reserva automática de peças no estoque técnico, rateio financeiro e histórico de auditoria.
+ */
+
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import {
@@ -26,6 +34,15 @@ export const dynamic = "force-dynamic";
 
 type UsuarioSessao = NonNullable<Parameters<typeof usuarioTemPermissao>[0]>;
 
+/**
+ * Calcula o valor total cobrado do cliente na O.S. (Peças + Mão de Obra - Desconto).
+ * Garante que o valor nunca seja inferior a zero.
+ *
+ * @param partsCost - Custo das peças para o cliente (R$)
+ * @param laborCost - Valor da mão de obra / serviço técnico (R$)
+ * @param discount - Desconto concedido (R$)
+ * @returns Total líquido da OS >= 0
+ */
 function calcularTotal(partsCost: number, laborCost: number, discount: number) {
   return Math.max(partsCost + laborCost - discount, 0);
 }
@@ -186,6 +203,16 @@ function carregarPecasTecnicasAtuais(
   });
 }
 
+/**
+ * Endpoint GET /api/ordens
+ * 
+ * Lista as Ordens de Serviço com filtros dinâmicos de busca (nome do cliente, marca, modelo,
+ * número de série, IMEI e número da OS), filtro por status operacional e paginação.
+ * Se o operador não tiver permissão financeira, omite valores confidenciais de lucro e custo.
+ *
+ * @param request - Requisição HTTP contendo query params (?busca=...&status=...&limite=...)
+ * @returns Lista paginada de Ordens de Serviço em JSON
+ */
 export async function GET(request: Request) {
   try {
     const acesso = await exigirPermissaoApi("ordens.ver");
@@ -295,6 +322,20 @@ export async function GET(request: Request) {
   }
 }
 
+/**
+ * Endpoint POST /api/ordens
+ * 
+ * Abre uma nova Ordem de Serviço na assistência técnica.
+ * Executa as seguintes regras de negócio atômicas:
+ * 1. Gera o próximo número sequencial de OS (ex: 001, 002) de forma atômica.
+ * 2. Valida existência do cliente e tipo de equipamento.
+ * 3. Reserva as peças técnicas selecionadas no estoque técnico via `reserveTechnicalPartForOrder`.
+ * 4. Calcula total (peças + mão de obra - desconto) e registra eventuais pagamentos de entrada.
+ * 5. Registra o evento de abertura no histórico de auditoria (`OrderHistory`).
+ *
+ * @param request - Requisição HTTP com o payload da O.S. (cliente, equipamento, defeito, peças)
+ * @returns Objeto da Ordem de Serviço criada com status HTTP 201
+ */
 export async function POST(request: Request) {
   try {
     const acesso = await exigirPermissaoApi("ordens.criar");
