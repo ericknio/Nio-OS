@@ -1,3 +1,15 @@
+/**
+ * @file app/produtos/page.tsx
+ * @description Painel Principal de Produtos, Estoque Comercial e PDV Balcão (Frontend).
+ * 
+ * Funcionalidades:
+ * - Catálogo completo de produtos para revenda (acessórios, periféricos, cabos, películas).
+ * - Indicadores financeiros: receita estimada, custo total estocado, margem média de lucro e alertas de estoque crítico.
+ * - Rankings automáticos de produtos mais vendidos e menos vendidos.
+ * - PDV Rápido integrado: permite selecionar produto, quantidade, cliente e emitir comprovante térmico (80mm).
+ * - Proteção por módulo opcional (`ModuloProdutosGuard`) e permissões granulares de acesso.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -515,6 +527,12 @@ function RankingCard({
   );
 }
 
+/**
+ * Componente principal da Tela de Gestão de Produtos.
+ * 
+ * Gerencia a listagem, filtros avançados, estatísticas consolidadas de vendas,
+ * rankings e modal de venda rápida de balcão (PDV).
+ */
 export default function ProdutosPage() {
   const { carregando: carregandoPermissoes, tem } =
     useUsuarioPermissoes();

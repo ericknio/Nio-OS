@@ -1,3 +1,15 @@
+/**
+ * @file app/financeiro-geral/page.tsx
+ * @description Painel de Gestão Financeira Unificada e Fluxo de Caixa (Frontend).
+ * 
+ * Funcionalidades:
+ * - Consolidação de receitas: Pagamentos de Ordens de Serviço + Vendas Balcão de Produtos - Estornos.
+ * - Divisão de participação no faturamento (% Serviços vs % Produtos).
+ * - Gráfico comparativo de arrecadação por método de pagamento (PIX, Dinheiro, Cartão, Parcelado).
+ * - Extrato detalhado de lançamentos e movimentações financeiras com filtro por período.
+ * - Trava estrita de acesso: exige permissão `relatorios.financeiro`.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -198,6 +210,12 @@ function BarraForma({
   );
 }
 
+/**
+ * Componente principal da Tela de Gestão Financeira Unificada.
+ * 
+ * Consulta a API consolidada `/api/financeiro-geral`, calcula participações percentuais
+ * e renderiza cartões de faturamento, barras comparativas e extrato financeiro.
+ */
 export default function FinanceiroGeralPage() {
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();
 

@@ -1,3 +1,14 @@
+/**
+ * @file app/garantias/page.tsx
+ * @description Tela de Gestão e Acompanhamento de Prazos de Garantia de O.S. (Frontend).
+ * 
+ * Funcionalidades:
+ * - Monitoramento em tempo real dos termos de garantia dos aparelhos entregues aos clientes.
+ * - Filtros rápidos por vigência: Vigentes, Vencendo (próximos da expiração), Vencidas e Sem Garantia.
+ * - Cálculo automático da contagem regressiva de dias restantes (`diasRestantesGarantia`).
+ * - Ações de suporte: contato via WhatsApp com o cliente, visualização da O.S. original e emissão de termo.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -285,6 +296,12 @@ function CampoResumo({
   );
 }
 
+/**
+ * Componente principal da Tela de Gestão de Garantias de O.S.
+ * 
+ * Gerencia a consulta a `/api/garantias`, botões de filtro por vigência,
+ * cartões de status e links para impressão e contato com o cliente.
+ */
 export default function GarantiasPage() {
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();
 

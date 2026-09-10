@@ -1,3 +1,15 @@
+/**
+ * @file app/relatorios/page.tsx
+ * @description Painel de Relatórios Técnicos, Comissões e Indicadores de O.S. (Frontend).
+ * 
+ * Funcionalidades:
+ * - Indicadores analíticos de assistência técnica: faturamento bruto, custo de peças de bancada e lucro da loja.
+ * - Apuração individual de comissões técnicas com base na regra de partilha configurada por técnico.
+ * - Gráficos de barras de distribuição por categoria de equipamento (Notebook, Celular, Console, etc.).
+ * - Exportação de relatórios gerenciais em PDF com cabeçalho personalizado da empresa.
+ * - Proteção de privacidade: técnicos comuns visualizam exclusivamente suas próprias comissões e ordens atendidas.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -345,6 +357,12 @@ function CampoResumo({
   );
 }
 
+/**
+ * Componente principal da Tela de Relatórios e Comissões de O.S.
+ * 
+ * Gerencia a busca consolidada via `/api/relatorios`, apuração de repasses
+ * para técnicos, filtros de período e exportação em formato PDF.
+ */
 export default function RelatoriosPage() {
   const { usuario, carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();
 

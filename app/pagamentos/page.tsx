@@ -1,3 +1,15 @@
+/**
+ * @file app/pagamentos/page.tsx
+ * @description Tela de Gestão de Recebimentos e Pagamentos de Ordens de Serviço (Frontend).
+ * 
+ * Funcionalidades:
+ * - Listagem analítica de todos os pagamentos capturados nas Ordens de Serviço.
+ * - Filtro dinâmico por método (PIX, Dinheiro, Cartão, Parcelado) e período de competência.
+ * - Indicadores em tempo real: Total recebido, total de estornos/reversões e ticket médio.
+ * - Exportação de relatório financeiro oficial em PDF via `/api/pagamentos/pdf`.
+ * - Link direto para consulta rápida da O.S. e do cliente pagador.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -145,6 +157,12 @@ function CardForma({
   );
 }
 
+/**
+ * Componente principal da Tela de Gestão de Pagamentos de O.S.
+ * 
+ * Gerencia a filtragem por formas de pagamento, geração e download de PDF
+ * e renderização dos lançamentos com destaque visual de estornos.
+ */
 export default function PagamentosPage() {
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();
 

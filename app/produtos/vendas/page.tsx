@@ -1,3 +1,15 @@
+/**
+ * @file app/produtos/vendas/page.tsx
+ * @description Tela de Histórico e Gestão de Vendas de Balcão / PDV (Frontend).
+ * 
+ * Funcionalidades:
+ * - Consulta consolidada de vendas comerciais com filtros de período e forma de pagamento.
+ * - Indicadores: Faturamento total, lucro bruto apurado, ticket médio e volume de peças vendidas.
+ * - Detalhamento de cada venda com itens, impostos, custos e dados do cliente.
+ * - Cancelamento seguro de vendas com estorno automático de mercadorias para o estoque.
+ * - Reimpressão de cupom não-fiscal térmico (80mm).
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -168,6 +180,12 @@ function CardResumo({
   );
 }
 
+/**
+ * Componente principal da Tela de Vendas de Produtos / PDV.
+ * 
+ * Gerencia a tabela de vendas concluídas, painel de filtros temporais,
+ * gaveta lateral de detalhes e fluxo de cancelamento com estorno.
+ */
 export default function VendasProdutosPage() {
   const { carregando: carregandoPermissoes, tem } =
     useUsuarioPermissoes();

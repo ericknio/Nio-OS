@@ -1,3 +1,13 @@
+/**
+ * @file app/produtos/ModuloProdutosGuard.tsx
+ * @description Guardião e Hook de Verificação do Módulo Comercial de Produtos.
+ * 
+ * Funcionalidades:
+ * - O Nio-OS permite ativar ou desativar o módulo de produtos e PDV nas configurações do sistema.
+ * - Este guardião consulta `/api/configuracoes` e armazena o status em localStorage para evitar flashes visuais.
+ * - Fornece tela de aviso amigável quando o módulo está desativado pelo administrador.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -17,6 +27,11 @@ function lerCacheModuloProdutos(): EstadoModulo {
   return "carregando";
 }
 
+/**
+ * Hook para consultar se o módulo de produtos está ativo na loja.
+ * 
+ * @returns { carregandoModuloProdutos: boolean, moduloProdutosAtivo: boolean }
+ */
 export function useModuloProdutosAtivo() {
   const [estado, setEstado] = useState<EstadoModulo>(lerCacheModuloProdutos);
 
@@ -58,6 +73,10 @@ export function useModuloProdutosAtivo() {
   };
 }
 
+/**
+ * Tela de aviso amigável exibida quando o operador tenta acessar rotas de produtos/PDV
+ * com o recurso desativado pelo administrador da loja.
+ */
 export function ModuloProdutosDesativado({
   titulo = "Módulo de produtos desativado",
   descricao = "Produtos, estoque, vendas e relatórios de produtos estão desativados nas configurações do sistema.",

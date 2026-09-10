@@ -1,3 +1,14 @@
+/**
+ * @file app/produtos/estoque/page.tsx
+ * @description Tela de Gestão e Ajustes de Estoque de Produtos Comerciais (Frontend).
+ * 
+ * Funcionalidades:
+ * - Visão geral de saldos, valor total em estoque e alertas de reposição.
+ * - Registro de movimentações de estoque (Entrada de mercadorias, Saída, Perda/Avaria, Inventário).
+ * - Exigência de justificativa obrigatória para qualquer ajuste manual de saldo.
+ * - Trilha cronológica de auditoria das movimentações por produto com registro do operador responsável.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -177,6 +188,12 @@ function CardResumo({
   );
 }
 
+/**
+ * Componente principal da Tela de Gestão de Estoque Comercial.
+ * 
+ * Gerencia a lista de saldos, filtros de criticidade, modal de ajuste rápido
+ * e gaveta com histórico detalhado de movimentações do produto selecionado.
+ */
 export default function EstoqueProdutosPage() {
   const { carregando: carregandoPermissoes, tem } =
     useUsuarioPermissoes();

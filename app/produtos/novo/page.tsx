@@ -1,3 +1,14 @@
+/**
+ * @file app/produtos/novo/page.tsx
+ * @description Tela de Cadastro e Edição de Produtos do Catálogo Comercial (Frontend).
+ * 
+ * Funcionalidades:
+ * - Cadastro de novos itens ou edição de produtos existentes (via parâmetro `?id=`).
+ * - Upload de imagem do produto via endpoint `/api/produtos/upload`.
+ * - Simulador dinâmico de margem: calcula em tempo real o lucro bruto (R$) e margem (%) baseando-se no preço de venda, custo e impostos.
+ * - Controle de estoque físico vs. ilimitado com definição de gatilho de estoque mínimo (`minStock`).
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -255,6 +266,12 @@ function CampoResumo({
   );
 }
 
+/**
+ * Componente principal da Tela de Criação e Edição de Produto.
+ * 
+ * Gerencia os campos de cadastro, upload de foto, cálculos reativos
+ * de margem de lucro e persistência via POST/PUT `/api/produtos`.
+ */
 export default function ProdutoNovoPage() {
   const router = useRouter();
 

@@ -1,3 +1,16 @@
+/**
+ * @file app/produtos/vendas/nova/page.tsx
+ * @description Tela de Frente de Caixa e PDV Balcão para Venda Rápida de Produtos (Frontend).
+ * 
+ * Funcionalidades:
+ * - Interface otimizada para operador de caixa com suporte a leitor de código de barras (SKU) e atalhos de teclado.
+ * - Carrinho dinâmico de compras com cálculo de subtotal, descontos e total líquido em tempo real.
+ * - Suporte a múltiplos meios de pagamento (Dinheiro, PIX, Cartão e Parcelado).
+ * - Calculadora de troco automática quando o meio de pagamento for Dinheiro.
+ * - Impressão automática de comprovante térmico não-fiscal (80mm) após confirmação da venda.
+ * - Abate imediato do estoque físico com registro de log de saída comercial.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -309,6 +322,12 @@ function imprimirReciboVenda(
   janela.document.close();
 }
 
+/**
+ * Componente principal da Tela de Frente de Caixa (PDV).
+ * 
+ * Gerencia a digitação ágil, atalhos de teclado, seleção de produtos e clientes,
+ * fechamento com troco e emissão instantânea de cupom.
+ */
 export default function FrenteDeCaixaPDVPage() {
   const { carregando: carregandoPermissoes, usuario, tem } = useUsuarioPermissoes();
   const { carregandoModuloProdutos, moduloProdutosAtivo } = useModuloProdutosAtivo();

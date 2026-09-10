@@ -1,3 +1,15 @@
+/**
+ * @file app/produtos/relatorios/page.tsx
+ * @description Painel de Relatórios Analíticos, Curva ABC e Comissões de Produtos (Frontend).
+ * 
+ * Funcionalidades:
+ * - Indicadores consolidados: Faturamento total, CMV (Custo da Mercadoria Vendida), Lucro Bruto e Margem Média.
+ * - Análise temporal: identificação de dias da semana e dias do mês de maior e menor movimento comercial.
+ * - Rankings analíticos: Mais vendidos, Menos vendidos, Maior lucratividade e Estoque Parado (sem vendas).
+ * - Relatório de desempenho e comissões por atendente/vendedor com filtros por período.
+ * - Exportação de relatório formatado para PDF via `/api/produtos/relatorios/pdf`.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -371,6 +383,12 @@ function RankingCard({
   );
 }
 
+/**
+ * Componente principal da Tela de Relatórios e Análises Comerciais de Produtos.
+ * 
+ * Gerencia o carregamento de dados analíticos por intervalo de datas,
+ * rankings comparativos, gráficos em barras de sazonalidade e exportação em PDF.
+ */
 export default function RelatoriosProdutosPage() {
   const { usuario, carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();
   const { carregandoModuloProdutos, moduloProdutosAtivo } = useModuloProdutosAtivo();
