@@ -1,3 +1,14 @@
+/**
+ * @file app/configuracoes/BackupRestoreCard.tsx
+ * @description Componente de Criação e Restauração de Cópias de Segurança (Backups).
+ * 
+ * Funcionalidades:
+ * - Geração de snapshots completos do sistema (banco de dados SQLite + arquivos anexados).
+ * - Listagem do histórico de backups automáticos (retenção de 30 dias) e manuais.
+ * - Restauração protegida: exige confirmação textual explícita digitando "RESTAURAR" para prevenir perdas acidentais.
+ * - Painel de logs de execução do processo de restauração e cópia.
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -56,6 +67,11 @@ function mensagemEhSucesso(mensagem: string) {
   );
 }
 
+/**
+ * Componente que renderiza o painel de criação e restauração de backups.
+ * 
+ * @param props.podeEditar - Se o usuário logado tem privilégios para gerar ou restaurar cópias
+ */
 export default function BackupRestoreCard({
   podeEditar = true,
 }: BackupRestoreCardProps) {

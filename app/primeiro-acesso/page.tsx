@@ -1,5 +1,20 @@
 "use client";
 
+/**
+ * @file app/primeiro-acesso/page.tsx
+ * @description Assistente de Inicialização e Criação do Primeiro Usuário Administrador (Setup Wizard).
+ * 
+ * Funcionalidades principais:
+ * - Verificação automática se a base de dados já possui um administrador cadastrado (`/api/auth/setup`).
+ * - Se já existir um administrador cadastrado, redireciona para a tela de login `/login`.
+ * - Se a base estiver virgem (instalação nova), exibe o formulário de cadastro do Super Admin.
+ * - Validação de login (caracteres permitidos, minúsculas, sem espaços) e medidor de força de senha.
+ * - Criação automática do primeiro usuário com role `ADMIN` e autenticação imediata.
+ * 
+ * Regras de Segurança:
+ * - O endpoint `/api/auth/setup` fecha permanentemente a criação de administradores assim que o primeiro é criado.
+ */
+
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { atualizarCacheUsuarioPermissoes } from "@/app/Permissao";
@@ -80,6 +95,10 @@ function forcaSenha(senha: string) {
 
 
 
+/**
+ * Componente da página de primeiro acesso / setup inicial.
+ * Garante que a primeira conta criada no sistema seja um administrador com credenciais fortes.
+ */
 export default function PrimeiroAcessoPage() {
   const router = useRouter();
 

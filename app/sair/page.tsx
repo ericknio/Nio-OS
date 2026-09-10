@@ -1,9 +1,22 @@
 "use client";
 
+/**
+ * @file app/sair/page.tsx
+ * @description Página de Finalização de Sessão do Usuário (Logout).
+ * 
+ * Fluxo de Execução:
+ * 1. Limpa o cache local de permissões do usuário em memória (`limparCacheUsuarioPermissoes()`).
+ * 2. Faz requisição HTTP POST para `/api/auth/logout` para revogar o cookie de autenticação JWT/sessão HTTP-only.
+ * 3. Notifica visualmente o encerramento da sessão e redireciona com limpeza de cache para `/login`.
+ */
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { limparCacheUsuarioPermissoes } from "@/app/Permissao";
 
+/**
+ * Componente funcional de logout que executa a limpeza da sessão no carregamento.
+ */
 export default function SairPage() {
   const router = useRouter();
   const [mensagem, setMensagem] = useState("Encerrando sessão...");

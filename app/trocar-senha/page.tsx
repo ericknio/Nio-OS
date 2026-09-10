@@ -1,5 +1,21 @@
 "use client";
 
+/**
+ * @file app/trocar-senha/page.tsx
+ * @description Página de Alteração Segura de Senha de Acesso.
+ * 
+ * Funcionalidades principais:
+ * - Formulário para troca de senha do usuário atualmente autenticado.
+ * - Indicador visual em tempo real de força de senha (comprimento, maiúsculas, números, caracteres especiais).
+ * - Alternância de visibilidade (mostrar/ocultar senha).
+ * - Envio da requisição para o endpoint `/api/auth/trocar-senha`.
+ * 
+ * Regras de Segurança:
+ * - Exige digitação da senha atual antes de aceitar uma nova.
+ * - Impede o reuso da senha atual como nova senha.
+ * - Exige confirmação idêntica e comprimento mínimo de 6 caracteres.
+ */
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
@@ -103,6 +119,10 @@ function CampoSenha({
   );
 }
 
+/**
+ * Componente da página de alteração de senha de usuário.
+ * Oferece interface interativa com medidor de complexidade de senha e feedbacks claros de validação.
+ */
 export default function TrocarSenhaPage() {
   const router = useRouter();
   const {

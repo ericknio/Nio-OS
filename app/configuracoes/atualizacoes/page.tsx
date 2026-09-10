@@ -1,4 +1,14 @@
-// app/configuracoes/atualizacoes/page.tsx
+/**
+ * @file app/configuracoes/atualizacoes/page.tsx
+ * @description Tela da Central de Atualizações de Software e Patch Notes (Frontend).
+ * 
+ * Funcionalidades:
+ * - Checagem remota por novas releases do Nio-OS via GET `/api/atualizacoes`.
+ * - Histórico completo de notas de versão (Patch Notes), novidades e correções.
+ * - Gerenciamento de download de instaladores com barra de progresso em tempo real.
+ * - Disparo de instalação automática da nova versão na máquina local.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -21,6 +31,12 @@ type DadosAtualizacao = {
   dataVerificacao?: string;
 };
 
+/**
+ * Componente principal da Central de Atualizações.
+ * 
+ * Controla o ciclo de verificação remota de updates, progresso do download do instalador
+ * e modal interativo com notas de patch detalhadas.
+ */
 export default function AtualizacoesPage() {
   const [carregando, setCarregando] = useState(false);
   const [mensagem, setMensagem] = useState("");

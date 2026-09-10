@@ -1,5 +1,21 @@
 "use client";
 
+/**
+ * @file app/minha-conta/page.tsx
+ * @description Interface do Usuário para Gestão do Perfil e Segurança da Conta ("Minha Conta").
+ * 
+ * Funcionalidades principais:
+ * - Visualização do perfil do usuário autenticado (Nome, Usuário, Email, Cargo, Status, Último Login).
+ * - Atualização dos dados cadastrais básicos (Nome, Nome de Usuário e Email) via API `/api/auth/me`.
+ * - Alteração de senha autônoma (validação de senha atual, nova senha e confirmação).
+ * - Exibição do status da licença do sistema vinculada ao terminal local.
+ * - Logout com invalidação de sessão e limpeza de cache de permissões.
+ * 
+ * Regras de Negócio e Segurança:
+ * - Não permite troca de perfil ou cargo por esta tela (cargos são gerenciados em `/usuarios-sistema`).
+ * - Atualização de nome e email sincroniza os caches locais de permissões e sessão.
+ */
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, ReactNode, useEffect, useState } from "react";
@@ -131,6 +147,11 @@ function LinhaInfo({
   );
 }
 
+/**
+ * Componente principal da tela "Minha Conta".
+ * Permite ao usuário visualizar seus dados, alterar perfil cadastral, modificar sua senha
+ * e inspecionar a validade e status da licença ativa do sistema.
+ */
 export default function MinhaContaPage() {
   const router = useRouter();
   const {

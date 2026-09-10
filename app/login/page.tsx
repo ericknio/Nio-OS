@@ -1,3 +1,14 @@
+/**
+ * @file app/login/page.tsx
+ * @description Tela de Autenticação e Entrada no Sistema (Frontend).
+ * 
+ * Funcionalidades:
+ * - Checagem inicial: detecta se o sistema é novo e precisa de setup de primeiro acesso (`/primeiro-acesso`).
+ * - Validação de sessão ativa: se o usuário já estiver logado, redireciona para a página solicitada (`next`).
+ * - Normalização de usuário, alternador de visibilidade de senha e feedback de erros de credenciais.
+ * - Atualização imediata do cache de permissões reativo (`atualizarCacheUsuarioPermissoes`) pós-login.
+ */
+
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
@@ -66,8 +77,12 @@ function normalizarLogin(valor: string) {
     .replace(/\s+/g, "");
 }
 
-
-
+/**
+ * Componente principal da Tela de Login do Sistema.
+ * 
+ * Gerencia a submissão segura de usuário/senha, redirecionamentos condicionais
+ * e atualização da sessão de trabalho.
+ */
 export default function LoginPage() {
   const router = useRouter();
 

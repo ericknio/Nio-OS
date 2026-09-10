@@ -1,4 +1,13 @@
-// app/components/ModalPatchNotes.tsx
+/**
+ * @file app/components/ModalPatchNotes.tsx
+ * @description Modal interativo de Notas de Atualização (Patch Notes / Changelog).
+ * 
+ * Funcionalidades:
+ * - Detecção automática no primeiro login após um update de versão através de `localStorage` (`nio_os_last_seen_patch_notes`).
+ * - Abertura manual para inspeção de histórico via tela de atualizações (`/configuracoes/atualizacoes`).
+ * - Apresentação de novidades classificadas em Destaques, Melhorias e Correções com badges estilizadas.
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,6 +26,13 @@ interface ModalPatchNotesProps {
   onClose?: () => void;
 }
 
+/**
+ * Componente modal de Changelog e notas de versão.
+ * 
+ * @param props.versaoEspecifica Versão opcional a ser exibida (se omitida, exibe a versão atual do sistema).
+ * @param props.abrirManualmente Se verdadeiro, ignora o storage e abre imediatamente.
+ * @param props.onClose Callback acionado ao fechar a modal.
+ */
 export default function ModalPatchNotes({
   versaoEspecifica,
   abrirManualmente = false,

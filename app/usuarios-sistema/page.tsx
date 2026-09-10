@@ -1,3 +1,15 @@
+/**
+ * @file app/usuarios-sistema/page.tsx
+ * @description Tela de Gestão de Usuários, Controle de Acesso (RBAC) e Comissões (Frontend).
+ * 
+ * Funcionalidades:
+ * - Área restrita exclusivamente a administradores (`role === 'ADMIN'`).
+ * - Criação, edição, ativação/desativação e redefinição de senhas de operadores.
+ * - Matriz granular de permissões com aplicação de modelos prontos por perfil (Admin, Técnico, Atendente).
+ * - Configuração de regras de comissionamento individual (Comissão de O.S. e Comissão de Vendas Balcão).
+ * - Proteção contra exclusão ou desativação do último administrador do sistema.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -230,6 +242,12 @@ function LinhaInfo({
   );
 }
 
+/**
+ * Componente principal da Tela de Gestão de Usuários do Sistema.
+ * 
+ * Gerencia a listagem, filtros por papel/status, formulário de cadastro/edição
+ * e painel interativo de seleção de permissões e comissões.
+ */
 export default function UsuariosSistemaPage() {
   const { carregando: carregandoPermissoes, tem, usuario } =
     useUsuarioPermissoes();

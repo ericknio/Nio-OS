@@ -1,3 +1,13 @@
+/**
+ * @file app/configuracoes/LogoUpload.tsx
+ * @description Componente de Upload e Gestão da Logomarca da Loja (Frontend).
+ * 
+ * Funcionalidades:
+ * - Permite trocar a logomarca da empresa exibida nos comprovantes e relatórios.
+ * - Validações de segurança: formato estrito PNG e tamanho limite de 2MB.
+ * - Pré-visualização imediata da imagem antes da submissão para `/api/configuracoes/logo`.
+ */
+
 "use client";
 
 import { useState } from "react";
@@ -10,6 +20,11 @@ function mensagemEhSucesso(mensagem: string) {
   return mensagem.toLowerCase().includes("sucesso");
 }
 
+/**
+ * Componente que renderiza o seletor e preview da logomarca da empresa.
+ * 
+ * @param props.podeEditar - Flag indicando se o usuário possui permissão para trocar a logo
+ */
 export default function LogoUpload({ podeEditar = true }: LogoUploadProps) {
   const [arquivo, setArquivo] = useState<File | null>(null);
   const [preview, setPreview] = useState(`/uploads/logo.png?v=${Date.now()}`);

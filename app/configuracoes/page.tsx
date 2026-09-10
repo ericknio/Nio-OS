@@ -1,3 +1,15 @@
+/**
+ * @file app/configuracoes/page.tsx
+ * @description Painel de Configurações Gerais da Empresa, Loja e Sistema (Frontend).
+ * 
+ * Funcionalidades:
+ * - Cadastro dos dados institucionais da assistência técnica (Razão Social, Nome Fantasia, CNPJ, Contatos, Endereço).
+ * - Definição de horários de funcionamento e dias úteis da loja física.
+ * - Parametrização padrão de Ordens de Serviço: prazo legal de garantia e texto padrão do termo de responsabilidade.
+ * - Ativação/Desativação de módulos do sistema (Módulo Comercial de Produtos).
+ * - Gestão de logotipo da empresa (`LogoUpload`) e rotinas de backup e restauração (`BackupRestoreCard`).
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -255,6 +267,12 @@ function CampoResumo({
   );
 }
 
+/**
+ * Componente principal da Tela de Configurações Gerais.
+ * 
+ * Gerencia a busca e persistência das configurações da loja e do sistema,
+ * cartões de pré-visualização e submissão via PUT `/api/configuracoes`.
+ */
 export default function ConfiguracoesPage() {
   const { carregando: carregandoPermissoes, tem } = useUsuarioPermissoes();
 
