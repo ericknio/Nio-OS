@@ -1,3 +1,11 @@
+/**
+ * @file lib/estoqueTecnico/sanitize.ts
+ * @description Sanitização e mascaramento de campos financeiros sensíveis (Preço de Custo, Lucro Bruto e Margens).
+ * 
+ * Garante que operadores sem a permissão `dashboard.ver` ou perfil financeiro/admin não recebam
+ * valores confidenciais de custo de aquisição de peças nas respostas de API e projeções públicas.
+ */
+
 import type {
   ServiceOrderPartRecord,
   ServiceOrderPartPublicProjection,

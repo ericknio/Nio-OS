@@ -1,3 +1,11 @@
+/**
+ * @file lib/estoqueTecnico/commandLogRepository.ts
+ * @description Repositório SQL para persistência do log de comandos idempotentes de peças (`TechnicalPartCommandLog`).
+ * 
+ * Registra a chave lógica do comando (`logicalKey`), o hash do payload (`payloadHash`), a operação executada
+ * e a versão resultante da entidade para viabilizar detecção de requisições repetidas (replays).
+ */
+
 import { randomUUID } from "node:crypto";
 import type {
   StockDatabase,

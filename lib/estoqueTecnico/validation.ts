@@ -1,3 +1,13 @@
+/**
+ * @file lib/estoqueTecnico/validation.ts
+ * @description Validadores de esquema, limites numéricos, sanitização de strings e checagem de invariantes de estoque.
+ * 
+ * Define:
+ * - Limites de tamanho para campos de texto (SKU, nomes, observações).
+ * - Validação rigorosa de chaves UUID e formatos de chave de idempotência.
+ * - Checagem matemática dos invariantes de estoque (`quantityOnHand`, `quantityReserved`, `quantityAvailable`).
+ */
+
 import type {
   TechnicalPartMovementInvariant,
   TechnicalStockBalance,

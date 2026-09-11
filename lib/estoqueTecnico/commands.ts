@@ -1,3 +1,11 @@
+/**
+ * @file lib/estoqueTecnico/commands.ts
+ * @description Parsers, validadores e tipos para todos os Comandos CQRS do Estoque Técnico.
+ * 
+ * Valida comandos de criação, atualização cadastral, entrada de mercadorias, ajustes de inventário,
+ * reserva de peças em O.S., cancelamento e estornos manuais com bloqueio estrito de campos proibidos.
+ */
+
 import type { InternalCommandContext } from "./types";
 import { stockError, validationError } from "./errors";
 import {

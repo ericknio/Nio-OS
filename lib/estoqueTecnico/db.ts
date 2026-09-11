@@ -1,3 +1,14 @@
+/**
+ * @file lib/estoqueTecnico/db.ts
+ * @description Conexão nativa e transacional síncrona com SQLite (`node:sqlite` / `DatabaseSync`).
+ * 
+ * Responsabilidades:
+ * - Resolução segura do arquivo `.db` do SQLite com proteção estrita contra Path Traversal e Symlinks.
+ * - Validação de integridade do esquema (verifica presença das tabelas `TechnicalPart`, `ServiceOrderPart`, etc.).
+ * - Transações atômicas com bloqueio imediato (`BEGIN IMMEDIATE`) para evitar race conditions em concorrência.
+ * - Encerramento e fechamento seguro das conexões (best effort com `ROLLBACK` automático em caso de exceção).
+ */
+
 import { existsSync, lstatSync, realpathSync } from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
@@ -124,6 +135,10 @@ function productionDatabaseLocation(): TestDatabaseLocation {
   return { runtimeRoot, databasePath };
 }
 
+/**
+ * Resolve o caminho absoluto seguro do banco de dados SQLite utilizado pelo estoque técnico.
+ * Valida a existência do arquivo e garante que o path resida na pasta de runtime autorizada.
+ */
 export function resolveStockDatabasePath(): string {
   return validateDatabaseLocation(productionDatabaseLocation());
 }
@@ -261,6 +276,15 @@ function executeWithDatabase<T>(
   }
 }
 
+/**
+ * Executa uma operação em transação atômica imediata (`BEGIN IMMEDIATE`), garantindo exclusividade de escrita
+ * no SQLite e revertendo automaticamente (`ROLLBACK`) se qualquer erro ocorrer.
+ * 
+ * @param operation Nome da operação sendo executada (usado para logging e auditoria).
+ * @param callback Função contendo as queries executadas dentro da transação.
+ * @param options Opções adicionais de logging ou auditoria.
+ * @returns Objeto com o valor retornado pela callback, duração em ms e modo de journal.
+ */
 export function withImmediateTransaction<T>(
   operation: string,
   callback: TransactionCallback<T>,
@@ -269,6 +293,12 @@ export function withImmediateTransaction<T>(
   return executeImmediateTransaction(resolveStockDatabasePath(), operation, callback, options);
 }
 
+/**
+ * Abre conexão somente-leitura com o SQLite para consultas rápidas sem travar a escrita.
+ * 
+ * @param callback Função contendo as leituras no banco.
+ * @returns Resultado da callback executada.
+ */
 export function withStockDatabase<T>(callback: TransactionCallback<T>): T {
   return executeWithDatabase(resolveStockDatabasePath(), callback);
 }

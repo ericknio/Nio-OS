@@ -1,3 +1,11 @@
+/**
+ * @file lib/estoqueTecnico/idempotency.ts
+ * @description Mecanismo de idempotência determinística para mutações no Estoque Técnico.
+ * 
+ * Previne execuções duplicadas acidentais de reservas, consumos ou baixas de peças decorrentes
+ * de duplo clique, reconexão de rede ou timeouts, usando hash criptográfico SHA-256 e comparação de replays.
+ */
+
 import { createHash } from "node:crypto";
 import { stockError, validationError } from "./errors";
 import { requireIdempotencyKey } from "./validation";
@@ -31,10 +39,16 @@ function canonicalValue(value: unknown, seen: Set<object>): unknown {
   return result;
 }
 
+/**
+ * Converte um payload em uma string JSON canônica determinística com chaves ordenadas alfabeticamente.
+ */
 export function canonicalizeIdempotentPayload(value: unknown): string {
   return JSON.stringify(canonicalValue(value, new Set<object>()));
 }
 
+/**
+ * Gera o hash SHA-256 em hexadecimal a partir do payload canônico da requisição.
+ */
 export function hashIdempotentPayload(value: unknown): string {
   return createHash("sha256").update(canonicalizeIdempotentPayload(value)).digest("hex");
 }
@@ -67,6 +81,11 @@ export function buildPersistedIdempotencyKey(input: {
   return persisted;
 }
 
+/**
+ * Compara uma requisição repetida com o hash armazenado no log de comandos.
+ * Se os hashes divergirem, acusa erro 409 (`IDEMPOTENCY_KEY_REUSED`).
+ * Se forem idênticos, retorna a resposta previamente calculada com a flag `replay: true`.
+ */
 export function compareIdempotentReplay<T>(input: {
   storedPayloadHash: string;
   currentPayloadHash: string;

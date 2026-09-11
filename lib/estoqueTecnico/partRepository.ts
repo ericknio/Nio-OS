@@ -1,3 +1,13 @@
+/**
+ * @file lib/estoqueTecnico/partRepository.ts
+ * @description Camada de persistência (Repositório SQL nativo) para a tabela `TechnicalPart`.
+ * 
+ * Executa queries parametrizadas de alta performance no SQLite:
+ * - Listagem paginada com filtros dinâmicos de texto, categoria, marca, saldo esgotado ou abaixo do mínimo.
+ * - Lock otimista com verificação de coluna `version` em cada update (`version = version + 1`).
+ * - Mutação de saldos físicos (`quantityOnHand`) e saldos reservados (`quantityReserved`).
+ */
+
 import type { StockDatabase, TechnicalPartRecord } from "./types";
 import type { TechnicalPartMetadata } from "./commands";
 

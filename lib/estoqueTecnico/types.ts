@@ -1,3 +1,12 @@
+/**
+ * @file lib/estoqueTecnico/types.ts
+ * @description Definições de tipos, contratos, estados e projeções públicas do Módulo de Estoque Técnico.
+ * 
+ * Modos de controle de estoque:
+ * - `controlled`: Peça com estoque físico rigorosamente rastreado (`quantityOnHand`, `quantityReserved`, `quantityAvailable`).
+ * - `unlimited`: Peça de suprimento infinito (ex: insumos genéricos, parafusos, solda) sem bloqueio por falta de saldo.
+ */
+
 import type {
   ServiceOrderPartState,
   TechnicalPartMovementType,

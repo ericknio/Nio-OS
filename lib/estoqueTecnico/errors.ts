@@ -1,3 +1,14 @@
+/**
+ * @file lib/estoqueTecnico/errors.ts
+ * @description Hierarquia de erros tipados, catálogo de códigos de falha e mapeador HTTP do Estoque Técnico.
+ * 
+ * Garante que mensagens amigáveis e seguras (`safeMessage`) sejam retornadas aos clientes sem vazar
+ * detalhes internos do banco SQLite, tratando erros de concorrência (`SQLITE_BUSY`) como retryable.
+ */
+
+/**
+ * Catálogo completo de códigos de erro de domínio do estoque técnico.
+ */
 export const STOCK_ERROR_CODES = [
   "AUTH_REQUIRED",
   "PERMISSION_DENIED",
@@ -15,7 +26,7 @@ export const STOCK_ERROR_CODES = [
   "PART_ALREADY_ACTIVE_ON_ORDER",
   "ORDER_PART_QUANTITY_CONFLICT",
   "SERVICE_ORDER_PART_NOT_RESERVED",
-"SERVICE_ORDER_PART_NOT_CONSUMED",
+  "SERVICE_ORDER_PART_NOT_CONSUMED",
   "LEGACY_PARTS_COST_CONFIRMATION_REQUIRED",
   "INSUFFICIENT_AVAILABLE_STOCK",
   "UNLIMITED_STOCK_REJECTS_MOVEMENT",
@@ -46,6 +57,10 @@ type StockDomainErrorOptions = {
   internalCause?: unknown;
 };
 
+/**
+ * Classe de erro de domínio para operações de peças e estoque técnico.
+ * Encapsula o código de erro, status HTTP correspondente, flag de reintento (`retryable`) e causa interna opcional.
+ */
 export class StockDomainError extends Error {
   readonly code: StockErrorCode;
   readonly httpStatus: number;
@@ -85,6 +100,12 @@ export function validationError(safeMessage: string, details?: SafeErrorDetails)
   });
 }
 
+/**
+ * Mapeia qualquer erro capturado (exceções do Prisma, erros de SQLite ou erros inesperados)
+ * em uma instância canônica de `StockDomainError`.
+ * 
+ * Converte bloqueios do SQLite (`SQLITE_BUSY` ou `database is locked`) em erros HTTP 503 retryable.
+ */
 export function mapUnknownStockError(error: unknown): StockDomainError {
   if (error instanceof StockDomainError) return error;
 

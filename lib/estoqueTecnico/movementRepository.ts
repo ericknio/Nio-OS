@@ -1,3 +1,13 @@
+/**
+ * @file lib/estoqueTecnico/movementRepository.ts
+ * @description Repositório SQL para persistência e consulta do razão imutável de movimentações de estoque (`TechnicalPartMovement`).
+ * 
+ * Cada movimentação registra:
+ * - Snapshots de saldo anterior e posterior (`onHandBefore`, `onHandAfter`, `reservedBefore`, `reservedAfter`).
+ * - Snapshot de custo unitário (`unitCostSnapshot`) na data do movimento.
+ * - Auditoria do operador (`operatorId`, `operatorNameSnapshot`) e chave de idempotência.
+ */
+
 import { randomUUID } from "node:crypto";
 import type {
   StockDatabase,

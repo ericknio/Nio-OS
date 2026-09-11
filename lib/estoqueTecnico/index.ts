@@ -1,3 +1,11 @@
+/**
+ * @file lib/estoqueTecnico/index.ts
+ * @description Ponto de entrada público (Barrel File) do Módulo de Estoque Técnico.
+ * 
+ * Exporta serviços de domínio, repositórios, tipos e tratamentos de erro padronizados
+ * para controle de peças técnicas utilizadas em Ordens de Serviço (reserva, consumo, estorno e movimentação).
+ */
+
 export {
   StockDomainError,
   mapUnknownStockError,
