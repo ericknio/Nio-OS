@@ -1,3 +1,14 @@
+/**
+ * @file lib/server/estoqueTecnicoHttp.ts
+ * @description Adaptador de transporte HTTP e validações de segurança para o Módulo de Estoque Técnico.
+ * 
+ * Responsabilidades:
+ * - Proteção contra CSRF via `requireSameOrigin` com suporte flexível a redes locais (LAN) e loopback.
+ * - Leitura estrita de corpos JSON e cabeçalhos de idempotência (`Idempotency-Key`).
+ * - Sanitização e validação de parâmetros de consulta (query params com allowlist).
+ * - Mapeamento e serialização de erros de domínio para códigos de status HTTP apropriados com `Cache-Control: no-store`.
+ */
+
 import { NextResponse } from "next/server";
 import {
   toFutureHttpError,
@@ -16,6 +27,13 @@ import {
 
 type UsuarioSessao = NonNullable<Parameters<typeof usuarioTemPermissao>[0]>;
 
+/**
+ * Cria uma resposta NextResponse JSON garantindo a desativação de cache do navegador (`Cache-Control: no-store`).
+ * 
+ * @param body Objeto serializável a ser retornado no corpo.
+ * @param status Código de status HTTP (padrão 200).
+ * @param extraHeaders Cabeçalhos adicionais opcionais.
+ */
 export function jsonNoStore(
   body: unknown,
   status = 200,
@@ -30,6 +48,10 @@ export function jsonNoStore(
   });
 }
 
+/**
+ * Converte qualquer erro gerado pela camada de domínio do estoque técnico em uma resposta HTTP segura e tipada.
+ * Se o erro for temporário/concorrencial (retryable), injeta o cabeçalho `Retry-After: 1`.
+ */
 export function stockHttpError(error: unknown) {
   const mapped = toFutureHttpError(error);
   return jsonNoStore(
@@ -39,6 +61,10 @@ export function stockHttpError(error: unknown) {
   );
 }
 
+/**
+ * Valida se a origem da requisição pertence ao mesmo domínio ou à rede local permitida (LAN / Localhost).
+ * Previne ataques de CSRF (Cross-Site Request Forgery) em instalações em rede local de assistência técnica.
+ */
 export function sameOriginOrNoOrigin(request: Request): boolean {
   const origin = request.headers.get("origin");
   if (!origin) return true;
@@ -85,6 +111,9 @@ export function sameOriginOrNoOrigin(request: Request): boolean {
   }
 }
 
+/**
+ * Garante que a requisição seja originada do mesmo host ou LAN confiável, lançando erro 403 caso contrário.
+ */
 export function requireSameOrigin(request: Request): void {
   if (!sameOriginOrNoOrigin(request)) {
     throw stockError(
@@ -95,6 +124,9 @@ export function requireSameOrigin(request: Request): void {
   }
 }
 
+/**
+ * Lê e valida que o corpo da requisição HTTP possui formato JSON válido.
+ */
 export async function readJsonObject(
   request: Request,
 ): Promise<Record<string, unknown>> {
@@ -123,6 +155,10 @@ export function canViewFinancialData(
   return usuarioPodeVerDadosFinanceirosSensiveis(usuario);
 }
 
+/**
+ * Constrói o contexto de execução de um comando de estoque a partir da requisição e da sessão do usuário.
+ * Extrai o ID do operador, nome, permissões financeiras e chave de idempotência do cabeçalho `Idempotency-Key`.
+ */
 export function commandContext(
   request: Request,
   usuario: UsuarioSessao,
@@ -137,6 +173,9 @@ export function commandContext(
   };
 }
 
+/**
+ * Valida o envelope padrão de envio de comandos `{ operation, command }`.
+ */
 export function dispatchBody(
   body: Record<string, unknown>,
 ): { operation: string; command: unknown } {

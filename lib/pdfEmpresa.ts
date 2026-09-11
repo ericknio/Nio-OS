@@ -1,9 +1,23 @@
+/**
+ * @file lib/pdfEmpresa.ts
+ * @description Gerador de fragmentos HTML e estilos CSS para cabeçalhos e rodapés de relatórios e documentos PDF.
+ * 
+ * Centraliza a identidade visual da empresa (Logotipo, Razão Social/Fantasia, CNPJ/CPF,
+ * Endereço completo e Contatos) para impressão de O.S., Recibos de Pagamento, Termos de Garantia e Vendas.
+ */
+
 import {
   ConfiguracoesSistema,
   montarContatoEmpresa,
   montarEnderecoEmpresa,
 } from "./configuracoesSistema";
 
+/**
+ * Monta o bloco HTML estilizado do cabeçalho da empresa para ser inserido nos documentos PDF.
+ * 
+ * @param config Objeto de configurações do sistema com os dados cadastrais da empresa.
+ * @returns String contendo o fragmento HTML do cabeçalho.
+ */
 export function blocoCabecalhoEmpresa(config: ConfiguracoesSistema) {
   const endereco = montarEnderecoEmpresa(config);
   const contato = montarContatoEmpresa(config);
@@ -31,6 +45,9 @@ export function blocoCabecalhoEmpresa(config: ConfiguracoesSistema) {
   `;
 }
 
+/**
+ * Retorna os blocos de regras CSS padrão para estilização do cabeçalho e rodapé dos relatórios impressos.
+ */
 export function estilosCabecalhoEmpresa() {
   return `
     .empresa-header {
@@ -89,6 +106,12 @@ export function estilosCabecalhoEmpresa() {
   `;
 }
 
+/**
+ * Monta o bloco HTML estilizado do rodapé da empresa se houver texto cadastrado nas configurações.
+ * 
+ * @param config Objeto de configurações contendo o texto de rodapé.
+ * @returns String contendo o HTML do rodapé ou string vazia.
+ */
 export function blocoRodapeEmpresa(config: ConfiguracoesSistema) {
   if (!config.rodape) return "";
 

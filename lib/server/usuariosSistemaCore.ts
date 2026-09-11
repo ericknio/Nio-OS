@@ -1,3 +1,16 @@
+/**
+ * @file lib/server/usuariosSistemaCore.ts
+ * @description Módulo de regras de negócio, autorização e validações para Usuários do Sistema.
+ * 
+ * Funcionalidades centrais:
+ * - Validação estrita de papéis (`ADMIN`, `ATENDENTE`, `TECNICO`, `FINANCEIRO`) e situações cadastrais.
+ * - Regras de comissionamento / participação nos lucros:
+ *   - Técnicos: comissão sobre serviços executados em OS (`profitShareEnabled` e `profitSharePercent`).
+ *   - Atendentes: comissão sobre vendas no balcão / PDV (`pdvProfitShareEnabled` e `pdvProfitSharePercent`).
+ * - Atribuição automática de permissões globais para administradores e normalização para demais papéis.
+ * - Guarda de autorização `exigirGerenciarUsuarios()` que protege rotas de CRUD de usuários.
+ */
+
 import { NextResponse } from "next/server";
 import {
   SystemUserRole,
@@ -10,6 +23,9 @@ import {
   TODAS_PERMISSOES,
 } from "@/lib/permissoesSistema";
 
+/**
+ * Seleção segura de colunas para consultas e retornos de usuários do sistema.
+ */
 export const selectUsuarioSistema = {
   id: true,
   name: true,
@@ -110,6 +126,14 @@ export type ProfitShareConfig = {
   percent: number;
 };
 
+/**
+ * Valida e calcula as configurações de participação nos lucros para técnicos em Ordens de Serviço.
+ * Se o papel do usuário não for TECNICO, desativa automaticamente a comissão técnica.
+ * 
+ * @param valor Payload contendo profitShareEnabled e profitSharePercent.
+ * @param role Papel do usuário no sistema.
+ * @returns Configuração sanitizada ou `null` se a porcentagem informada for inválida (<= 0 ou > 100).
+ */
 export function participacaoLucroParaSalvar(
   valor: unknown,
   role: SystemUserRole,
@@ -137,6 +161,14 @@ export function participacaoLucroParaSalvar(
   };
 }
 
+/**
+ * Valida e calcula as configurações de comissão sobre vendas no balcão / PDV para atendentes.
+ * Se o papel do usuário não for ATENDENTE, desativa automaticamente a comissão de PDV.
+ * 
+ * @param valor Payload contendo pdvProfitShareEnabled e pdvProfitSharePercent.
+ * @param role Papel do usuário no sistema.
+ * @returns Configuração sanitizada ou `null` se a porcentagem informada for inválida (<= 0 ou > 100).
+ */
 export function participacaoLucroPdvParaSalvar(
   valor: unknown,
   role: SystemUserRole,
@@ -172,6 +204,10 @@ export function permissoesParaSalvar(valor: unknown, role: SystemUserRole) {
   return normalizarPermissoes(valor, role);
 }
 
+/**
+ * Formata os dados do usuário para resposta na API, mapeando o array de permissões
+ * e garantindo que administradores recebam a lista completa de permissões do sistema.
+ */
 export function formatarUsuarioSistema(usuario: UsuarioFormatavel) {
   const {
     permissions,
@@ -218,6 +254,10 @@ export function usuarioPodeGerenciarUsuarios(
   return permissoes.includes("usuarios.gerenciar");
 }
 
+/**
+ * Guarda de autorização para endpoints de gerenciamento de usuários (`/api/usuarios-sistema`).
+ * Requer sessão autenticada e perfil ADMIN ou permissão explícita `usuarios.gerenciar`.
+ */
 export async function exigirGerenciarUsuarios() {
   const usuario = await obterUsuarioLogado();
 

@@ -1,3 +1,14 @@
+/**
+ * @file lib/server/clientesCore.ts
+ * @description Módulo de regras de negócio, sanitização e validação cadastral de Clientes.
+ * 
+ * Funcionalidades centrais:
+ * - Sanitização completa de entradas (remoção de caracteres não numéricos de CPF, CEP e telefones).
+ * - Validação de integridade (nome obrigatório, formato de e-mail e UF do estado em 2 caracteres).
+ * - Verificação inteligente de duplicidade por CPF, WhatsApp ou Email com mensagem informativa.
+ * - Projeções de campos Prisma otimizadas (`clienteSelect` e `ordemClienteSelect`).
+ */
+
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
@@ -18,6 +29,9 @@ export type DadosClienteNormalizados = {
   notes: string | null;
 };
 
+/**
+ * Projeção segura de colunas do cliente para consultas e listagens.
+ */
 export const clienteSelect = {
   id: true,
   name: true,
@@ -100,6 +114,19 @@ function converterData(valor: unknown) {
   };
 }
 
+/**
+ * Valida, limpa e padroniza o payload de cadastro ou atualização de cliente recebido na API.
+ * 
+ * Regras aplicadas:
+ * - Sanitização de CPF, telefones e CEP (mantém apenas dígitos).
+ * - Conversão segura de data de nascimento.
+ * - Validação de obrigatoriedade do nome do cliente.
+ * - Validação sintática de formato de e-mail (se informado).
+ * - Sigla da Unidade Federativa (UF) restrita a 2 caracteres maiúsculos.
+ * 
+ * @param body Corpo da requisição HTTP bruta.
+ * @returns Objeto com `ok: true` e os dados prontos para o Prisma, ou `ok: false` com mensagem de erro amigável.
+ */
 export function prepararDadosCliente(body: unknown):
   | {
       ok: true;
@@ -170,6 +197,15 @@ export function prepararDadosCliente(body: unknown):
   };
 }
 
+/**
+ * Consulta o banco de dados para detectar se já existe outro cliente cadastrado com o mesmo CPF, WhatsApp ou Email.
+ * 
+ * @param params.cpf CPF sanitizado a checar.
+ * @param params.whatsapp WhatsApp sanitizado a checar.
+ * @param params.email Email sanitizado a checar.
+ * @param params.ignorarClienteId ID do cliente sendo editado para ignorar seu próprio registro.
+ * @returns Mensagem descritiva do conflito (ex: "Já existe cliente com este CPF...") ou `null` se não houver duplicidade.
+ */
 export async function verificarDuplicidadeCliente({
   cpf,
   whatsapp,
