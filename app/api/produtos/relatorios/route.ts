@@ -1,3 +1,16 @@
+/**
+ * @file route.ts
+ * @description Endpoint analítico para geração de relatórios de vendas de balcão (PDV) e movimentação de produtos.
+ * Realiza agregações temporais (por dia da semana e dias corridos no período), estatísticas de ticket médio,
+ * margens de lucro, impostos, rankings (mais/menos vendidos, maior/menor lucro, produtos parados em estoque)
+ * e comissões de atendentes.
+ *
+ * Aplica controle de acesso baseado em papéis (RBAC):
+ * - Usuários com permissão financeira visualizam métricas sensíveis completas (custo, lucro, imposto e comissão de todos).
+ * - Usuários com perfil ATENDENTE visualizam exclusivamente suas próprias vendas e comissões,
+ *   sem expor custos, lucros ou indicadores globais da empresa.
+ */
+
 import { NextResponse } from "next/server";
 import { ProductSaleStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -17,6 +30,9 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Nomes dos dias da semana em português indexados de 0 (Domingo) a 6 (Sábado).
+ */
 const DIAS_SEMANA = [
   "Domingo",
   "Segunda-feira",
@@ -27,29 +43,64 @@ const DIAS_SEMANA = [
   "Sábado",
 ];
 
+/**
+ * Converte um valor arbitrário em número finito válido.
+ *
+ * @param valor - Dado de entrada a ser convertido
+ * @returns Número resultante ou 0 caso inválido/infinito
+ */
 function numero(valor: unknown) {
   const n = Number(valor ?? 0);
   return Number.isFinite(n) ? n : 0;
 }
 
+/**
+ * Converte um valor em número inteiro não-negativo (arredondado para baixo).
+ *
+ * @param valor - Valor a ser convertido
+ * @returns Inteiro >= 0
+ */
 function inteiro(valor: unknown) {
   return Math.max(0, Math.floor(numero(valor)));
 }
 
+/**
+ * Sanitiza e normaliza um valor como string sem espaços excedentes.
+ *
+ * @param valor - Dado de entrada
+ * @returns String normalizada
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Retorna o primeiro instante (00:00:00.000) do primeiro dia do mês corrente.
+ *
+ * @returns Instância Date configurada para o início do mês atual
+ */
 function dataInicioMesAtual() {
   const hoje = new Date();
   return new Date(hoje.getFullYear(), hoje.getMonth(), 1, 0, 0, 0, 0);
 }
 
+/**
+ * Retorna o último instante (23:59:59.999) do último dia do mês corrente.
+ *
+ * @returns Instância Date configurada para o final do mês atual
+ */
 function dataFimMesAtual() {
   const hoje = new Date();
   return new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0, 23, 59, 59, 999);
 }
 
+/**
+ * Converte com segurança uma string no formato AAAA-MM-DD em um objeto Date local válido.
+ * Valida os componentes de ano, mês e dia para evitar transbordamentos de datas inválidas.
+ *
+ * @param data - String no formato YYYY-MM-DD
+ * @returns Objeto Date local ou null se formato ou data inválida
+ */
 function criarDataLocalSegura(data: string) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(data);
 
@@ -71,19 +122,36 @@ function criarDataLocalSegura(data: string) {
   return d;
 }
 
+/**
+ * Define o horário da data informada para o primeiro milissegundo do dia (00:00:00.000).
+ *
+ * @param data - Data de referência
+ * @returns Nova instância Date no início do dia
+ */
 function inicioDoDia(data: Date) {
   const d = new Date(data);
   d.setHours(0, 0, 0, 0);
   return d;
 }
 
+/**
+ * Define o horário da data informada para o último milissegundo do dia (23:59:59.999).
+ *
+ * @param data - Data de referência
+ * @returns Nova instância Date no final do dia
+ */
 function fimDoDia(data: Date) {
   const d = new Date(data);
   d.setHours(23, 59, 59, 999);
   return d;
 }
 
-
+/**
+ * Formata um objeto Date em string no padrão YYYY-MM-DD compatível com inputs HTML.
+ *
+ * @param data - Data a ser formatada
+ * @returns String no formato AAAA-MM-DD
+ */
 function formatarDataInput(data: Date) {
   const ano = data.getFullYear();
   const mes = String(data.getMonth() + 1).padStart(2, "0");
@@ -92,6 +160,15 @@ function formatarDataInput(data: Date) {
   return `${ano}-${mes}-${dia}`;
 }
 
+/**
+ * Constrói a estrutura diária com acumuladores zerados para o período solicitado,
+ * filtrando apenas os dias em que a loja esteve aberta conforme as configurações.
+ *
+ * @param inicio - Data de início do período
+ * @param fim - Data final do período
+ * @param diasFuncionamento - Array com os índices dos dias da semana em que há expediente
+ * @returns Array de objetos com métricas financeiras diárias zeradas
+ */
 function criarDiasDoPeriodo(
   inicio: Date,
   fim: Date,
@@ -150,6 +227,12 @@ function criarDiasDoPeriodo(
   return dias;
 }
 
+/**
+ * Consulta as diretrizes de funcionamento da loja (dias úteis e horários de abertura/fechamento)
+ * cadastradas nas configurações da empresa (`CompanySettings`), normalizando os valores para fallback padrão.
+ *
+ * @returns Objeto contendo os dias abertos, seus rótulos formatados e horários de expediente
+ */
 async function buscarFuncionamentoLoja() {
   const configuracoes = await prisma.companySettings.findFirst({
     select: {
@@ -171,6 +254,25 @@ async function buscarFuncionamentoLoja() {
   };
 }
 
+/**
+ * Handler GET para geração do relatório analítico de produtos e vendas de balcão (PDV).
+ *
+ * Processamento e Regras de Negócio:
+ * 1. Valida se o módulo de produtos está ativo na licença/configurações do sistema.
+ * 2. Verifica as permissões de acesso (`relatorios.ver` ou `relatorios.financeiro`). Atendentes ativos
+ *    sem permissão global recebem visão restrita filtrada automaticamente pelo seu ID de usuário.
+ * 3. Valida e filtra o intervalo de datas (`dataInicio` e `dataFim`).
+ * 4. Carrega as vendas concluídas (`ProductSaleStatus.CONCLUIDA`) no período.
+ * 5. Agrega métricas consolidadas: total vendido, custos de mercadoria vendida, impostos incidentes,
+ *    lucro operacional, comissões devidas aos atendentes e ticket médio.
+ * 6. Constrói agrupamentos temporais por dia da semana e dias corridos no período.
+ * 7. Monta rankings: produtos mais vendidos, menos vendidos, maior lucro e produtos sem saída no período.
+ * 8. Sanitiza a resposta ocultando margens, custos e métricas sensíveis se o usuário logado não possuir
+ *    privilégios financeiros globais.
+ *
+ * @param request - Requisição HTTP com query params opcionais `dataInicio` e `dataFim` (YYYY-MM-DD)
+ * @returns Resposta JSON com resumo financeiro, diagnósticos temporais, rankings e comissões de atendentes
+ */
 export async function GET(request: Request) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();

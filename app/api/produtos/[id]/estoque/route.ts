@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint para consulta e movimentação de estoque físico de um Produto (`/api/produtos/[id]/estoque`).
+ * Permite listar os últimos lançamentos do kardex/histórico de movimentações (GET),
+ * e registrar novas movimentações (ENTRADA, SAIDA, AJUSTE) com controle de concorrência otimista (POST).
+ */
+
 import { NextResponse } from "next/server";
 import { StockMovementType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -19,23 +26,48 @@ type RouteContext = {
   }>;
 };
 
+/**
+ * Converte valor em número finito positivo ou zero.
+ * @param valor - Valor a converter
+ * @returns Número seguro
+ */
 function numero(valor: unknown) {
   const n = Number(valor ?? 0);
   return Number.isFinite(n) ? n : 0;
 }
 
+/**
+ * Converte valor em inteiro positivo (arredondado para baixo).
+ * @param valor - Valor a converter
+ * @returns Inteiro seguro
+ */
 function inteiro(valor: unknown) {
   return Math.max(0, Math.floor(numero(valor)));
 }
 
+/**
+ * Converte valor em string sem espaços laterais.
+ * @param valor - Valor a converter
+ * @returns String limpa
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Obtém o nome legível do operador autenticado para trilhas de auditoria.
+ * @param usuario - Dados da sessão do usuário
+ * @returns Nome, username ou 'Sistema'
+ */
 function nomeOperador(usuario: UsuarioSessao) {
   return usuario.name?.trim() || usuario.username?.trim() || "Sistema";
 }
 
+/**
+ * Valida se o tipo de movimentação pertence ao enum StockMovementType.
+ * @param valor - Valor informado
+ * @returns StockMovementType válido ou null se incorreto
+ */
 function tipoMovimento(valor: unknown) {
   const tipo = texto(valor).toUpperCase();
 
@@ -50,6 +82,12 @@ function tipoMovimento(valor: unknown) {
   return null;
 }
 
+/**
+ * Mascara campos financeiros do produto de acordo com o nível de acesso do usuário.
+ * @param produto - Objeto do produto
+ * @param financeiroSensivelLiberado - Indicador de permissão do usuário
+ * @returns Objeto com dados sensíveis ofuscados se não autorizado
+ */
 function protegerProduto(
   produto: Record<string, unknown>,
   financeiroSensivelLiberado: boolean
@@ -82,6 +120,11 @@ function protegerProduto(
   };
 }
 
+/**
+ * Calcula a nova quantidade física em estoque com base no tipo de movimentação.
+ * @param params - Objeto contendo tipo, estoqueAtual e quantidade movimentada
+ * @returns Nova quantidade resultante
+ */
 function calcularNovoEstoque({
   tipo,
   estoqueAtual,
@@ -102,6 +145,13 @@ function calcularNovoEstoque({
   return quantidade;
 }
 
+/**
+ * Manipulador GET para consultar o saldo e histórico de até 80 movimentações de estoque do produto.
+ * Exige permissão `estoque.ver` ou `produtos.ver`.
+ * @param _request - Requisição HTTP
+ * @param context - Contexto contendo `params.id` do produto
+ * @returns Resposta JSON com dados do produto e lista de movimentos
+ */
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();
@@ -156,6 +206,15 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Manipulador POST para registrar movimentações de estoque físico (ENTRADA, SAIDA, AJUSTE) no produto.
+ * Implementa controle de concorrência com optimistic locking para impedir condições de corrida.
+ * Rejeita movimentações físicas em produtos com estoque ilimitado.
+ * Exige permissão `estoque.ajustar`.
+ * @param request - Requisição HTTP contendo JSON com tipo, quantidade e motivo
+ * @param context - Contexto contendo `params.id` do produto
+ * @returns Resposta JSON com o produto e movimento registrado
+ */
 export async function POST(request: Request, context: RouteContext) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();

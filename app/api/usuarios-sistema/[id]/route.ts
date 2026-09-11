@@ -1,3 +1,17 @@
+/**
+ * @file route.ts
+ * @description Endpoint de gerenciamento individual de operadores e usuários do sistema (`/api/usuarios-sistema/[id]`).
+ * Suporta operações de atualização cadastral/permissões (`PATCH`) e exclusão definitiva (`DELETE`).
+ *
+ * Travas de Segurança e Integridade Arquitetural:
+ * 1. Autorização Estrita: Acesso exclusivo para administradores (`SystemUserRole.ADMIN`).
+ * 2. Prevenção de Auto-Bloqueio (Lock-out):
+ *    - O administrador conectado não pode inativar nem rebaixar seu próprio usuário.
+ *    - Não é permitido inativar, despromover ou excluir o último administrador ativo da empresa.
+ * 3. Sanitização & Validação: Validação de e-mail único, complexidade mínima de senha e limites de participação nos lucros.
+ * 4. Consistência Relacional: Remoção em cascata transacional de permissões associadas antes da exclusão física.
+ */
+
 import { NextResponse } from "next/server";
 import { SystemUserRole, SystemUserStatus, type Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -20,12 +34,22 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Contexto da rota com o identificador único do usuário nos parâmetros dinâmicos.
+ */
 type RouteContext = {
   params: Promise<{
     id: string;
   }>;
 };
 
+/**
+ * Verifica no banco de dados se há ao menos outro usuário ativo com perfil de administrador
+ * além do usuário cujo ID foi fornecido. Previne que o sistema fique sem gestão.
+ *
+ * @param id - Identificador do usuário que está sendo modificado ou excluído
+ * @returns True se houver pelo menos mais um admin ativo; false caso contrário
+ */
 async function existeOutroAdminAtivo(id: string) {
   const total = await prisma.systemUser.count({
     where: {
@@ -40,6 +64,21 @@ async function existeOutroAdminAtivo(id: string) {
   return total > 0;
 }
 
+/**
+ * Handler PATCH para atualização parcial ou total dos dados, credenciais e permissões de um usuário.
+ *
+ * Regras de Validação:
+ * - Exige papel ADMIN autenticado.
+ * - Impede auto-inativação ou remoção de privilégios do próprio administrador logado.
+ * - Impede remover o último administrador ativo da aplicação.
+ * - Valida unicidade de e-mail e formato válido.
+ * - Criptografa nova senha via bcrypt se fornecida (mínimo de 6 dígitos).
+ * - Atualiza permissões granulares e percentuais de participação nos lucros (OS e PDV).
+ *
+ * @param request - Requisição HTTP com o payload JSON de atualização
+ * @param context - Contexto contendo o parâmetro dinâmico `id`
+ * @returns JSON com os dados do usuário atualizado formatado
+ */
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     
@@ -213,6 +252,21 @@ export async function PATCH(request: Request, context: RouteContext) {
     );
   }
 }
+
+/**
+ * Handler DELETE para exclusão definitiva de um usuário do sistema.
+ *
+ * Regras de Segurança:
+ * 1. Acesso restrito a administradores ativos.
+ * 2. Bloqueia auto-exclusão: o administrador autenticado não pode se auto-remover.
+ * 3. Garante a sobrevivência administrativa: impede a exclusão se for o único administrador ativo restante.
+ * 4. Transação Atômica: Remove previamente os registros filhos de permissões vinculados ao usuário
+ *    e em seguida remove a conta do banco.
+ *
+ * @param _request - Requisição HTTP recebida
+ * @param context - Contexto contendo o parâmetro dinâmico `id` do usuário
+ * @returns JSON confirmando a exclusão ou mensagem de erro
+ */
 export async function DELETE(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirGerenciarUsuarios();

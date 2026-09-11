@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint de gerenciamento individual de Produto (`/api/produtos/[id]`).
+ * Suporta consulta detalhada com histórico de movimentações e vendas (GET),
+ * atualização cadastral com validação de SKU e alternância de controle de estoque (PUT),
+ * e inativação lógica (soft delete) do produto no catálogo (DELETE).
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { exigirModuloProdutosAtivoApi } from "@/lib/moduloProdutos";
@@ -15,15 +23,31 @@ type RouteContext = {
   }>;
 };
 
+/**
+ * Converte valor em string sem espaços laterais.
+ * @param valor - Valor a converter
+ * @returns String limpa
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Converte valor em string limpa ou null se vazia.
+ * @param valor - Valor a converter
+ * @returns String preenchida ou null
+ */
 function textoOuNulo(valor: unknown) {
   const limpo = texto(valor);
   return limpo || null;
 }
 
+/**
+ * Converte valor em número finito positivo ou zero.
+ * @param valor - Valor a converter
+ * @param fallback - Valor padrão se inválido
+ * @returns Número seguro
+ */
 function numero(valor: unknown, fallback = 0) {
   const n = Number(valor);
 
@@ -32,10 +56,21 @@ function numero(valor: unknown, fallback = 0) {
   return n;
 }
 
+/**
+ * Converte valor em inteiro positivo (arredondado para baixo).
+ * @param valor - Valor a converter
+ * @param fallback - Fallback padrão
+ * @returns Inteiro seguro
+ */
 function inteiro(valor: unknown, fallback = 0) {
   return Math.max(0, Math.floor(numero(valor, fallback)));
 }
 
+/**
+ * Calcula impostos, margens de lucro e status de estoque de um produto.
+ * @param produto - Objeto com preços e estoque
+ * @returns Objeto com valores financeiros e flags calculadas
+ */
 function calcularProduto(produto: {
   salePrice: unknown;
   costPrice: unknown;
@@ -70,6 +105,11 @@ function calcularProduto(produto: {
   };
 }
 
+/**
+ * Enriquece os dados do produto com os cálculos financeiros e flags de estoque.
+ * @param produto - Registro do produto
+ * @returns Produto formatado
+ */
 function formatarProduto(produto: any) {
   const calculos = calcularProduto(produto);
 
@@ -90,6 +130,12 @@ function formatarProduto(produto: any) {
   };
 }
 
+/**
+ * Ofusca custos e margens caso o usuário autenticado não possua privilégios financeiros.
+ * @param produto - Produto bruto
+ * @param financeiroSensivelLiberado - Indicador de permissão do usuário
+ * @returns Produto com campos de custo protegidos
+ */
 function protegerProduto(produto: any, financeiroSensivelLiberado: boolean) {
   const formatado = formatarProduto(produto);
   const valorEstoqueVenda = formatado.unlimitedStock
@@ -139,6 +185,13 @@ function protegerProduto(produto: any, financeiroSensivelLiberado: boolean) {
   };
 }
 
+/**
+ * Manipulador GET para obter detalhes completos de um produto, incluindo histórico de estoque e vendas.
+ * Exige permissão `produtos.ver`, `estoque.ver` ou `vendas.ver`.
+ * @param _request - Requisição HTTP
+ * @param context - Contexto contendo `params.id` do produto
+ * @returns Resposta JSON com o produto protegido
+ */
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();
@@ -214,6 +267,14 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Manipulador PUT para atualizar os dados cadastrais, precificação e regras de estoque do produto.
+ * Valida se houve mudança no modo de estoque (ilimitado vs controlado) exigindo confirmação explícita.
+ * Exige permissão `produtos.editar`.
+ * @param request - Requisição HTTP contendo JSON de atualização
+ * @param context - Contexto contendo `params.id` do produto
+ * @returns Resposta JSON com dados atualizados do produto
+ */
 export async function PUT(request: Request, context: RouteContext) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();
@@ -419,6 +480,14 @@ export async function PUT(request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Manipulador DELETE para inativação lógica (soft delete) do produto.
+ * Define `isActive: false`, preservando o histórico de movimentações e vendas passadas.
+ * Exige permissão `produtos.excluir`.
+ * @param _request - Requisição HTTP
+ * @param context - Contexto contendo `params.id` do produto
+ * @returns Resposta JSON com confirmação de inativação
+ */
 export async function DELETE(_request: Request, context: RouteContext) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();

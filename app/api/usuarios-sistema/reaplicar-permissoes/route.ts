@@ -1,3 +1,16 @@
+/**
+ * @file route.ts
+ * @description Endpoint administrativo para redefinição em lote das permissões de acesso dos operadores.
+ *
+ * Utilidade e Comportamento:
+ * - Sincroniza todos os operadores do sistema com a matriz de permissões padrão recomendada para cada papel
+ *   (`ADMIN`, `ATENDENTE`, `TECNICO`, `FINANCEIRO`) via `permissoesPadraoPorPerfil`.
+ * - Útil em manutenções pós-migração, atualizações de versão do sistema com novas funcionalidades ou restauração
+ *   de privilégios após reconfigurações globais.
+ * - Executa toda a atualização em transação atômica (`prisma.$transaction`).
+ * - Restrito exclusivamente a usuários com papel `SystemUserRole.ADMIN`.
+ */
+
 import { NextResponse } from "next/server";
 import { SystemUserRole } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -10,6 +23,11 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Handler POST para reaplicar em lote as permissões canônicas de cada perfil em todos os usuários cadastrados.
+ *
+ * @returns JSON contendo o número de operadores atualizados e a distribuição por perfil
+ */
 export async function POST() {
   try {
     const acesso = await exigirGerenciarUsuarios();

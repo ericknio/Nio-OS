@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint principal do catálogo de Produtos para Vendas Balcão / PDV (`/api/produtos`).
+ * Permite a listagem paginada/filtrada de produtos com cálculo dinâmico de margens de lucro,
+ * alertas de estoque baixo/esgotado e rankings de mais/menos vendidos (GET),
+ * além do cadastro de novos produtos com validação de SKU e modalidade de estoque (POST).
+ */
+
 import { NextResponse } from "next/server";
 import { type Prisma, ProductSaleStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -10,15 +18,31 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Converte valor em string sem espaços laterais.
+ * @param valor - Valor a converter
+ * @returns String limpa
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Converte valor em string limpa ou null se vazia.
+ * @param valor - Valor a converter
+ * @returns String preenchida ou null
+ */
 function textoOuNulo(valor: unknown) {
   const limpo = texto(valor);
   return limpo || null;
 }
 
+/**
+ * Converte valor em número finito positivo ou zero.
+ * @param valor - Valor a converter
+ * @param fallback - Valor padrão se inválido
+ * @returns Número seguro
+ */
 function numero(valor: unknown, fallback = 0) {
   const n = Number(valor);
 
@@ -27,10 +51,21 @@ function numero(valor: unknown, fallback = 0) {
   return n;
 }
 
+/**
+ * Converte valor em inteiro positivo (arredondado para baixo).
+ * @param valor - Valor a converter
+ * @param fallback - Fallback padrão
+ * @returns Inteiro seguro
+ */
 function inteiro(valor: unknown, fallback = 0) {
   return Math.max(0, Math.floor(numero(valor, fallback)));
 }
 
+/**
+ * Calcula impostos, lucro líquido, margem percentual e flags de estoque de um produto.
+ * @param produto - Objeto contendo preços, alíquota de imposto e quantidades de estoque
+ * @returns Objeto com valores calculados (taxAmount, profitAmount, marginPercent, unlimitedStock, lowStock)
+ */
 function calcularProduto(produto: {
   salePrice: unknown;
   costPrice: unknown;
@@ -65,6 +100,12 @@ function calcularProduto(produto: {
   };
 }
 
+/**
+ * Formata um registro de produto enriquecendo-o com os cálculos financeiros e quantidade vendida.
+ * @param produto - Registro do produto
+ * @param soldQuantity - Quantidade total vendida historicamente
+ * @returns Produto formatado
+ */
 function formatarProduto(produto: any, soldQuantity = 0) {
   const calculos = calcularProduto(produto);
 
@@ -87,6 +128,12 @@ function formatarProduto(produto: any, soldQuantity = 0) {
   };
 }
 
+/**
+ * Ofusca custos, margens e valores de estoque a preço de custo caso o usuário não possua permissão financeira.
+ * @param produto - Produto formatado
+ * @param financeiroSensivelLiberado - Indicador de permissão do usuário
+ * @returns Produto com dados sensíveis preservados ou ofuscados
+ */
 function protegerProduto(produto: any, financeiroSensivelLiberado: boolean) {
   const valorEstoqueVenda = produto.unlimitedStock
     ? null
@@ -124,6 +171,10 @@ function protegerProduto(produto: any, financeiroSensivelLiberado: boolean) {
   };
 }
 
+/**
+ * Agrupa no banco a quantidade vendida de cada produto em vendas balcão concluídas.
+ * @returns Map indexado por productId com a soma das quantidades vendidas
+ */
 async function mapaVendidos() {
   const vendidos = await prisma.productSaleItem.groupBy({
     by: ["productId"],
@@ -145,6 +196,11 @@ async function mapaVendidos() {
   );
 }
 
+/**
+ * Monta os rankings de produtos mais vendidos e menos vendidos da loja.
+ * @param financeiroSensivelLiberado - Indicador se dados de margem podem ser exibidos
+ * @returns Objeto com listas maisVendidos e menosVendidos
+ */
 async function montarRanking(financeiroSensivelLiberado: boolean) {
   const vendidosMap = await mapaVendidos();
 
@@ -178,6 +234,12 @@ async function montarRanking(financeiroSensivelLiberado: boolean) {
   };
 }
 
+/**
+ * Manipulador GET para consulta e filtragem do catálogo de produtos.
+ * Valida se o módulo de produtos está ativo e se o usuário tem permissão `produtos.ver`, `estoque.ver` ou `vendas.ver`.
+ * @param request - Requisição HTTP contendo filtros de busca, categoria, status e estoque
+ * @returns Resposta JSON com resumo estatístico, lista de produtos e rankings
+ */
 export async function GET(request: Request) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();
@@ -362,6 +424,14 @@ export async function GET(request: Request) {
   }
 }
 
+/**
+ * Manipulador POST para cadastro de um novo produto no catálogo.
+ * Valida unicidade de SKU, consistência de estoque ilimitado versus quantidade fixa,
+ * e protege campos de custo e impostos de acordo com as permissões do usuário.
+ * Exige que o módulo de produtos esteja ativo e permissão `produtos.criar`.
+ * @param request - Requisição HTTP contendo JSON com dados do produto
+ * @returns Resposta JSON com dados do produto recém-criado (Status 201)
+ */
 export async function POST(request: Request) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();

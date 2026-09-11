@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint de exclusão definitiva (hard delete) de Produto (`/api/produtos/[id]/excluir-definitivo`).
+ * Remove o registro do produto do banco de dados de forma irreversível,
+ * expurgando itens de venda associados e recalculando ou excluindo vendas afetadas em transação ACID.
+ * Exige confirmação textual ('EXCLUIR') e permissão `produtos.excluir`.
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { exigirModuloProdutosAtivoApi } from "@/lib/moduloProdutos";
@@ -12,15 +20,33 @@ type RouteContext = {
   }>;
 };
 
+/**
+ * Converte valor em número finito positivo ou zero.
+ * @param valor - Valor a converter
+ * @returns Número seguro
+ */
 function numero(valor: unknown) {
   const n = Number(valor ?? 0);
   return Number.isFinite(n) ? n : 0;
 }
 
+/**
+ * Converte valor em string sem espaços laterais.
+ * @param valor - Valor a converter
+ * @returns String limpa
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Manipulador DELETE para excluir definitivamente um produto do catálogo.
+ * Exige a confirmação textual `confirmacao: "EXCLUIR"` no corpo da requisição.
+ * Recalcula totais de vendas impactadas e remove vendas que ficarem sem itens.
+ * @param request - Requisição HTTP com JSON contendo `confirmacao`
+ * @param context - Contexto contendo `params.id` do produto
+ * @returns Resposta JSON com resumo da operação e quantitativo de itens/vendas afetadas
+ */
 export async function DELETE(request: Request, context: RouteContext) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();

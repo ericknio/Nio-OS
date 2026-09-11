@@ -1,3 +1,14 @@
+/**
+ * @file route.ts
+ * @description Endpoint público para entrega e streaming de imagens e fotografias de produtos do catálogo.
+ *
+ * Mecanismos e Regras:
+ * 1. Módulo: Valida se o módulo de produtos está ativo na licença da instalação.
+ * 2. Prevenção de Path Traversal: Sanitiza o nome do arquivo através de `path.basename`.
+ * 3. Armazenamento: Localiza o arquivo físico no diretório de uploads de produtos configurado no storage de runtime.
+ * 4. Resposta Binária: Entrega o buffer com o MIME type adequado (png, jpeg, webp) e cabeçalhos de controle de cache.
+ */
+
 import { NextResponse } from "next/server";
 import { readFile } from "fs/promises";
 import path from "path";
@@ -7,12 +18,21 @@ import { exigirModuloProdutosAtivoApi } from "@/lib/moduloProdutos";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Contexto da rota contendo os parâmetros de URL dinâmicos resolvidos de forma assíncrona.
+ */
 type RouteContext = {
   params: Promise<{
     arquivo: string;
   }>;
 };
 
+/**
+ * Determina o cabeçalho Content-Type apropriado com base na extensão do arquivo de imagem.
+ *
+ * @param nomeArquivo - Nome do arquivo com extensão
+ * @returns MIME type da imagem ou octet-stream para fallback
+ */
 function contentTypePorExtensao(nomeArquivo: string) {
   const ext = path.extname(nomeArquivo).toLowerCase();
 
@@ -23,6 +43,13 @@ function contentTypePorExtensao(nomeArquivo: string) {
   return "application/octet-stream";
 }
 
+/**
+ * Handler GET para entrega da imagem do produto em formato binário.
+ *
+ * @param _request - Requisição HTTP recebida
+ * @param context - Contexto contendo o nome do arquivo da imagem nos parâmetros
+ * @returns Resposta com buffer da imagem ou status 404 se não localizada
+ */
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();
@@ -58,4 +85,4 @@ export async function GET(_request: Request, context: RouteContext) {
       { status: 404 }
     );
   }
-}
+}

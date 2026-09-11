@@ -1,12 +1,47 @@
-// proxy.ts
+/**
+ * @file proxy.ts
+ * @description Proxy/Middleware de segurança, controle de autenticação e proteção contra CSRF no Nio-OS.
+ *
+ * Pilares de Segurança:
+ * 1. Sessão Criptografada: Valida tokens de sessão assinados com HMAC-SHA256 via Web Crypto API nativa (`crypto.subtle`).
+ * 2. Proteção CSRF / Cross-Site Request Forgery:
+ *    - Inspeciona os cabeçalhos `Origin`, `Host` e `Sec-Fetch-Site` em métodos mutáveis (`POST`, `PUT`, `PATCH`, `DELETE`).
+ *    - Bloqueia requisições originadas fora do mesmo host com status 403 Forbidden.
+ * 3. Headers HTTP Defensivos:
+ *    - `X-Content-Type-Options: nosniff` (impede MIME sniffing).
+ *    - `X-Frame-Options: DENY` e CSP `frame-ancestors 'none'` (mitiga clickjacking).
+ *    - `Referrer-Policy: no-referrer` (previne vazamento de URLs e tokens).
+ * 4. Isolamento de Anexos:
+ *    - Bloqueia acesso direto à rota `/uploads/anexos` para forçar o consumo via endpoint seguro com RBAC (`/api/uploads/anexos/[arquivo]`).
+ * 5. Roteamento Inteligente:
+ *    - Redireciona acessos não autenticados para `/login?next=...` ou retorna JSON 401 para chamadas à API.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 
+/**
+ * Nome do cookie HTTP que armazena o token de sessão assinado.
+ */
 const COOKIE_NAME = "nio_os_session";
+
+/**
+ * Segredo padrão utilizado estritamente em ambiente de desenvolvimento local caso `AUTH_SECRET` não esteja definido.
+ */
 const DEV_AUTH_SECRET = "nio-os-dev-secret-change-this";
+
+/**
+ * Tempo máximo de vida da sessão do operador (30 dias em milissegundos).
+ */
 const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 30;
 
+/**
+ * Páginas visuais do sistema com acesso liberado a usuários não autenticados.
+ */
 const ROTAS_PUBLICAS = ["/login", "/primeiro-acesso", "/sair"];
 
+/**
+ * Endpoints da API com acesso público para procedimentos de autenticação e bootstrapping do sistema.
+ */
 const APIS_PUBLICAS = [
   "/api/auth/setup",
   "/api/auth/login",
@@ -14,20 +49,40 @@ const APIS_PUBLICAS = [
   "/api/auth/me",
 ];
 
+/**
+ * Métodos HTTP de mutação de estado sujeitos a validação estrita de origem (CSRF).
+ */
 const METODOS_MUTAVEIS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
+/**
+ * Verifica se o caminho requisitado corresponde a uma rota pública de interface.
+ *
+ * @param pathname - Caminho da URL
+ * @returns True se a rota for pública
+ */
 function rotaEhPublica(pathname: string) {
   return ROTAS_PUBLICAS.some(
     (rota) => pathname === rota || pathname.startsWith(`${rota}/`)
   );
 }
 
+/**
+ * Verifica se o endpoint de API requisitado é público.
+ *
+ * @param pathname - Caminho da API
+ * @returns True se o endpoint for público
+ */
 function apiEhPublica(pathname: string) {
   return APIS_PUBLICAS.some(
     (rota) => pathname === rota || pathname.startsWith(`${rota}/`)
   );
 }
 
+/**
+ * Recupera a chave secreta para assinatura HMAC a partir da variável `AUTH_SECRET`.
+ *
+ * @returns String da chave secreta ou string vazia se ausente em produção
+ */
 function authSecret() {
   const secret = String(process.env.AUTH_SECRET || "").trim();
 
@@ -40,6 +95,12 @@ function authSecret() {
   return "";
 }
 
+/**
+ * Converte um ArrayBuffer binário em string Base64URL segura para URLs e cookies.
+ *
+ * @param buffer - Buffer com dados binários da assinatura
+ * @returns String codificada em Base64URL
+ */
 function base64Url(buffer: ArrayBuffer) {
   const bytes = new Uint8Array(buffer);
   let texto = "";
@@ -54,6 +115,12 @@ function base64Url(buffer: ArrayBuffer) {
     .replace(/\//g, "_");
 }
 
+/**
+ * Decodifica uma string no formato Base64URL para texto ASCII original.
+ *
+ * @param valor - String Base64URL
+ * @returns Texto decodificado
+ */
 function decodificarBase64Url(valor: string) {
   const base64 = valor.replace(/-/g, "+").replace(/_/g, "/");
   const padding = "=".repeat((4 - (base64.length % 4)) % 4);
@@ -61,6 +128,12 @@ function decodificarBase64Url(valor: string) {
   return atob(base64 + padding);
 }
 
+/**
+ * Gera a assinatura criptográfica HMAC-SHA256 para um dado texto utilizando a Web Crypto API.
+ *
+ * @param valor - Conteúdo a ser assinado (payload do token)
+ * @returns Assinatura codificada em Base64URL
+ */
 async function assinar(valor: string) {
   const secret = authSecret();
 
@@ -88,6 +161,12 @@ async function assinar(valor: string) {
   return base64Url(assinatura);
 }
 
+/**
+ * Valida a autenticidade e validade temporal de um token de sessão.
+ *
+ * @param token - Token no formato `payload.assinatura`
+ * @returns True se o token for válido e não expirado; false caso contrário
+ */
 async function tokenValido(token?: string) {
   if (!token) return false;
 
@@ -121,6 +200,13 @@ async function tokenValido(token?: string) {
   }
 }
 
+/**
+ * Injeta cabeçalhos HTTP defensivos (CSP, X-Frame-Options, anti-sniffing) na resposta NextResponse.
+ *
+ * @param response - Resposta do Next.js
+ * @param semCache - Se deve incluir diretiva `Cache-Control: no-store`
+ * @returns A resposta modificada com os headers de segurança
+ */
 function aplicarHeadersSeguranca(
   response: NextResponse,
   semCache = false
@@ -140,6 +226,12 @@ function aplicarHeadersSeguranca(
   return response;
 }
 
+/**
+ * Detecta se uma requisição HTTP de alteração de dados provém de uma origem externa não autorizada (Cross-Site).
+ *
+ * @param request - Requisição NextRequest recebida
+ * @returns True se a requisição for mutável e de origem cruzada suspeita
+ */
 function requisicaoMutavelCrossSite(request: NextRequest) {
   if (
     !request.nextUrl.pathname.startsWith("/api") ||
@@ -172,6 +264,12 @@ function requisicaoMutavelCrossSite(request: NextRequest) {
   );
 }
 
+/**
+ * Função de middleware proxy que intercepta requisições HTTP para validar sessões, CSRF e cabeçalhos defensivos.
+ *
+ * @param request - Requisição NextRequest recebida
+ * @returns NextResponse com o resultado do processamento ou redirecionamento para login
+ */
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -242,6 +340,11 @@ export async function proxy(request: NextRequest) {
   );
 }
 
+/**
+ * Configuração de rotas interceptadas pelo middleware (matcher do Next.js).
+ * Intercepta todas as rotas que não contenham extensão de arquivo estático, além da pasta protegida `/uploads/anexos/:path*`.
+ */
 export const config = {
   matcher: ["/((?!.*\\..*).*)", "/uploads/anexos/:path*"],
 };
+

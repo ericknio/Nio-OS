@@ -1,3 +1,19 @@
+/**
+ * @file route.ts
+ * @description Endpoint para cancelamento transacional e estorno de vendas de balcão (PDV).
+ *
+ * Regras de Negócio e Concorrência:
+ * 1. Módulo & Permissão: Requer módulo de produtos ativo e permissão `vendas.cancelar`.
+ * 2. Prevenção de Duplo Cancelamento (Idempotência/Lock Otimista):
+ *    - Atualiza a venda condicionalmente de `CONCLUIDA` para `CANCELADA` via `updateMany`. Se `count !== 1`, aborta imediatamente.
+ *    - Verifica se já existem movimentações do tipo `CANCELAMENTO_VENDA`.
+ * 3. Reversão Inteligente de Estoque:
+ *    - Para itens com controle físico ativo (`stockQuantity !== null`), devolve o saldo via incremento atômico (`increment`).
+ *    - Trata adequadamente itens originalmente ilimitados ou produtos migrados para modo ilimitado sem quebrar o inventário.
+ *    - Registra rastreabilidade detalhada na tabela `StockMovement` com tipo `CANCELAMENTO_VENDA`, motivos e operador responsável.
+ * 4. Sanitização RBAC: Mascara dados de custos e lucros da resposta se o usuário não tiver permissão financeira.
+ */
+
 import { NextResponse } from "next/server";
 import { ProductSaleStatus, StockMovementType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -11,22 +27,46 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Tipagem do usuário autenticado no sistema.
+ */
 type UsuarioSessao = NonNullable<Parameters<typeof usuarioTemPermissao>[0]>;
 
+/**
+ * Contexto da rota contendo o ID da venda nos parâmetros dinâmicos.
+ */
 type RouteContext = {
   params: Promise<{
     id: string;
   }>;
 };
 
+/**
+ * Sanitiza valores de entrada convertendo-os em string sem espaços laterais.
+ *
+ * @param valor - Valor a ser sanitizado
+ * @returns String tratada
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Retorna o nome amigável do operador para auditoria no log de cancelamento.
+ *
+ * @param usuario - Objeto do usuário logado
+ * @returns Nome do operador ou "Sistema"
+ */
 function nomeOperador(usuario: UsuarioSessao) {
   return usuario.name?.trim() || usuario.username?.trim() || "Sistema";
 }
 
+/**
+ * Converte um valor arbitrário em número inteiro não-negativo.
+ *
+ * @param valor - Dado de entrada
+ * @returns Inteiro >= 0
+ */
 function inteiro(valor: unknown) {
   const n = Number(valor ?? 0);
 
@@ -35,11 +75,25 @@ function inteiro(valor: unknown) {
   return Math.max(0, Math.floor(n));
 }
 
+/**
+ * Converte um valor arbitrário em número finito com fallback para 0.
+ *
+ * @param valor - Valor a converter
+ * @returns Número válido ou 0
+ */
 function numero(valor: unknown) {
   const n = Number(valor ?? 0);
   return Number.isFinite(n) ? n : 0;
 }
 
+/**
+ * Mascara campos financeiros sensíveis (impostos, custos e lucros) da venda cancelada
+ * caso o operador logado não possua autorização de visualização financeira.
+ *
+ * @param venda - Objeto da venda retornado pelo Prisma
+ * @param financeiroSensivelLiberado - Se o usuário tem permissão financeira
+ * @returns Objeto protegido para retorno na resposta HTTP
+ */
 function protegerVenda(venda: any, financeiroSensivelLiberado: boolean) {
   if (financeiroSensivelLiberado) {
     return {
@@ -90,6 +144,13 @@ function protegerVenda(venda: any, financeiroSensivelLiberado: boolean) {
   };
 }
 
+/**
+ * Handler POST para cancelamento atômico de uma venda de produtos e devolução de estoque.
+ *
+ * @param request - Requisição HTTP com JSON contendo `reason` ou `motivo`
+ * @param context - Contexto com o parâmetro dinâmico `id` da venda
+ * @returns JSON com a confirmação de cancelamento e a quantidade de itens estornados
+ */
 export async function POST(request: Request, context: RouteContext) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();

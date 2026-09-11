@@ -1,3 +1,21 @@
+/**
+ * @file route.ts
+ * @description Endpoint central para listagem analítica (`GET`) e registro transacional (`POST`) de vendas de balcão (PDV).
+ *
+ * Funcionalidades e Regras de Negócio:
+ * 1. Módulo de Produtos: Exige que o módulo de catálogo/produtos esteja ativo na licença.
+ * 2. Transação Atômica & Concorrência de Estoque:
+ *    - A efetivação da venda (`POST`) ocorre em transação Prisma isolada (`prisma.$transaction`).
+ *    - Utiliza atualização condicional atômica (`decrement` com filtro `gte`) para prevenir estoque negativo em vendas concorrentes.
+ *    - Registra rastreabilidade com `StockMovement` (tipo `VENDA`).
+ * 3. Comissionamento do Atendente:
+ *    - Grava o snapshot imutável do percentual de comissão do operador no momento da venda (`attendantProfitPercentSnapshot`).
+ *    - Calcula a participação no lucro líquido da venda (`attendantProfitShare`).
+ * 4. Proteção de Dados Sensíveis (RBAC):
+ *    - Mascara custos (`costAmount`), impostos (`taxAmount`), margem de lucro (`profitAmount`) e comissões para usuários
+ *      sem permissão explícita para visualizar dados financeiros sensíveis.
+ */
+
 import {
   PaymentMethod,
   ProductSaleStatus,
@@ -17,8 +35,14 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Tipagem do usuário autenticado na sessão ativa.
+ */
 type UsuarioSessao = NonNullable<Parameters<typeof usuarioTemPermissao>[0]>;
 
+/**
+ * Modalidades de pagamento autorizadas para conclusão de venda no balcão.
+ */
 const FORMAS_PAGAMENTO_VALIDAS = [
   PaymentMethod.DINHEIRO,
   PaymentMethod.PIX,
@@ -26,27 +50,58 @@ const FORMAS_PAGAMENTO_VALIDAS = [
   PaymentMethod.PARCELADO,
 ] as const;
 
+/**
+ * Tipo união representando as opções válidas de forma de pagamento.
+ */
 type FormaPagamentoVenda = (typeof FORMAS_PAGAMENTO_VALIDAS)[number];
 
+/**
+ * Estrutura do item de venda recebido no payload de criação.
+ */
 type ItemVendaInput = {
   productId?: unknown;
   quantity?: unknown;
   unitPrice?: unknown;
 };
 
+/**
+ * Sanitiza valores de entrada convertendo-os em string sem espaços excedentes.
+ *
+ * @param valor - Dado a ser sanitizado
+ * @returns String resultante limpa
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Retorna o nome amigável do operador logado para auditoria e histórico de estoque.
+ *
+ * @param usuario - Objeto do usuário autenticado
+ * @returns Nome do operador ou "Sistema"
+ */
 function nomeOperador(usuario: UsuarioSessao) {
   return usuario.name?.trim() || usuario.username?.trim() || "Sistema";
 }
 
+/**
+ * Retorna o texto sanitizado ou null caso a string seja vazia.
+ *
+ * @param valor - Dado de entrada
+ * @returns String preenchida ou null
+ */
 function textoOuNulo(valor: unknown) {
   const limpo = texto(valor);
   return limpo || null;
 }
 
+/**
+ * Converte um valor arbitrário em número não-negativo seguro.
+ *
+ * @param valor - Valor a ser convertido
+ * @param fallback - Valor padrão em caso de número inválido ou negativo (default: 0)
+ * @returns Número válido >= 0
+ */
 function numero(valor: unknown, fallback = 0) {
   const n = Number(valor);
 
@@ -55,10 +110,23 @@ function numero(valor: unknown, fallback = 0) {
   return n;
 }
 
+/**
+ * Converte um valor em número inteiro não-negativo (arredondado para baixo).
+ *
+ * @param valor - Valor de entrada
+ * @param fallback - Valor padrão caso inválido
+ * @returns Inteiro >= 0
+ */
 function inteiro(valor: unknown, fallback = 0) {
   return Math.max(0, Math.floor(numero(valor, fallback)));
 }
 
+/**
+ * Valida se a modalidade informada é uma forma de pagamento suportada no PDV.
+ *
+ * @param valor - Dado a ser verificado
+ * @returns A forma de pagamento tipada ou null se inválida
+ */
 function formaPagamentoValida(valor: unknown): FormaPagamentoVenda | null {
   const forma = texto(valor).toUpperCase();
 
@@ -67,6 +135,14 @@ function formaPagamentoValida(valor: unknown): FormaPagamentoVenda | null {
     : null;
 }
 
+/**
+ * Formata os dados da venda para retorno na API, mascarando campos financeiros sensíveis
+ * (custos, impostos, lucros e percentuais de comissão) se o usuário não possuir privilégios para vê-los.
+ *
+ * @param venda - Registro da venda bruto do banco de dados
+ * @param financeiroSensivelLiberado - Flag autorizando a visualização de métricas financeiras
+ * @returns Objeto da venda sanitizado e seguro para exibição
+ */
 function formatarVenda(
   venda: Record<string, unknown>,
   financeiroSensivelLiberado: boolean
@@ -111,6 +187,18 @@ function formatarVenda(
   };
 }
 
+/**
+ * Handler GET para consulta e listagem paginada de vendas de produtos/balcão.
+ *
+ * Filtros suportados via Query String:
+ * - `busca`: Termo de pesquisa por nome do cliente, cupom/número de venda ou itens.
+ * - `status`: Status da venda (`CONCLUIDA`, `CANCELADA` ou `TODAS`).
+ * - `forma`: Forma de pagamento utilizada.
+ * - `dataInicio` / `dataFim`: Intervalo temporal de venda (YYYY-MM-DD).
+ *
+ * @param request - Requisição HTTP recebida
+ * @returns JSON contendo resumo analítico do lote e lista de vendas formatadas
+ */
 export async function GET(request: Request) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();
@@ -287,6 +375,25 @@ export async function GET(request: Request) {
   }
 }
 
+/**
+ * Handler POST para registro transacional de venda de produtos no balcão.
+ *
+ * Processamento e Regras de Negócio:
+ * 1. Módulo & Permissão: Valida módulo de produtos ativo e permissão `vendas.registrar`.
+ * 2. Validação de Itens: Exige ao menos um produto ativo e sem repetição na mesma venda.
+ * 3. Transação Atômica (`prisma.$transaction`):
+ *    - Carrega dados atualizados dos produtos (preços, custos e alíquotas de imposto).
+ *    - Resolve atendente responsável e calcula percentual/comissão de lucro no PDV se habilitado.
+ *    - Computa subtotais, descontos aplicados, impostos e lucro líquido.
+ *    - Aloca o próximo número sequencial de venda (`proximoNumeroVendaProduto`).
+ *    - Cria a venda com status `CONCLUIDA`.
+ *    - Realiza baixa de estoque atômica com validação de concorrência (`gte`).
+ *    - Cria registro de histórico de movimentação (`StockMovementType.VENDA`).
+ * 4. Retorna a venda registrada com valores sensíveis mascarados conforme as permissões do usuário.
+ *
+ * @param request - Requisição HTTP com o payload de itens, cliente, desconto e pagamento
+ * @returns JSON com a venda criada e status HTTP 201
+ */
 export async function POST(request: Request) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();

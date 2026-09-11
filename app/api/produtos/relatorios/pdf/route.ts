@@ -1,3 +1,15 @@
+/**
+ * @file route.ts
+ * @description Endpoint para exportação em PDF de relatórios de vendas e comissões de atendentes do balcão (PDV).
+ * Utiliza a biblioteca `pdfkit` para desenhar vetorialmente cabeçalhos corporativos com logotipo,
+ * cards estatísticos de resumo financeiro, agregações por atendente e detalhamento de vendas com itens.
+ *
+ * Aplica controle de acesso baseado em papéis (RBAC):
+ * - Gestores com permissão financeira visualizam lucro da empresa, margem e comissões de todos os operadores.
+ * - Atendentes com perfil restrito recebem documento customizado exibindo exclusivamente sua própria produção,
+ *   omitindo lucros e custos internos da loja.
+ */
+
 import { NextRequest } from "next/server";
 import PDFDocument from "pdfkit";
 import fs from "fs";
@@ -12,6 +24,9 @@ import { obterUsuarioLogado } from "@/lib/authSistema";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Estrutura com dados cadastrais e de identidade visual da empresa emissora.
+ */
 type EmpresaConfig = {
   nomeEmpresa?: string;
   companyName?: string;
@@ -29,6 +44,12 @@ type EmpresaConfig = {
   footerText?: string;
 };
 
+/**
+ * Formata um valor numérico para representação monetária brasileira (R$).
+ *
+ * @param valor - Quantia monetária numérica
+ * @returns String formatada em Real (ex: "R$ 1.250,50")
+ */
 function formatarMoeda(valor: unknown) {
   const n = Number(valor ?? 0);
   return Number.isFinite(n)
@@ -36,6 +57,12 @@ function formatarMoeda(valor: unknown) {
     : "R$ 0,00";
 }
 
+/**
+ * Converte uma data em formato ISO para o padrão brasileiro DD/MM/AAAA.
+ *
+ * @param dataIso - String de data no padrão ISO ou nula
+ * @returns Data formatada ou "-" em caso de erro/ausência
+ */
 function formatarData(dataIso?: string | null) {
   if (!dataIso) return "-";
   try {
@@ -46,6 +73,12 @@ function formatarData(dataIso?: string | null) {
   }
 }
 
+/**
+ * Converte uma data/hora ISO para o formato brasileiro legível DD/MM/AAAA HH:MM.
+ *
+ * @param dataIso - String de data/hora ISO ou nula
+ * @returns Data e hora formatadas ou "-" em caso de falha
+ */
 function formatarDataHora(dataIso?: string | null) {
   if (!dataIso) return "-";
   try {
@@ -60,6 +93,12 @@ function formatarDataHora(dataIso?: string | null) {
   }
 }
 
+/**
+ * Converte de forma segura uma string no padrão YYYY-MM-DD para objeto Date local.
+ *
+ * @param data - String no formato YYYY-MM-DD
+ * @returns Instância Date correspondente ou null se inválida
+ */
 function criarDataLocalSegura(data: string | null) {
   if (!data) return null;
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(data);
@@ -78,12 +117,25 @@ function criarDataLocalSegura(data: string | null) {
   return d;
 }
 
+/**
+ * Formata a data de um período para exibição no cabeçalho do documento.
+ *
+ * @param dataIso - Data no padrão ISO YYYY-MM-DD
+ * @returns Data formatada em DD/MM/AAAA
+ */
 function formatarDataPeriodo(dataIso: string) {
   const d = criarDataLocalSegura(dataIso);
   if (!d) return dataIso;
   return d.toLocaleDateString("pt-BR");
 }
 
+/**
+ * Localiza o caminho absoluto em disco da logomarca da empresa a partir de sua URL pública.
+ * Suporta caminhos estáticos em `public/` e armazenamentos dinâmicos em `uploads/`.
+ *
+ * @param logoUrl - URL relativa ou absoluta do logotipo
+ * @returns Caminho absoluto do arquivo no disco se existente, ou null
+ */
 function resolverCaminhoLogoLocal(logoUrl?: string) {
   if (!logoUrl) return null;
   try {
@@ -104,6 +156,18 @@ function resolverCaminhoLogoLocal(logoUrl?: string) {
   }
 }
 
+/**
+ * Renderiza o documento PDF vetorial com os dados de vendas e comissões dos atendentes.
+ * Constrói paginação automática, blocos de cabeçalho corporativo, cards estatísticos e listagem de vendas.
+ *
+ * @param relatorio - Dados consolidados obtidos do endpoint analítico de produtos
+ * @param empresa - Informações cadastrais da empresa
+ * @param periodoInicio - Data inicial formatada (YYYY-MM-DD)
+ * @param periodoFim - Data final formatada (YYYY-MM-DD)
+ * @param atendenteFiltro - ID do atendente específico ou "TODOS"
+ * @param ehApenasAtendente - Flag indicando se a emissão é restrita à visão do atendente
+ * @returns Promise resolvendo para o Buffer binário do PDF gerado
+ */
 async function gerarBufferPDFAtendentes(
   relatorio: any,
   empresa: EmpresaConfig,
@@ -517,6 +581,21 @@ async function gerarBufferPDFAtendentes(
   });
 }
 
+/**
+ * Handler GET para geração e streaming do arquivo PDF de vendas e comissões dos atendentes.
+ *
+ * Processamento e Regras de Negócio:
+ * 1. Extrai os parâmetros `inicio`, `fim`, `atendente` (ID ou "TODOS") e valida o intervalo de datas.
+ * 2. Verifica a autenticação e permissões: gestores com permissão financeira podem emitir o relatório de
+ *    todos os atendentes; usuários ATENDENTE têm a emissão forçada e restrita ao seu próprio usuário.
+ * 3. Faz requisição interna autenticada ao endpoint analítico `/api/produtos/relatorios` para buscar os dados agregados.
+ * 4. Obtém os dados cadastrais da empresa em `/api/configuracoes`.
+ * 5. Constrói o arquivo PDF em memória utilizando `gerarBufferPDFAtendentes`.
+ * 6. Retorna o stream binário com cabeçalhos `application/pdf` e `inline; filename="relatorio-atendentes-..."`.
+ *
+ * @param request - Requisição NextRequest com query params `inicio`, `fim` e `atendente`
+ * @returns Response com o binário do arquivo PDF gerado
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams, origin } = new URL(request.url);

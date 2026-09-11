@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint para upload de fotos de produtos (`/api/produtos/upload`).
+ * Recebe arquivos via `multipart/form-data`, valida o tipo MIME, tamanho máximo (3MB)
+ * e assinaturas mágicas de bytes (PNG, JPEG, WEBP) para impedir upload de binários maliciosos,
+ * persistindo no armazenamento seguro e retornando a URL pública.
+ */
+
 import { caminhoPublicoRuntime, caminhoUploadPublico } from "@/lib/runtimeStorage";
 import { NextResponse } from "next/server";
 import { mkdir, writeFile } from "fs/promises";
@@ -8,13 +16,26 @@ import { exigirPermissaoApi } from "@/lib/permissaoApi";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Tipos MIME de imagens aceitos no upload.
+ */
 const TIPOS_PERMITIDOS = ["image/png", "image/jpeg", "image/webp"];
+
+/**
+ * Mapeamento de tipos MIME para extensões de arquivo correspondentes.
+ */
 const EXTENSOES: Record<string, string> = {
   "image/png": "png",
   "image/jpeg": "jpg",
   "image/webp": "webp",
 };
 
+/**
+ * Valida a integridade e cabeçalho binário (magic bytes) do buffer da imagem.
+ * @param buffer - Buffer do arquivo recebido
+ * @param type - Tipo MIME declarado
+ * @returns Booleano indicando se a assinatura binária é genuína
+ */
 function imagemValida(buffer: Buffer, type: string) {
   if (type === "image/png") {
     const assinatura = Buffer.from([
@@ -39,6 +60,12 @@ function imagemValida(buffer: Buffer, type: string) {
   return false;
 }
 
+/**
+ * Manipulador POST para receber e salvar a imagem do produto.
+ * Exige que o módulo de produtos esteja ativo e permissão `produtos.criar` ou `produtos.editar`.
+ * @param request - Requisição HTTP contendo FormData com o campo `imagem`
+ * @returns Resposta JSON com a URL pública da imagem salva
+ */
 export async function POST(request: Request) {
   try {
     const bloqueioModuloProdutos = await exigirModuloProdutosAtivoApi();
