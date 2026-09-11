@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint de integração da Ordem de Serviço com o Estoque Técnico (`/api/ordens/[id]/pecas-tecnicas`).
+ * Permite buscar peças disponíveis para vincular à OS (GET) com flag de já vinculada (`alreadyActive`),
+ * e realizar a reserva formal com controle de versão otimista e idempotência (POST).
+ */
+
 import {
   getTechnicalPartById,
   listTechnicalParts,
@@ -27,6 +34,11 @@ export const dynamic = "force-dynamic";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
+/**
+ * Valida e sanitiza o payload JSON de reserva de peça técnica para a OS.
+ * @param value - Objeto bruto recebido na requisição
+ * @returns Objeto com technicalPartId, technicalPartVersion, quantity e confirmReplaceLegacyPartsCost
+ */
 function reserveBody(value: unknown) {
   const body = requirePlainRecord(value);
   assertAllowedKeys(body, [
@@ -46,6 +58,12 @@ function reserveBody(value: unknown) {
   };
 }
 
+/**
+ * Manipulador GET para consultar peças técnicas disponíveis para vincular a uma OS específica.
+ * @param request - Requisição HTTP com parâmetro de busca opcional `?q=`
+ * @param context - Contexto da rota contendo `params.id` (ID da Ordem de Serviço)
+ * @returns Resposta JSON contendo lista de peças com indicador `alreadyActive`
+ */
 export async function GET(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.editar");
@@ -97,6 +115,14 @@ export async function GET(request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Manipulador POST para reservar uma peça técnica no estoque e vinculá-la à Ordem de Serviço.
+ * Exige permissão `ordens.editar` e validação CSRF (Same-Origin).
+ * Suporta idempotência e controle de concorrência por versão otimista.
+ * @param request - Requisição HTTP contendo JSON de reserva (ID da peça, versão, quantidade)
+ * @param context - Contexto da rota contendo `params.id` (ID da Ordem de Serviço)
+ * @returns Resposta JSON com dados da reserva (Status 201 criado ou 200 replay idempotente)
+ */
 export async function POST(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.editar");

@@ -1,5 +1,9 @@
-// app/api/ordens/[id]/observacoes/route.ts
-// v1.1.0 - API de observações internas protegida e com operador da sessão
+/**
+ * @file route.ts
+ * @description Endpoint de anotações internas de uma Ordem de Serviço (`/api/ordens/[id]/observacoes`).
+ * Permite que técnicos e atendentes registrem notas de acompanhamento sigilosas (não visíveis ao cliente),
+ * com auditoria do autor autenticado na sessão e teto de 3.000 caracteres.
+ */
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
@@ -14,12 +18,23 @@ type RouteContext = {
   }>;
 };
 
+/** Limite máximo de caracteres por nota interna (3.000). */
 const LIMITE_OBSERVACAO = 3000;
 
+/**
+ * Converte valor de entrada para string limpa sem espaços nas pontas.
+ * @param valor - Dado bruto
+ * @returns String sanitizada
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Resolve o nome de identificação do operador autenticado.
+ * @param usuario - Dados da sessão
+ * @returns Nome do operador ou 'Sistema'
+ */
 function nomeOperador(usuario: unknown) {
   const dados = usuario as
     | {
@@ -40,6 +55,11 @@ function nomeOperador(usuario: unknown) {
   );
 }
 
+/**
+ * Normaliza e sanitiza os campos do registro de observação interna para retorno da API.
+ * @param observacao - Objeto salvo no banco
+ * @returns Observação com operador garantido
+ */
 function sanitizarObservacao(observacao: {
   id: string;
   serviceOrderId: string;
@@ -56,6 +76,14 @@ function sanitizarObservacao(observacao: {
   };
 }
 
+/**
+ * Lista as observações internas registradas na Ordem de Serviço.
+ * Exige permissão 'ordens.observacoes'.
+ * 
+ * @param _request - Requisição HTTP recebida
+ * @param context - Parâmetros da rota contendo `id` da OS
+ * @returns JSON com array das notas internas ordenadas da mais recente para a mais antiga
+ */
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.observacoes");
@@ -98,6 +126,15 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Adiciona uma nova nota de observação interna à Ordem de Serviço.
+ * Registra o autor autenticado e cria entrada de auditoria em `OrderHistory`.
+ * Exige permissão 'ordens.observacoes'.
+ * 
+ * @param request - Requisição HTTP com JSON contendo `note`
+ * @param context - Parâmetros da rota contendo `id` da OS
+ * @returns JSON com a nota cadastrada e status HTTP 201
+ */
 export async function POST(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.observacoes");

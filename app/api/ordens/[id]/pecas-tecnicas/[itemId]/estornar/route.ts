@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint de estorno manual de peça técnica consumida em Ordem de Serviço (`/api/ordens/[id]/pecas-tecnicas/[itemId]/estornar`).
+ * Permite reverter itens consumidos (status CONSUMED) de volta para o estoque físico e contábil,
+ * exigindo chave de idempotência UUID, validação de origem segura, versão otimista e justificativa obrigatória.
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
@@ -23,10 +30,22 @@ type UsuarioSessao = NonNullable<Parameters<typeof usuarioTemPermissao>[0]>;
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+/**
+ * Obtém o nome legível do operador autenticado para trilhas de auditoria.
+ * @param usuario - Dados da sessão do usuário autenticado
+ * @returns Nome, username ou 'Sistema'
+ */
 function nomeOperador(usuario: UsuarioSessao | null | undefined) {
   return usuario?.name?.trim() || usuario?.username?.trim() || "Sistema";
 }
 
+/**
+ * Cria resposta JSON padronizada com cabeçalho `Cache-Control: no-store`.
+ * @param body - Conteúdo do payload da resposta
+ * @param status - Código de status HTTP (padrão 200)
+ * @param extraHeaders - Cabeçalhos HTTP adicionais
+ * @returns Instância de NextResponse
+ */
 function json(
   body: unknown,
   status = 200,
@@ -41,6 +60,12 @@ function json(
   });
 }
 
+/**
+ * Valida se a origem da requisição pertence ao mesmo domínio ou rede local/LAN autorizada.
+ * Previne ataques de falsificação entre sites (CSRF).
+ * @param request - Requisição HTTP recebida
+ * @returns Booleano indicando se a origem é permitida
+ */
 function origemPermitida(request: Request) {
   const origin = request.headers.get("origin");
   if (!origin) return true;
@@ -83,11 +108,21 @@ function origemPermitida(request: Request) {
   }
 }
 
+/**
+ * Extrai e valida a chave de idempotência presente no cabeçalho `Idempotency-Key`.
+ * @param request - Requisição HTTP recebida
+ * @returns UUID v4 válido ou null se ausente/inválido
+ */
 function idempotencyKey(request: Request) {
   const value = request.headers.get("Idempotency-Key")?.trim() || "";
   return UUID_PATTERN.test(value) ? value : null;
 }
 
+/**
+ * Valida a integridade do payload de estorno enviado pelo cliente.
+ * @param body - Objeto JSON decodificado da requisição
+ * @returns Mensagem descritiva de erro ou null se todos os campos forem válidos
+ */
 function validarPayload(body: Record<string, unknown>) {
   const allowed = new Set([
     "technicalPartVersion",
@@ -136,6 +171,11 @@ function validarPayload(body: Record<string, unknown>) {
   return null;
 }
 
+/**
+ * Mapeia erros de domínio de estoque para respostas HTTP apropriadas com headers de retry se aplicável.
+ * @param error - Erro capturado
+ * @returns Resposta HTTP NextResponse formatada
+ */
 function estoqueError(error: unknown) {
   const mapped = toFutureHttpError(error);
   return json(
@@ -145,6 +185,14 @@ function estoqueError(error: unknown) {
   );
 }
 
+/**
+ * Manipulador PATCH para executar estorno manual de peça técnica consumida na Ordem de Serviço.
+ * Valida permissão `ordens.editar`, origem Same-Origin/LAN, chave de idempotência obrigatória,
+ * existência e pertencimento da peça à OS informada na URL, antes de chamar o serviço transacional.
+ * @param request - Requisição HTTP com JSON do estorno e cabeçalho Idempotency-Key
+ * @param context - Contexto contendo `id` da OS e `itemId` da peça vinculada
+ * @returns Resposta JSON com o resultado do estorno ou mensagem de erro
+ */
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.editar");

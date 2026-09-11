@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint para duplicação/clonagem de uma Ordem de Serviço existente (`/api/ordens/[id]/duplicar`).
+ * Copia dados do cliente, equipamento, defeito relatado e valores previstos, gerando um novo número
+ * sequencial atômico (`gerarProximoNumeroOS`), reiniciando o status em RECEBIDO e registrando a origem no histórico.
+ */
+
 import { NextResponse } from "next/server";
 import { PaymentMethod } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -18,15 +25,30 @@ type RouteContext = {
 
 type UsuarioSessao = NonNullable<Parameters<typeof usuarioTemPermissao>[0]>;
 
+/**
+ * Converte valor numérico com fallback seguro para zero.
+ * @param valor - Dado de entrada
+ * @returns Número finito ou 0
+ */
 function numeroSeguro(valor: unknown) {
   const numero = Number(valor ?? 0);
   return Number.isFinite(numero) ? numero : 0;
 }
 
+/**
+ * Retorna o nome ou username do operador para auditoria.
+ * @param usuario - Objeto do usuário autenticado
+ * @returns Identificação do operador
+ */
 function nomeOperador(usuario: UsuarioSessao | null | undefined) {
   return usuario?.name?.trim() || usuario?.username?.trim() || "Sistema";
 }
 
+/**
+ * Valida se o usuário tem permissão para visualizar dados financeiros de pagamento.
+ * @param usuario - Objeto do usuário logado
+ * @returns Verdadeiro se puder visualizar dados de pagamento
+ */
 function podeVerDadosPagamento(usuario: UsuarioSessao | null | undefined) {
   if (!usuario) return false;
 
@@ -37,6 +59,12 @@ function podeVerDadosPagamento(usuario: UsuarioSessao | null | undefined) {
   ]);
 }
 
+/**
+ * Oculta campos financeiros confidenciais da ordem duplicada caso o operador não tenha permissão de visualização.
+ * @param ordem - Registro completo da nova OS
+ * @param mostrarPagamentos - Flag de autorização financeira
+ * @returns Ordem com dados protegidos ou completos
+ */
 function ocultarDadosPagamentoDaOrdem(ordem: any, mostrarPagamentos: boolean) {
   if (mostrarPagamentos) return ordem;
 
@@ -57,6 +85,14 @@ function ocultarDadosPagamentoDaOrdem(ordem: any, mostrarPagamentos: boolean) {
   };
 }
 
+/**
+ * Duplica uma Ordem de Serviço existente, gerando uma nova com número sequencial próprio e status RECEBIDO.
+ * Exige permissão 'ordens.criar'.
+ * 
+ * @param _request - Requisição HTTP recebida
+ * @param context - Parâmetros da rota contendo `id` da OS original
+ * @returns JSON com a nova OS clonada (status 201)
+ */
 export async function POST(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.criar");

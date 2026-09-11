@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint de gerenciamento e recebimento de pagamentos de uma Ordem de Serviço (`/api/ordens/[id]/pagamento`).
+ * Suporta pagamentos fracionados (parciais) ou integrais, valida percentuais acumulados até 100%,
+ * aplica bloqueio de concorrência otimista (OCC), registra em `ServiceOrderPayment` e gera eventos no histórico.
+ */
+
 import { NextResponse } from "next/server";
 import { OrderStatus, PaymentMethod } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -13,6 +20,7 @@ type RouteContext = {
   }>;
 };
 
+/** Formas de pagamento aceitas para liquidação de Ordens de Serviço. */
 const formasPagamentoPermitidas: PaymentMethod[] = [
   PaymentMethod.DINHEIRO,
   PaymentMethod.PIX,
@@ -20,6 +28,7 @@ const formasPagamentoPermitidas: PaymentMethod[] = [
   PaymentMethod.PARCELADO,
 ];
 
+/** Mapeamento textual amigável das formas de pagamento. */
 const nomesPagamento: Record<string, string> = {
   DINHEIRO: "Dinheiro",
   PIX: "Pix",
@@ -28,6 +37,11 @@ const nomesPagamento: Record<string, string> = {
   AGUARDANDO_PAGAMENTO: "Aguardando pagamento",
 };
 
+/**
+ * Converte valor numérico para padrão monetário BRL.
+ * @param valor - Quantia monetária
+ * @returns String formatada (R$)
+ */
 function formatarMoeda(valor: number) {
   return valor.toLocaleString("pt-BR", {
     style: "currency",
@@ -35,18 +49,34 @@ function formatarMoeda(valor: number) {
   });
 }
 
+/**
+ * Converte string ou número em percentual numérico com suporte a vírgula decimal.
+ * @param valor - Dado bruto
+ * @returns Número percentual float
+ */
 function numeroPercentual(valor: unknown) {
   const numero = Number(String(valor ?? "").replace(",", "."));
 
   return Number.isFinite(numero) ? numero : 0;
 }
 
+/**
+ * Limita o tamanho do texto prevenindo estouros no banco.
+ * @param valor - Dado de entrada
+ * @param limite - Tamanho máximo (default: 500)
+ * @returns String limitada ou null se vazia
+ */
 function limitarTexto(valor: unknown, limite = 500) {
   const texto = String(valor || "").trim();
 
   return texto ? texto.slice(0, limite) : null;
 }
 
+/**
+ * Extrai o nome do operador autenticado na sessão.
+ * @param usuario - Dados da sessão
+ * @returns Nome limpo do usuário
+ */
 function nomeOperadorUsuario(usuario: unknown) {
   const dados = usuario as {
     name?: string | null;
@@ -56,6 +86,14 @@ function nomeOperadorUsuario(usuario: unknown) {
   return String(dados?.name || dados?.username || "").trim();
 }
 
+/**
+ * Lista todos os recebimentos registrados para a Ordem de Serviço informada.
+ * Exige permissão financeira ('pagamentos.ver', 'pagamentos.registrar' ou 'relatorios.financeiro').
+ * 
+ * @param _request - Requisição HTTP recebida
+ * @param context - Parâmetros da rota contendo `id` da OS
+ * @returns JSON com array de pagamentos ordenados do mais recente ao mais antigo
+ */
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi([
@@ -90,6 +128,20 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Registra um pagamento (parcial ou total) para a Ordem de Serviço.
+ * 
+ * Regras e concorrência:
+ * - Valida se a OS não está cancelada, finalizada ou sem valor total.
+ * - Garante que o percentual informado acumulado com pagamentos anteriores não ultrapasse 100%.
+ * - Utiliza atualização com OCC (Optimistic Concurrency Control) via `updateMany` condicional ao percentual prévio.
+ * - Cria registro individual em `ServiceOrderPayment` e gera evento no histórico.
+ * - Exige permissão 'pagamentos.registrar'.
+ * 
+ * @param request - Requisição HTTP com JSON contendo `paymentMethod`, `paymentPercent` e `note`
+ * @param context - Parâmetros da rota contendo `id` da OS
+ * @returns JSON com a ordem atualizada e lista de pagamentos
+ */
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("pagamentos.registrar");

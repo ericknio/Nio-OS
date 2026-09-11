@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint de exclusão de anexo específico vinculado a uma Ordem de Serviço (`/api/ordens/[id]/anexos/[anexoId]`).
+ * Executa a remoção do arquivo físico no disco (App Data / runtime), deleta o registro correspondente
+ * no banco de dados SQLite e registra o evento no histórico de auditoria da OS.
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import fs from "fs/promises";
@@ -15,6 +22,11 @@ type RouteContext = {
   }>;
 };
 
+/**
+ * Normaliza o nome do usuário autenticado para registro de histórico.
+ * @param usuario - Dados do usuário logado
+ * @returns Nome do operador ou 'Sistema'
+ */
 function nomeOperador(usuario: {
   name?: string | null;
   username?: string | null;
@@ -26,6 +38,12 @@ function nomeOperador(usuario: {
   );
 }
 
+/**
+ * Resolve todas as localizações potenciais onde o arquivo físico pode estar armazenado,
+ * cobrindo estruturas modernas e legadas de runtime.
+ * @param url - URL gravada no banco
+ * @returns Lista de caminhos absolutos no sistema de arquivos
+ */
 function caminhosPossiveisDoAnexo(url: string | null | undefined) {
   const valor = String(url || "").split("?")[0].trim();
   const nomeArquivo = path.basename(valor);
@@ -48,6 +66,10 @@ function caminhosPossiveisDoAnexo(url: string | null | undefined) {
   return Array.from(new Set(caminhos));
 }
 
+/**
+ * Remove fisicamente o arquivo do anexo no sistema de arquivos local.
+ * @param url - URL do anexo gravada no banco
+ */
 async function removerArquivoFisico(url: string | null | undefined) {
   const caminhos = caminhosPossiveisDoAnexo(url);
 
@@ -61,7 +83,14 @@ async function removerArquivoFisico(url: string | null | undefined) {
   }
 }
 
-
+/**
+ * Exclui um anexo específico de uma Ordem de Serviço.
+ * Exige permissão 'ordens.anexos'.
+ * 
+ * @param _request - Requisição HTTP recebida
+ * @param context - Parâmetros da rota contendo `id` da OS e `anexoId`
+ * @returns JSON confirmando a remoção ou erro (404, 500)
+ */
 export async function DELETE(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.anexos");

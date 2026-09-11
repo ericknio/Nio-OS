@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint de geração de etiqueta térmica em PDF para identificação física de aparelhos (`/api/ordens/[id]/etiqueta`).
+ * Gera um documento em formato compacto (240x120 pt / aprox. 85x42mm) utilizando PDFKit, com bordas arredondadas,
+ * número da OS em destaque, dados do cliente, WhatsApp, status, datas e IMEI/Serial, pronto para impressão térmica.
+ */
+
 import PDFDocument from "pdfkit";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
@@ -12,6 +19,11 @@ type RouteContext = {
   }>;
 };
 
+/**
+ * Normaliza o nome do usuário autenticado para registro de histórico.
+ * @param usuario - Dados do usuário logado
+ * @returns Nome do operador ou 'Sistema'
+ */
 function nomeOperador(usuario: {
   name?: string | null;
   username?: string | null;
@@ -23,7 +35,7 @@ function nomeOperador(usuario: {
   );
 }
 
-
+/** Mapa de tradução amigável dos tipos de equipamento para a etiqueta compacta. */
 const nomesEquipamento: Record<string, string> = {
   NOTEBOOK: "Notebook",
   COMPUTADOR: "Computador",
@@ -35,6 +47,7 @@ const nomesEquipamento: Record<string, string> = {
   OUTRO: "Outro",
 };
 
+/** Mapa de tradução e abreviação dos status de OS para o badge da etiqueta. */
 const nomesStatus: Record<string, string> = {
   RECEBIDO: "Recebido",
   EM_ANALISE: "Em análise",
@@ -45,6 +58,11 @@ const nomesStatus: Record<string, string> = {
   CANCELADO: "Cancelado",
 };
 
+/**
+ * Converte data para o formato pt-BR (DD/MM/AAAA) ou retorna '-' se nula.
+ * @param data - Dado de data
+ * @returns String formatada
+ */
 function formatarData(data: unknown) {
   if (!data) return "-";
 
@@ -57,6 +75,11 @@ function formatarData(data: unknown) {
   return d.toLocaleDateString("pt-BR");
 }
 
+/**
+ * Desenha e compila o buffer binário do PDF da etiqueta adesiva de bancada via PDFKit.
+ * @param ordem - Registro completo da Ordem de Serviço com dados do cliente
+ * @returns Promise com o Buffer binário do PDF montado
+ */
 function gerarPDFEtiqueta(ordem: any): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     try {
@@ -251,6 +274,15 @@ function gerarPDFEtiqueta(ordem: any): Promise<Buffer> {
   });
 }
 
+/**
+ * Gera e retorna a etiqueta adesiva térmica em formato PDF inline para impressão imediata.
+ * Registra o evento de impressão no histórico de auditoria da OS.
+ * Exige permissão 'ordens.imprimir'.
+ * 
+ * @param _request - Requisição HTTP recebida
+ * @param context - Parâmetros da rota contendo `id` da OS
+ * @returns Resposta HTTP binária (Content-Type: application/pdf) com o PDF da etiqueta
+ */
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.imprimir");

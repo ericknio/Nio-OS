@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint de geração e download da folha de entrada/serviço da OS em PDF A4 (`/api/ordens/[id]/imprimir`).
+ * Renderiza layout profissional de assistência técnica contendo cabeçalho personalizado da empresa,
+ * dados cadastrais do cliente, equipamento com defeito reclamado, laudo técnico, valores orçados
+ * (com proteção por permissão financeira), declaração de recebimento com assinatura e listagem de anexos.
+ */
+
 import { prisma } from "@/lib/prisma";
 import { caminhoUploadPublico } from "@/lib/runtimeStorage";
 import {
@@ -18,6 +26,11 @@ type RouteContext = {
   }>;
 };
 
+/**
+ * Normaliza o nome do usuário autenticado para registro de histórico.
+ * @param usuario - Dados do usuário logado
+ * @returns Nome do operador ou 'Sistema'
+ */
 function nomeOperador(usuario: {
   name?: string | null;
   username?: string | null;
@@ -29,6 +42,11 @@ function nomeOperador(usuario: {
   );
 }
 
+/**
+ * Formata valores numéricos para representação monetária brasileira (R$ 0,00).
+ * @param valor - Quantia monetária
+ * @returns String formatada em BRL
+ */
 function formatarMoeda(valor: unknown) {
   return Number(valor || 0).toLocaleString("pt-BR", {
     style: "currency",
@@ -36,11 +54,21 @@ function formatarMoeda(valor: unknown) {
   });
 }
 
+/**
+ * Formata data no padrão brasileiro pt-BR (DD/MM/AAAA) ou retorna '-' se nula.
+ * @param data - Data a formatar
+ * @returns String formatada
+ */
 function formatarData(data: Date | string | null | undefined) {
   if (!data) return "-";
   return new Date(data).toLocaleDateString("pt-BR");
 }
 
+/**
+ * Traduz o código enumerado do status da OS para texto em português.
+ * @param status - Código do status
+ * @returns Nome amigável do status
+ */
 function nomeStatus(status: string) {
   const nomes: Record<string, string> = {
     RECEBIDO: "Recebido",
@@ -55,6 +83,11 @@ function nomeStatus(status: string) {
   return nomes[status] || status;
 }
 
+/**
+ * Traduz a chave do tipo de equipamento para exibição em português.
+ * @param tipo - Código do equipamento
+ * @returns Nome amigável do equipamento
+ */
 function nomeEquipamento(tipo: string) {
   const nomes: Record<string, string> = {
     NOTEBOOK: "Notebook",
@@ -69,12 +102,27 @@ function nomeEquipamento(tipo: string) {
   return nomes[tipo] || tipo;
 }
 
+/**
+ * Desenha uma faixa de cabeçalho de seção retangular colorida no documento PDF.
+ * @param doc - Documento PDFKit
+ * @param titulo - Título da seção
+ * @param y - Posição vertical Y no documento
+ */
 function secao(doc: PDFKit.PDFDocument, titulo: string, y: number) {
   doc.roundedRect(30, y, 535, 18, 4).fill("#e2e8f0");
   doc.fillColor("#0f172a").font("Helvetica-Bold").fontSize(9).text(titulo, 36, y + 5);
   doc.fillColor("#000000");
 }
 
+/**
+ * Renderiza um campo simples de rótulo e valor nas coordenadas fornecidas.
+ * @param doc - Documento PDFKit
+ * @param titulo - Rótulo do campo
+ * @param valor - Texto do valor
+ * @param x - Posição X
+ * @param y - Posição Y
+ * @param largura - Largura máxima (default: 160)
+ */
 function campo(
   doc: PDFKit.PDFDocument,
   titulo: string,
@@ -91,6 +139,12 @@ function campo(
   });
 }
 
+/**
+ * Insere a imagem do logotipo da empresa no cabeçalho do documento PDF.
+ * @param doc - Documento PDFKit
+ * @param logoUrl - Caminho da logo
+ * @returns Verdadeiro se a imagem foi carregada e desenhada com sucesso
+ */
 function desenharLogo(
   doc: any,
   logoUrl: string | null | undefined,
@@ -118,10 +172,16 @@ function desenharLogo(
   }
 }
 
-
-
-
-
+/**
+ * Renderiza uma caixa retangular com borda arredondada contendo texto multi-linha.
+ * @param doc - Documento PDFKit
+ * @param titulo - Título do bloco
+ * @param valor - Conteúdo textual
+ * @param x - Posição horizontal X
+ * @param y - Posição vertical Y
+ * @param largura - Largura do bloco
+ * @param altura - Altura do bloco
+ */
 function blocoTexto(
   doc: PDFKit.PDFDocument,
   titulo: string,
@@ -140,6 +200,16 @@ function blocoTexto(
   });
 }
 
+/**
+ * Gera e retorna a folha completa da Ordem de Serviço em PDF A4 para impressão.
+ * Oculta o valor financeiro do serviço caso o operador não possua permissões financeiras.
+ * Registra o evento de impressão no histórico da OS.
+ * Exige permissão 'ordens.imprimir'.
+ * 
+ * @param request - Requisição HTTP recebida
+ * @param context - Parâmetros da rota contendo `id` da OS
+ * @returns Resposta HTTP binária (Content-Type: application/pdf) com o PDF da OS
+ */
 export async function GET(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.imprimir");

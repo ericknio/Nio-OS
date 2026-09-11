@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint para geração de Recibo de Pagamento em PDF da Ordem de Serviço (`/api/ordens/[id]/recibo`).
+ * Renderiza documento fiscal/operacional A4 contendo dados da empresa, cliente, equipamento,
+ * resumo financeiro (total, pago, saldo devedor), relação detalhada de pagamentos recebidos
+ * e termo de quitação/declaração formal com registro em auditoria.
+ */
+
 import PDFDocument from "pdfkit";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
@@ -21,6 +29,11 @@ type RouteContext = {
   }>;
 };
 
+/**
+ * Obtém o nome legível do operador autenticado para trilhas de auditoria.
+ * @param usuario - Dados do usuário autenticado
+ * @returns Nome, username, e-mail ou 'Sistema'
+ */
 function nomeOperador(usuario: {
   name?: string | null;
   username?: string | null;
@@ -32,6 +45,9 @@ function nomeOperador(usuario: {
   );
 }
 
+/**
+ * Dicionário para tradução de constantes de formas de pagamento em nomes amigáveis.
+ */
 const nomesPagamento: Record<string, string> = {
   AGUARDANDO_PAGAMENTO: "Aguardando pagamento",
   DINHEIRO: "Dinheiro",
@@ -40,6 +56,11 @@ const nomesPagamento: Record<string, string> = {
   PARCELADO: "Parcelado",
 };
 
+/**
+ * Formata um valor numérico em moeda Real Brasileiro (BRL).
+ * @param valor - Valor numérico a ser formatado
+ * @returns String formatada (ex: R$ 150,00)
+ */
 function formatarMoeda(valor: unknown) {
   return Number(valor || 0).toLocaleString("pt-BR", {
     style: "currency",
@@ -47,6 +68,11 @@ function formatarMoeda(valor: unknown) {
   });
 }
 
+/**
+ * Formata timestamp ou string ISO em data pt-BR (DD/MM/AAAA).
+ * @param data - Data a formatar
+ * @returns Data formatada ou hífen se inválida
+ */
 function formatarData(data: unknown) {
   if (!data) return "-";
 
@@ -57,6 +83,11 @@ function formatarData(data: unknown) {
   return d.toLocaleDateString("pt-BR");
 }
 
+/**
+ * Formata timestamp em data e hora pt-BR (DD/MM/AAAA HH:mm).
+ * @param data - Data a formatar
+ * @returns Data e hora formatadas
+ */
 function formatarDataHora(data: unknown) {
   if (!data) return "-";
 
@@ -73,6 +104,13 @@ function formatarDataHora(data: unknown) {
   return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
 }
 
+/**
+ * Desenha a logomarca da empresa no documento PDF do recibo.
+ * @param doc - Instância do PDFKit Document
+ * @param logoUrl - Caminho ou URL da logomarca
+ * @param _resto - Parâmetros adicionais não utilizados
+ * @returns Booleano indicando se a logo foi desenhada com sucesso
+ */
 function desenharLogoRecibo(
   doc: any,
   logoUrl: string | null | undefined,
@@ -100,11 +138,11 @@ function desenharLogoRecibo(
   }
 }
 
-
-
-
-
-
+/**
+ * Gera o buffer binário do PDF do Recibo de Pagamento com layout profissional.
+ * @param params - Objeto contendo ordem de serviço completa e configurações da empresa
+ * @returns Promise com o Buffer do PDF gerado
+ */
 function gerarPDFRecibo({
   ordem,
   empresa,
@@ -479,6 +517,15 @@ doc.y = 122;
   });
 }
 
+/**
+ * Manipulador GET para gerar o Recibo de Pagamento em PDF da Ordem de Serviço.
+ * Exige permissões `ordens.imprimir` e permissão financeira (`pagamentos.ver`, `pagamentos.registrar` ou `relatorios.financeiro`).
+ * Requer que a OS possua pelo menos um pagamento registrado (`paymentPercent > 0`).
+ * Registra o histórico `RECIBO_PAGAMENTO` e retorna o arquivo PDF para visualização em navegador (inline).
+ * @param request - Requisição HTTP recebida
+ * @param context - Contexto contendo `params.id` da OS
+ * @returns Resposta com binário PDF (`application/pdf`) ou erro JSON
+ */
 export async function GET(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.imprimir");

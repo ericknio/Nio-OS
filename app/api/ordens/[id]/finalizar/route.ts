@@ -1,3 +1,13 @@
+/**
+ * @file route.ts
+ * @description Endpoint de finalização e entrega ao cliente de uma Ordem de Serviço (`/api/ordens/[id]/finalizar`).
+ * Executa em transação atômica do Prisma:
+ * 1. Valida se a ordem está no status PRONTO e possui técnico responsável definido.
+ * 2. Cria o registro `OrderFinalization` com laudo de reparo, peças trocadas, garantia e recebedor.
+ * 3. Quita eventual saldo financeiro restante criando um pagamento complementar automático.
+ * 4. Altera o status da ordem para ENTREGUE e marca quitação em 100%.
+ */
+
 import { NextResponse } from "next/server";
 import { OrderStatus, PaymentMethod, type Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -17,21 +27,42 @@ type RouteContext = {
 
 type UsuarioSessao = NonNullable<Parameters<typeof usuarioTemPermissao>[0]>;
 
+/**
+ * Converte valor numérico com fallback seguro para zero.
+ * @param valor - Dado de entrada
+ * @returns Número finito ou zero
+ */
 function numeroSeguro(valor: unknown) {
   const numero = Number(valor ?? 0);
   return Number.isFinite(numero) ? numero : 0;
 }
 
+/**
+ * Trata e limita o tamanho de strings de texto prevenindo estouro de payload.
+ * @param valor - Dado bruto
+ * @param limite - Quantidade máxima de caracteres permitida
+ * @returns String cortada
+ */
 function textoLimitado(valor: unknown, limite: number) {
   return String(valor || "")
     .trim()
     .slice(0, limite);
 }
 
+/**
+ * Normaliza o nome do usuário autenticado para registro de histórico.
+ * @param usuario - Dados do usuário logado
+ * @returns Nome do operador ou 'Sistema'
+ */
 function nomeOperador(usuario: UsuarioSessao | null | undefined) {
   return usuario?.name?.trim() || usuario?.username?.trim() || "Sistema";
 }
 
+/**
+ * Valida se uma data é legítima ou retorna a data atual / null em caso de valor inválido.
+ * @param valor - Dado de data informado
+ * @returns Instância de Date ou null se data inválida
+ */
 function dataValidaOuNula(valor: unknown) {
   if (!valor) return new Date();
 
@@ -42,6 +73,20 @@ function dataValidaOuNula(valor: unknown) {
   return data;
 }
 
+/**
+ * Finaliza e registra a entrega da Ordem de Serviço ao cliente.
+ * 
+ * Requisitos operacionais e financeiros:
+ * - Exige permissão 'ordens.finalizar' e 'pagamentos.registrar'.
+ * - A OS deve estar previamente no status PRONTO com técnico responsável registrado.
+ * - Criação de `OrderFinalization` com laudo de conserto, peças, prazo de garantia e recebedor.
+ * - Registro automático de pagamento residual para atingir 100% de quitação.
+ * - Atualização do status para ENTREGUE.
+ * 
+ * @param request - Requisição HTTP com JSON contendo `repairDescription`, `deliveredBy`, `finalAmount`, `paymentMethod`, `warrantyDays`, etc.
+ * @param context - Parâmetros da rota contendo `id` da OS
+ * @returns JSON com a ordem finalizada e termo de entrega gerado
+ */
 export async function POST(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.finalizar");

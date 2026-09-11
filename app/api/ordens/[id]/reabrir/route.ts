@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint para reabertura de Ordens de Serviço finalizadas ou canceladas (`/api/ordens/[id]/reabrir`).
+ * Remove o registro de finalização (`orderFinalization`), restaura o status da OS para `RECEBIDO`,
+ * reseta `finalizedAt` e registra o evento na trilha de auditoria (`REABERTURA_OS`).
+ */
+
 import { NextResponse } from "next/server";
 import { OrderStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -17,10 +24,20 @@ type RouteContext = {
 
 type UsuarioSessao = NonNullable<Parameters<typeof usuarioTemPermissao>[0]>;
 
+/**
+ * Obtém o nome legível do operador autenticado para trilhas de auditoria.
+ * @param usuario - Dados da sessão do usuário autenticado
+ * @returns Nome, username ou 'Sistema'
+ */
 function nomeOperador(usuario: UsuarioSessao | null | undefined) {
   return usuario?.name?.trim() || usuario?.username?.trim() || "Sistema";
 }
 
+/**
+ * Verifica se o usuário tem permissão para visualizar dados financeiros e pagamentos da OS.
+ * @param usuario - Usuário autenticado
+ * @returns Booleano indicando permissão financeira
+ */
 function podeVerDadosPagamento(usuario: UsuarioSessao | null | undefined) {
   if (!usuario) return false;
 
@@ -31,6 +48,12 @@ function podeVerDadosPagamento(usuario: UsuarioSessao | null | undefined) {
   ]);
 }
 
+/**
+ * Mascara campos financeiros e histórico de pagamentos caso o usuário não possua autorização.
+ * @param ordem - Objeto da Ordem de Serviço com relações
+ * @param mostrarPagamentos - Indicador se pagamentos devem ser exibidos
+ * @returns Ordem com dados financeiros preservados ou ofuscados
+ */
 function ocultarDadosPagamentoDaOrdem(ordem: any, mostrarPagamentos: boolean) {
   if (mostrarPagamentos) return ordem;
 
@@ -51,6 +74,14 @@ function ocultarDadosPagamentoDaOrdem(ordem: any, mostrarPagamentos: boolean) {
   };
 }
 
+/**
+ * Manipulador PATCH para reabrir uma Ordem de Serviço finalizada ou cancelada.
+ * Exige permissão `ordens.reabrir`. Executa transação no banco removendo a finalização,
+ * alterando o status para `RECEBIDO` e inserindo log no histórico.
+ * @param _request - Requisição HTTP recebida
+ * @param context - Contexto contendo `params.id` da OS
+ * @returns Resposta JSON com os dados da OS reaberta
+ */
 export async function PATCH(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.reabrir");

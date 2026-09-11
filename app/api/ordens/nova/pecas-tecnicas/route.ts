@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint para busca e auto-complete de peças do estoque técnico durante a abertura de nova OS.
+ * Oculta dados de custos de compra (`canViewFinancialData: false`) e restringe aos itens ativos
+ * com saldo em estoque disponível para reserva.
+ */
+
 import { listTechnicalParts, StockDomainError, toFutureHttpError } from "@/lib/estoqueTecnico";
 import { exigirPermissaoApi } from "@/lib/permissaoApi";
 import { NextResponse } from "next/server";
@@ -5,6 +12,13 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Retorna as peças técnicas ativas cadastradas no estoque para inclusão na abertura de uma OS.
+ * Exige permissão 'ordens.criar'.
+ * 
+ * @param request - Requisição HTTP com parâmetro de busca opcional `?q=`
+ * @returns JSON com array sanitizado de peças (nome, SKU, modelo compatível, preço de venda e saldo disponível)
+ */
 export async function GET(request: Request) {
   try {
     const acesso = await exigirPermissaoApi("ordens.criar");

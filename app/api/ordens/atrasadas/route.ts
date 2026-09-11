@@ -1,5 +1,10 @@
-// app/api/ordens/atrasadas/route.ts
-// v1.1.0 - Mantém proteção server-side e sanitização financeira.
+/**
+ * @file route.ts
+ * @description Endpoint de consulta e sumarização de Ordens de Serviço em atraso no Nio-OS.
+ * Filtra ordens cuja data prevista de entrega (`expectedDeliveryDate`) é inferior à data corrente
+ * e cujo status não seja terminativo (PRONTO, ENTREGUE, CANCELADO). Calcula dias corridos de atraso
+ * e estatísticas operacionais/financeiras para alertas no painel.
+ */
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
@@ -8,12 +13,22 @@ import { exigirPermissaoApi } from "@/lib/permissaoApi";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Zera as horas, minutos, segundos e milissegundos de uma data para comparação estrita de dias civis.
+ * @param data - Instância de Date
+ * @returns Nova Date com horário 00:00:00.000
+ */
 function inicioDoDia(data: Date) {
   const novaData = new Date(data);
   novaData.setHours(0, 0, 0, 0);
   return novaData;
 }
 
+/**
+ * Calcula a quantidade inteira de dias corridos em atraso em relação ao dia atual.
+ * @param dataPrevisao - Data prevista de entrega da OS
+ * @returns Número inteiro maior ou igual a zero representando os dias de atraso
+ */
 function calcularDiasAtraso(dataPrevisao: Date | string | null) {
   if (!dataPrevisao) return 0;
 
@@ -28,6 +43,11 @@ function calcularDiasAtraso(dataPrevisao: Date | string | null) {
   return Math.max(diferenca, 0);
 }
 
+/**
+ * Agrupa a contagem de ordens atrasadas por status intermediário (recebido, em análise, aguardando peça, em reparo).
+ * @param ordens - Lista de ordens avaliadas
+ * @returns Objeto com contadores por status
+ */
 function resumoPorStatus(ordens: { status: string }[]) {
   return {
     recebido: ordens.filter((ordem) => ordem.status === "RECEBIDO").length,
@@ -38,6 +58,12 @@ function resumoPorStatus(ordens: { status: string }[]) {
   };
 }
 
+/**
+ * Retorna o relatório consolidado de ordens de serviço atrasadas com contadores e total financeiro em aberto.
+ * Exige permissão 'ordens.ver'.
+ * 
+ * @returns JSON com resumo estatístico e array de ordens atrasadas ordenadas por maior urgência
+ */
 export async function GET() {
   try {
     const acesso = await exigirPermissaoApi("ordens.ver");

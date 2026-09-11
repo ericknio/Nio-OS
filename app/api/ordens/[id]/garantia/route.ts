@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint de geração do Termo de Garantia em PDF formato A4 (`/api/ordens/[id]/garantia`).
+ * Renderiza documento formal contendo dados da empresa, cliente, equipamento, descrição do reparo,
+ * peças aplicadas, cálculo da data de expiração da garantia e cláusulas contratuais de cobertura.
+ */
+
 import { prisma } from "@/lib/prisma";
 import { caminhoUploadPublico } from "@/lib/runtimeStorage";
 import {
@@ -15,6 +22,11 @@ type RouteContext = {
   }>;
 };
 
+/**
+ * Normaliza o nome do usuário autenticado para registro de histórico.
+ * @param usuario - Dados do usuário logado
+ * @returns Nome do operador ou 'Sistema'
+ */
 function nomeOperador(usuario: {
   name?: string | null;
   username?: string | null;
@@ -26,17 +38,33 @@ function nomeOperador(usuario: {
   );
 }
 
+/**
+ * Formata data no padrão brasileiro pt-BR (DD/MM/AAAA) ou retorna '-' se nula.
+ * @param data - Data a formatar
+ * @returns String formatada
+ */
 function formatarData(data: Date | string | null | undefined) {
   if (!data) return "-";
   return new Date(data).toLocaleDateString("pt-BR");
 }
 
+/**
+ * Calcula a data de expiração somando a quantidade de dias de garantia à data de entrega.
+ * @param data - Data inicial de entrega
+ * @param dias - Quantidade de dias de cobertura
+ * @returns Nova instância de Date calculada
+ */
 function somarDias(data: Date | string, dias: number) {
   const novaData = new Date(data);
   novaData.setDate(novaData.getDate() + dias);
   return novaData;
 }
 
+/**
+ * Traduz a chave enumerada do tipo de equipamento para exibição em português.
+ * @param tipo - Código do equipamento
+ * @returns Nome amigável do equipamento
+ */
 function nomeEquipamento(tipo: string) {
   const nomes: Record<string, string> = {
     NOTEBOOK: "Notebook",
@@ -51,12 +79,27 @@ function nomeEquipamento(tipo: string) {
   return nomes[tipo] || tipo;
 }
 
+/**
+ * Desenha uma faixa de cabeçalho de seção retangular colorida no documento PDF.
+ * @param doc - Documento PDFKit
+ * @param titulo - Título da seção
+ * @param y - Posição vertical Y no documento
+ */
 function secao(doc: PDFKit.PDFDocument, titulo: string, y: number) {
   doc.roundedRect(30, y, 535, 18, 4).fill("#e2e8f0");
   doc.fillColor("#0f172a").font("Helvetica-Bold").fontSize(9).text(titulo, 36, y + 5);
   doc.fillColor("#000000");
 }
 
+/**
+ * Renderiza um rótulo e valor textual simples em coordenadas específicas do PDF.
+ * @param doc - Documento PDFKit
+ * @param titulo - Rótulo do campo
+ * @param valor - Conteúdo a exibir
+ * @param x - Posição horizontal X
+ * @param y - Posição vertical Y
+ * @param largura - Largura do campo (default: 160)
+ */
 function campo(
   doc: PDFKit.PDFDocument,
   titulo: string,
@@ -73,6 +116,12 @@ function campo(
   });
 }
 
+/**
+ * Insere a imagem do logotipo da empresa no cabeçalho do documento PDF.
+ * @param doc - Documento PDFKit
+ * @param logoUrl - Caminho da logo
+ * @returns Verdadeiro se a imagem foi carregada e desenhada com sucesso
+ */
 function desenharLogo(
   doc: any,
   logoUrl: string | null | undefined,
@@ -100,10 +149,16 @@ function desenharLogo(
   }
 }
 
-
-
-
-
+/**
+ * Renderiza uma caixa retangular com borda arredondada contendo texto multi-linha (laudos e peças).
+ * @param doc - Documento PDFKit
+ * @param titulo - Título do bloco
+ * @param valor - Texto do bloco
+ * @param x - Posição X
+ * @param y - Posição Y
+ * @param largura - Largura do bloco
+ * @param altura - Altura do bloco
+ */
 function blocoTexto(
   doc: PDFKit.PDFDocument,
   titulo: string,
@@ -122,6 +177,15 @@ function blocoTexto(
   });
 }
 
+/**
+ * Gera e retorna o documento PDF A4 completo do Termo de Garantia da Ordem de Serviço.
+ * Registra o evento de impressão no histórico de auditoria da OS.
+ * Exige permissão 'ordens.imprimir'.
+ * 
+ * @param request - Requisição HTTP recebida
+ * @param context - Parâmetros da rota contendo `id` da OS
+ * @returns Resposta HTTP binária (Content-Type: application/pdf) com o PDF da garantia
+ */
 export async function GET(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("ordens.imprimir");
