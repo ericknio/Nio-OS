@@ -1,3 +1,14 @@
+/**
+ * @file lib/estoqueTecnico/orderCancellationService.ts
+ * @description Serviço de cancelamento de Ordens de Serviço com liberação ou devolução de peças técnicas.
+ * 
+ * Regras de execução:
+ * - Libera peças que estavam reservadas (`RESERVED` -> `RELEASED`), restaurando o saldo disponível.
+ * - Opcionalmente reverte peças já consumidas (`returnConsumedParts: true`), devolvendo-as ao saldo físico.
+ * - Atualiza o status da O.S. para `CANCELADO` e recalcula os totais.
+ * - Não permite cancelamento se houver pagamentos ativos não estornados (exige estorno financeiro prévio).
+ */
+
 import { createHash, randomUUID } from "node:crypto";
 import { validateCancelServiceOrderCommand, validateCommandContext } from "./commands";
 import { __withImmediateTransactionForTests, withImmediateTransaction } from "./db";

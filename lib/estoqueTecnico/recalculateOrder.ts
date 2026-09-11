@@ -1,3 +1,13 @@
+/**
+ * @file lib/estoqueTecnico/recalculateOrder.ts
+ * @description Recálculo financeiro atômico dos totais de uma Ordem de Serviço após inclusão/remoção de peças técnicas.
+ * 
+ * Regras financeiras aplicadas:
+ * - Soma os totais (`totalPriceSnapshot`) apenas dos itens com estado `RESERVED` ou `CONSUMED`.
+ * - `totalAmount = MAX(partsCost + laborCost - discount, 0)`.
+ * - Proteção contra estouro numérico e violação de invariantes contábeis.
+ */
+
 import type {
   StockDatabase,
   TechnicalOrderTotals,
@@ -5,6 +15,13 @@ import type {
 import { STOCK_NUMERIC_LIMITS, roundMoney } from "./validation";
 import { stockError } from "./errors";
 
+/**
+ * Recalcula o valor total de peças (`partsCost`) e o valor final da OS (`totalAmount`) no banco de dados.
+ * 
+ * @param database Conexão com o banco SQLite.
+ * @param serviceOrderId ID da Ordem de Serviço recalculada.
+ * @returns Totais financeiros recalculados.
+ */
 export function recalculateTechnicalPartsOrderTotals(
   database: StockDatabase,
   serviceOrderId: string,

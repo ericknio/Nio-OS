@@ -1,3 +1,11 @@
+/**
+ * @file lib/estoqueTecnico/movementService.ts
+ * @description Serviço de consulta paginada do histórico de movimentações de peças técnicas.
+ * 
+ * Permite extrair o extrato de entradas, saídas, reservas, consumos e estornos de uma peça específica,
+ * com sanitização e ocultação automática de dados de custo para usuários não autorizados.
+ */
+
 import {
   __withStockDatabaseForTests,
   withStockDatabase,

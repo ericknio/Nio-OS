@@ -1,3 +1,14 @@
+/**
+ * @file lib/estoqueTecnico/orderPartService.ts
+ * @description Serviço de domínio para reserva e listagem de peças técnicas vinculadas a uma Ordem de Serviço.
+ * 
+ * Responsabilidades:
+ * - Reserva de peças com separação física no estoque (`reserveTechnicalPartForOrder`).
+ * - Validação de status mutável da O.S. (impede alteração se já finalizada ou cancelada).
+ * - Recálculo imediato do valor total de peças e atualização da O.S.
+ * - Registro do movimento de reserva (`ORDER_RESERVATION`) e auditoria no histórico da O.S.
+ */
+
 import { createHash } from "node:crypto";
 import type { ServiceOrderPartState } from "@prisma/client";
 import { validateCommandContext } from "./commands";

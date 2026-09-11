@@ -1,3 +1,15 @@
+/**
+ * @file lib/estoqueTecnico/orderConsumptionService.ts
+ * @description Serviço de transição atômica de status para PRONTO (`markServiceOrderReadyAndConsumeTechnicalParts`).
+ * 
+ * Executa a baixa definitiva em lote:
+ * 1. Converte todas as peças com status `RESERVED` na O.S. para `CONSUMED`.
+ * 2. Baixa a reserva e o saldo físico em estoque de cada peça (`quantityOnHand - qty` e `quantityReserved - qty`).
+ * 3. Cria registros de movimentação do tipo `ORDER_CONSUMPTION` com snapshots do custo de aquisição.
+ * 4. Captura o snapshot do percentual de participação nos lucros do técnico (`technicianProfitPercentSnapshot`).
+ * 5. Atualiza o status da O.S. para `PRONTO`.
+ */
+
 import { createHash } from "node:crypto";
 import { validateCommandContext } from "./commands";
 import { __withImmediateTransactionForTests, withImmediateTransaction } from "./db";

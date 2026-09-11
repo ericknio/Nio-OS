@@ -1,3 +1,14 @@
+/**
+ * @file lib/estoqueTecnico/orderPartRepository.ts
+ * @description Repositório SQL para persistência e ciclo de vida de itens de peças em O.S. (`ServiceOrderPart`).
+ * 
+ * Gerencia a máquina de estados das peças vinculadas à Ordem de Serviço:
+ * - `RESERVED`: Peça separada no estoque aguardando conserto ou aprovação.
+ * - `CONSUMED`: Peça consumida e instalada no aparelho na entrega/conclusão da O.S.
+ * - `RELEASED`: Peça liberada de volta para o saldo disponível por cancelamento ou remoção.
+ * - `REVERSED`: Peça consumida cujo estorno foi executado manualmente com devolução ao estoque.
+ */
+
 import { randomUUID } from "node:crypto";
 import type {
   ServiceOrderPartRecord,

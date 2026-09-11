@@ -1,3 +1,11 @@
+/**
+ * @file lib/estoqueTecnico/orderTechnicalCommandRepository.ts
+ * @description Repositório SQL para persistência do log de comandos em O.S. (`ServiceOrderTechnicalCommandLog`).
+ * 
+ * Registra o histórico idempotente de comandos executados sobre a Ordem de Serviço
+ * (consumo em lote na finalização, liberação no cancelamento, etc.).
+ */
+
 import { randomUUID } from "node:crypto";
 import type {
   ServiceOrderTechnicalCommandLogRecord,

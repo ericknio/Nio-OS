@@ -1,3 +1,14 @@
+/**
+ * @file lib/estoqueTecnico/orderPartMutationService.ts
+ * @description Serviço de mutação de itens reservados em Ordem de Serviço (alteração de quantidade e remoção).
+ * 
+ * Operações:
+ * - `changeReservedTechnicalPartQuantity`: Ajusta a quantidade reservada da peça, aumentando ou diminuindo
+ *   o saldo reservado no estoque físico e recalculando os totais da O.S.
+ * - `releaseTechnicalPartFromOrder`: Remove a peça da O.S., marcando seu estado como `RELEASED`,
+ *   devolvendo as unidades ao saldo disponível da peça e recalculando os totais financeiros.
+ */
+
 import { createHash } from "node:crypto";
 import { validateCommandContext } from "./commands";
 import {

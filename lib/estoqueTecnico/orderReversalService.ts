@@ -1,3 +1,14 @@
+/**
+ * @file lib/estoqueTecnico/orderReversalService.ts
+ * @description Serviço de estorno pontual de peça técnica consumida em O.S. (`reverseConsumedTechnicalPartManually`).
+ * 
+ * Permite devolver uma peça que já havia sido baixada no conserto de volta ao inventário físico:
+ * - Transiciona o item de `CONSUMED` para `REVERSED`.
+ * - Reincrementa o saldo físico da peça (`quantityOnHand + qty`).
+ * - Registra movimento imutável de estorno do tipo `ORDER_REVERSAL`.
+ * - Recalcula os totais financeiros e registra auditoria detalhada.
+ */
+
 import { createHash } from "node:crypto";
 import { validateCommandContext } from "./commands";
 import {

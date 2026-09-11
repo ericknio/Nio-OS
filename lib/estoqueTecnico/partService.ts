@@ -1,3 +1,15 @@
+/**
+ * @file lib/estoqueTecnico/partService.ts
+ * @description Serviço de domínio CQRS para gestão do ciclo de vida e inventário de Peças Técnicas (`TechnicalPart`).
+ * 
+ * Funcionalidades centrais:
+ * - Cadastro de peças com suporte a estoque controlado ou ilimitado.
+ * - Atualização com controle de concorrência otimista (`version`).
+ * - Entradas de mercadoria, acertos de balanço positivo/negativo com rastreamento imutável de movimentações.
+ * - Transição entre modos de estoque (`controlled` <-> `unlimited`).
+ * - Execução sob transação imediata (`withImmediateTransaction`) e garantia de idempotência.
+ */
+
 import { randomUUID } from "node:crypto";
 import type { TechnicalPartMovementType } from "@prisma/client";
 import {

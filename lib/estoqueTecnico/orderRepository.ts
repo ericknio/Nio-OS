@@ -1,3 +1,13 @@
+/**
+ * @file lib/estoqueTecnico/orderRepository.ts
+ * @description Repositório SQL para consulta e atualização de totais financeiros de Ordens de Serviço sob o ponto de vista do Estoque Técnico.
+ * 
+ * Responsável por:
+ * - Consultar a O.S. com verificações de integridade (`hasFinalization`, `paymentCount`, `technicianProfitPercentSnapshot`).
+ * - Atualizar totais financeiros da O.S. (`partsCost`, `totalAmount`, `paymentPercent`).
+ * - Inspecionar configurações de comissão do técnico responsável.
+ */
+
 import { randomUUID } from "node:crypto";
 import type {
   ProfitShareTechnicianRecord,
