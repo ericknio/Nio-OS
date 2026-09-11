@@ -1,14 +1,27 @@
-// lib/versoesSistema.ts
-// Gerenciador de versões, histórico de releases e Patch Notes do Nio-OS
+/**
+ * @file versoesSistema.ts
+ * @description Gerenciador de versões, histórico de releases e Patch Notes do Nio-OS Desktop.
+ * Controla o versionamento semântico (SemVer), changelogs detalhados, verificação de novas atualizações
+ * e dados para exibição do modal pós-instalação no frontend.
+ */
 
+/**
+ * Categorias de mudanças em um Patch Note de versão.
+ */
 export type TipoItemPatch = "adicionado" | "modificado" | "corrigido";
 
+/**
+ * Representa um item pontual de novidade ou correção em um release.
+ */
 export type ItemPatchNote = {
   tipo: TipoItemPatch;
   titulo: string;
   descricao?: string;
 };
 
+/**
+ * Metadados completos de uma versão publicada do software.
+ */
 export type ReleaseInfo = {
   version: string;
   titulo: string;
@@ -20,8 +33,14 @@ export type ReleaseInfo = {
   itens: ItemPatchNote[];
 };
 
+/**
+ * Versão atual em execução do software Nio-OS Desktop.
+ */
 export const VERSAO_ATUAL_SISTEMA = "0.1.4";
 
+/**
+ * Histórico decrescente de releases publicados com seus respectivos changelogs.
+ */
 export const HISTORICO_RELEASES: ReleaseInfo[] = [
   {
     version: "0.1.4",
@@ -198,19 +217,37 @@ export function compararVersoes(v1: string, v2: string): number {
   return 0;
 }
 
+/**
+ * Retorna a versão corrente do sistema Nio-OS.
+ * @returns String contendo a versão semântica (ex: "0.1.4")
+ */
 export function obterVersaoAtual(): string {
   return VERSAO_ATUAL_SISTEMA;
 }
 
+/**
+ * Retorna os dados do release mais recente registrado no changelog.
+ * @returns Objeto ReleaseInfo com notas e link de download
+ */
 export function obterReleaseMaisRecente(): ReleaseInfo {
   return HISTORICO_RELEASES[0];
 }
 
+/**
+ * Busca os dados e Patch Notes de uma versão específica.
+ * @param versao - Versão a ser consultada (com ou sem prefixo 'v')
+ * @returns Objeto ReleaseInfo ou undefined se não encontrada
+ */
 export function obterPatchNote(versao: string): ReleaseInfo | undefined {
   const versaoLimpa = versao.replace(/^v/i, "").trim();
   return HISTORICO_RELEASES.find((r) => r.version === versaoLimpa);
 }
 
+/**
+ * Compara a versão atual em execução com a mais recente publicada para identificar se há updates disponíveis.
+ * @param versaoAtual - Versão de referência (padrão: VERSAO_ATUAL_SISTEMA)
+ * @returns Objeto com flags, versão atual, versão mais recente e os dados do release se disponível
+ */
 export function verificarSeHaAtualizacao(versaoAtual = VERSAO_ATUAL_SISTEMA): {
   temAtualizacao: boolean;
   versaoAtual: string;

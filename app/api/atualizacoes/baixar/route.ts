@@ -1,4 +1,10 @@
-// app/api/atualizacoes/baixar/route.ts
+/**
+ * @file route.ts
+ * @description Endpoint para download em segundo plano e telemetria de progresso do instalador (.exe) de atualização.
+ * Salva o instalador baixado na pasta segura `%LOCALAPPDATA%/Nio-OS/updates` e, ao término, dispara o instalador
+ * desanexado do processo principal (`child.unref()`).
+ */
+
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
@@ -6,6 +12,9 @@ import { spawn } from "child_process";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Estrutura de status e telemetria do download de nova versão.
+ */
 type StatusDownload = {
   emAndamento: boolean;
   progresso: number;
@@ -17,7 +26,9 @@ type StatusDownload = {
   arquivo: string | null;
 };
 
-// Estado global em memória no processo Node
+/**
+ * Estado global em memória no processo Node para acompanhamento do download pelo frontend.
+ */
 const estadoGlobal: StatusDownload = {
   emAndamento: false,
   progresso: 0,
@@ -29,10 +40,21 @@ const estadoGlobal: StatusDownload = {
   arquivo: null,
 };
 
+/**
+ * Retorna o estado atual do progresso de download (percentual, bytes transferidos e status).
+ * @returns JSON com o objeto StatusDownload
+ */
 export async function GET() {
   return NextResponse.json(estadoGlobal);
 }
 
+/**
+ * Inicia o download assíncrono do instalador do GitHub Releases ou executa pacote local pré-existente.
+ * Grava o fluxo binário via stream e executa o instalador .exe de forma desacoplada no Windows.
+ * 
+ * @param req - Requisição HTTP com JSON contendo `downloadUrl` e `version`
+ * @returns JSON indicando início do download ou execução do instalador local
+ */
 export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({}));

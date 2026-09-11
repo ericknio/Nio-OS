@@ -1,4 +1,10 @@
-// app/api/atualizacoes/route.ts
+/**
+ * @file route.ts
+ * @description Endpoint para verificação de novas versões do Nio-OS Desktop.
+ * Realiza consulta à API do GitHub Releases (`ericknio/nio-os-releases`), processa os changelogs
+ * em categorias (adicionado, modificado, corrigido) e compara com a versão atualmente em execução.
+ */
+
 import { NextResponse } from "next/server";
 import {
   verificarSeHaAtualizacao,
@@ -12,8 +18,16 @@ import {
 
 export const dynamic = "force-dynamic";
 
+/** Repositório padrão do GitHub para busca dos releases e instaladores (.exe). */
 const DEFAULT_GITHUB_REPO = "ericknio/nio-os-releases";
 
+/**
+ * Consulta os releases mais recentes publicados no repositório do GitHub via API REST.
+ * Faz parsing do corpo (body) do release identificando tópicos e buscando o executável (.exe) nos assets.
+ * 
+ * @param repo - Nome do repositório no formato 'owner/repo'
+ * @returns Metadados do release estruturados em ReleaseInfo ou null se indisponível/offline
+ */
 async function consultarGitHubReleases(repo: string): Promise<ReleaseInfo | null> {
   try {
     const controller = new AbortController();
@@ -95,6 +109,13 @@ async function consultarGitHubReleases(repo: string): Promise<ReleaseInfo | null
   }
 }
 
+/**
+ * Consulta a existência de atualizações pendentes para o sistema.
+ * Compara a versão corrente com a última release do GitHub Releases e retorna
+ * o histórico de versões e notas de lançamento (Patch Notes).
+ * 
+ * @returns JSON com flags de atualização, versão atual, release disponível e histórico
+ */
 export async function GET() {
   try {
     const versaoAtual = obterVersaoAtual();

@@ -1,4 +1,10 @@
-// app/api/auth/trocar-senha/route.ts
+/**
+ * @file route.ts
+ * @description Endpoint seguro para alteração de senha pelo próprio usuário autenticado.
+ * Valida a senha atual via timingSafeEqual e hash PBKDF2, exige confirmação idêntica da nova senha,
+ * impede repetição da senha anterior e atualiza o hash no banco.
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
@@ -10,10 +16,21 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Converte qualquer valor recebido para string limpa, removendo espaços excedentes nas pontas.
+ * @param valor - Dado de entrada
+ * @returns String tratada
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Constrói resposta JSON padronizada com cabeçalho no-store.
+ * @param message - Mensagem textual
+ * @param status - Código de status HTTP
+ * @returns NextResponse estruturado
+ */
 function respostaJson(message: string, status: number) {
   return NextResponse.json(
     {
@@ -28,6 +45,21 @@ function respostaJson(message: string, status: number) {
   );
 }
 
+/**
+ * Altera a senha do usuário atualmente autenticado.
+ * 
+ * Regras aplicadas:
+ * 1. Exige autenticação prévia (retorna 401 se ausente).
+ * 2. Valida preenchimento de senhaAtual, novaSenha e confirmarSenha.
+ * 3. Garante tamanho mínimo de 6 caracteres para nova senha.
+ * 4. Valida se confirmarSenha confere com novaSenha.
+ * 5. Garante que novaSenha seja diferente da senhaAtual.
+ * 6. Valida senhaAtual contra o hash salvo no banco.
+ * 7. Gera novo hash PBKDF2 com salt criptográfico e persiste no SQLite.
+ * 
+ * @param request - Requisição HTTP com JSON contendo `senhaAtual`, `novaSenha` e `confirmarSenha`
+ * @returns JSON com mensagem de sucesso ou erro (400, 401, 404, 500)
+ */
 export async function PATCH(request: Request) {
   try {
     const usuarioLogado = await obterUsuarioLogado();

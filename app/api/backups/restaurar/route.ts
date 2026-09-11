@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint crítico para restauração de backups completos do sistema Nio-OS.
+ * Exige perfil exclusivo de Administrador (ADMIN), valida a palavra-chave de confirmação ("RESTAURAR")
+ * para evitar acidentes operacionais e executa o processo de restauração via `scripts/backup-api.js`.
+ */
+
 import { spawnSync } from "child_process";
 import { existsSync } from "fs";
 import path from "path";
@@ -8,6 +15,9 @@ import { exigirPermissaoApi } from "@/lib/permissaoApi";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Estrutura de resposta gerada pelo script de restauração.
+ */
 type BackupApiResponse = {
   ok?: boolean;
   message?: string;
@@ -15,24 +25,45 @@ type BackupApiResponse = {
   logs?: string[];
 };
 
+/** Flag de bloqueio para evitar restaurações simultâneas concorrentes. */
 let restauracaoEmAndamento = false;
 
+/**
+ * Sanitiza valores de entrada convertendo para string e removendo espaços.
+ * @param valor - Dado de entrada
+ * @returns String limpa
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Higieniza entradas de log removendo caracteres de controle ASCII.
+ * @param valor - Log bruto
+ * @returns String tratada
+ */
 function limparLog(valor: unknown) {
   return texto(valor)
     .replace(/[\u0000-\u001f\u007f]/g, " ")
     .slice(0, 500);
 }
 
+/**
+ * Limita os logs de execução a um teto de 60 linhas.
+ * @param logs - Array de logs
+ * @returns Lista limitada
+ */
 function limitarLogs(logs: unknown) {
   if (!Array.isArray(logs)) return [];
 
   return logs.map(limparLog).filter(Boolean).slice(0, 60);
 }
 
+/**
+ * Realiza o parse seguro do JSON retornado pelo processo de restauração.
+ * @param textoJson - String bruta
+ * @returns Objeto BackupApiResponse
+ */
 function lerJson(textoJson: string): BackupApiResponse {
   try {
     return JSON.parse(textoJson) as BackupApiResponse;
@@ -41,6 +72,10 @@ function lerJson(textoJson: string): BackupApiResponse {
   }
 }
 
+/**
+ * Executa o script `scripts/backup-api.js` com o comando `restore` de forma síncrona com timeout de 4 minutos.
+ * @returns Resposta JSON do processo de restauração
+ */
 function executarRestoreApi() {
   const scriptPath = path.join(process.cwd(), "scripts", "backup-api.js");
 
@@ -89,6 +124,10 @@ function executarRestoreApi() {
   return data;
 }
 
+/**
+ * Valida se a requisição possui permissão de edição de configurações e perfil ADMIN.
+ * @returns Objeto com o usuário autenticado ou resposta de bloqueio HTTP 403
+ */
 async function exigirAcessoRestore() {
   const acesso = await exigirPermissaoApi("configuracoes.editar");
 
@@ -115,6 +154,18 @@ async function exigirAcessoRestore() {
   };
 }
 
+/**
+ * Executa a restauração de um backup no sistema Nio-OS.
+ * 
+ * Requisitos e segurança:
+ * 1. Acesso restrito a usuários ADMIN com permissão 'configuracoes.editar'.
+ * 2. Bloqueia chamadas concorrentes caso uma restauração já esteja em progresso (409).
+ * 3. Exige no payload `{ confirmacao: "RESTAURAR" }` para mitigar acionamentos acidentais.
+ * 4. Substitui o banco SQLite e arquivos de uploads pelos contidos no snapshot selecionado.
+ * 
+ * @param request - Requisição HTTP com JSON contendo `confirmacao: "RESTAURAR"`
+ * @returns JSON com mensagem de sucesso, resultado e logs de execução
+ */
 export async function POST(request: Request) {
   try {
     const acesso = await exigirAcessoRestore();

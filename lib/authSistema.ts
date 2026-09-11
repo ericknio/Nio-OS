@@ -1,4 +1,15 @@
-// lib/authSistema.ts
+/**
+ * @file lib/authSistema.ts
+ * @description Módulo central de criptografia, hash de senhas e gerenciamento de sessões do Nio-OS.
+ * 
+ * Funcionalidades de Segurança:
+ * - Hashing de senhas seguro utilizando PBKDF2 com salt aleatório (100.000 iterações de SHA-512).
+ * - Verificação de senhas e assinaturas em tempo constante (`timingSafeEqual`) contra ataques de temporização (timing attacks).
+ * - Emissão de tokens de sessão compactos e assinados com HMAC-SHA256 (`COOKIE_NAME = "nio_os_session"`).
+ * - Gestão de cookies HTTP-only seguros para terminais locais e suporte futuro a HTTPS.
+ * - Resolução do usuário logado diretamente pelo banco de dados com suas respectivas permissões.
+ */
+
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
@@ -8,6 +19,9 @@ import { TODAS_PERMISSOES } from "@/lib/permissoesSistema";
 import { prisma } from "@/lib/prisma";
 import { raizDadosRuntime } from "@/lib/runtimeStorage";
 
+/**
+ * Nome do cookie HTTP-only que armazena o token assinado da sessão.
+ */
 export const COOKIE_NAME = "nio_os_session";
 
 const DEV_SESSION_SECRET = "nio-os-dev-secret-change-this";
@@ -89,6 +103,12 @@ function compararTextoSeguro(a: string, b: string) {
   return crypto.timingSafeEqual(bufferA, bufferB);
 }
 
+/**
+ * Cria um hash criptográfico seguro para a senha informada utilizando PBKDF2 com salt aleatório de 16 bytes.
+ * 
+ * @param senha Senha em texto puro a ser criptografada.
+ * @returns String formatada no padrão "salt:hashHex" para persistência no banco.
+ */
 export function criarHashSenha(senha: string) {
   const senhaLimpa = String(senha || "");
   const salt = crypto.randomBytes(16).toString("hex");
@@ -100,6 +120,14 @@ export function criarHashSenha(senha: string) {
   return `${salt}:${hash}`;
 }
 
+/**
+ * Valida se uma senha informada corresponde ao hash gravado no banco de dados.
+ * A comparação é feita em tempo constante (`timingSafeEqual`) para proteção contra timing attacks.
+ * 
+ * @param senha Senha em texto puro fornecida na tentativa de login.
+ * @param passwordHash Hash "salt:hashHex" armazenado no cadastro do usuário.
+ * @returns `true` se a senha conferir, `false` caso contrário.
+ */
 export function verificarSenha(senha: string, passwordHash: string) {
   const [salt, hashOriginal] = String(passwordHash || "").split(":");
 
@@ -117,6 +145,12 @@ export function verificarSenha(senha: string, passwordHash: string) {
   return crypto.timingSafeEqual(bufferOriginal, bufferTeste);
 }
 
+/**
+ * Gera um token de sessão assinado contendo o ID do usuário e timestamp de emissão.
+ * 
+ * @param userId ID do usuário autenticado.
+ * @returns Token no formato "payloadBase64.assinaturaHmac".
+ */
 export function criarTokenSessao(userId: string) {
   const payload = {
     userId,
@@ -129,6 +163,13 @@ export function criarTokenSessao(userId: string) {
   return `${payloadBase64}.${assinatura}`;
 }
 
+/**
+ * Decodifica e valida a assinatura criptográfica de um token de sessão.
+ * Checa expiração e tolerância de clock skew (+5 min).
+ * 
+ * @param token String do token recebido via cookie.
+ * @returns Objeto com `userId` se válido, ou `null` se inválido/expirado.
+ */
 export function lerTokenSessao(token?: string | null) {
   if (!token) return null;
 
@@ -164,6 +205,11 @@ export function lerTokenSessao(token?: string | null) {
   }
 }
 
+/**
+ * Grava o cookie de sessão autenticada com flags de segurança (HttpOnly, SameSite=Lax).
+ * 
+ * @param userId ID do usuário autenticado no banco.
+ */
 export async function definirSessaoUsuario(userId: string) {
   const token = criarTokenSessao(userId);
   const cookieStore = await cookies();
@@ -177,6 +223,9 @@ export async function definirSessaoUsuario(userId: string) {
   });
 }
 
+/**
+ * Remove o cookie de sessão do navegador expirando sua validade (`maxAge: 0`).
+ */
 export async function limparSessaoUsuario() {
   const cookieStore = await cookies();
 
@@ -189,6 +238,12 @@ export async function limparSessaoUsuario() {
   });
 }
 
+/**
+ * Identifica e carrega os dados do usuário autenticado a partir do cookie HTTP da requisição atual.
+ * Verifica no banco se o usuário permanece ativo e carrega sua lista de permissões granulares.
+ * 
+ * @returns Dados do usuário ativo com suas permissões, ou `null` se não autenticado/inativo.
+ */
 export async function obterUsuarioLogado() {
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;

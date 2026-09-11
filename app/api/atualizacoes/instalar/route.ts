@@ -1,4 +1,10 @@
-// app/api/atualizacoes/instalar/route.ts
+/**
+ * @file route.ts
+ * @description Endpoint para inicialização do executável de instalação de nova versão (`Nio-OS Setup <versão>.exe`).
+ * Localiza o executável em diretórios candidatos de atualização (`AppData/Local/Nio-OS/updates` ou `release/`)
+ * e dispara o instalador como subprocesso independente no Windows (`detached: true`, `subprocess.unref()`).
+ */
+
 import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
@@ -6,6 +12,17 @@ import { spawn } from "child_process";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Localiza e executa o instalador da versão alvo do Nio-OS.
+ * 
+ * Etapas:
+ * 1. Mapeia diretórios candidatos (updates no AppData e pasta release local).
+ * 2. Seleciona o executável de maior precedência correspondente à versão solicitada.
+ * 3. Dispara o instalador desanexado do runtime para permitir que o usuário atualize mesmo com o app aberto.
+ * 
+ * @param req - Requisição HTTP com JSON contendo `version`
+ * @returns JSON informando se o processo foi iniciado com sucesso
+ */
 export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({}));

@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint para envio e atualização do logotipo da empresa (logo.png).
+ * Executa validação de integridade por magic bytes (assinatura 0x89 PNG), limite de tamanho (2MB)
+ * e salva o arquivo no diretório seguro de uploads do runtime (`caminhoUploadPublico()`).
+ */
+
 import { NextResponse } from "next/server";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
@@ -8,6 +15,12 @@ import { textoGarantiaPadrao } from "@/lib/configuracoesPadrao";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Valida se os primeiros 8 bytes do buffer correspondem à assinatura mágica oficial de arquivos PNG.
+ * Evita upload malicioso de arquivos renomeados com extensão .png.
+ * @param buffer - Buffer do arquivo recebido
+ * @returns Verdadeiro se for um arquivo PNG legítimo
+ */
 function ehPng(buffer: Buffer) {
   const assinaturaPng = Buffer.from([
     0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
@@ -16,6 +29,10 @@ function ehPng(buffer: Buffer) {
   return buffer.length >= 8 && buffer.subarray(0, 8).equals(assinaturaPng);
 }
 
+/**
+ * Recupera as configurações existentes da empresa ou inicializa caso inexistente.
+ * @returns Registro CompanySettings
+ */
 async function obterOuCriarConfiguracoes() {
   const existente = await prisma.companySettings.findFirst();
 
@@ -35,6 +52,21 @@ async function obterOuCriarConfiguracoes() {
   });
 }
 
+/**
+ * Processa o upload multipart/form-data do logotipo da empresa.
+ * 
+ * Etapas de processamento:
+ * 1. Exige permissão RBAC 'configuracoes.editar'.
+ * 2. Verifica presença do arquivo no campo 'logo'.
+ * 3. Valida MIME type (image/png) e limite máximo de 2MB.
+ * 4. Valida assinatura binária do cabeçalho PNG.
+ * 5. Grava fisicamente no diretório de runtime (`caminhoUploadPublico()/logo.png`).
+ * 6. Atualiza `logoUrl` no banco SQLite.
+ * 7. Retorna a URL com timestamp para quebra de cache do navegador.
+ * 
+ * @param request - Requisição HTTP com multipart/form-data contendo o campo 'logo'
+ * @returns JSON com mensagem de sucesso e logoUrl atualizada
+ */
 export async function POST(request: Request) {
   try {
     const acesso = await exigirPermissaoApi("configuracoes.editar");

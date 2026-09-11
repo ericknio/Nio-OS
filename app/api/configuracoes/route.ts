@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint de gerenciamento das configurações da empresa (CompanySettings).
+ * Provê leitura pública de dados da loja (GET) para cabeçalhos e menus, e atualização protegida (PUT)
+ * por controle de acesso RBAC com a permissão 'configuracoes.editar'.
+ */
+
 import { NextResponse } from "next/server";
 import { type CompanySettings } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -12,15 +19,31 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Sanitiza valores de entrada convertendo para string e removendo espaços excedentes.
+ * @param valor - Dado bruto
+ * @returns String tratada
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Sanitiza valores de entrada retornando string limpa ou null caso vazia.
+ * @param valor - Dado bruto
+ * @returns String ou null
+ */
 function textoOuNulo(valor: unknown) {
   const valorLimpo = texto(valor);
   return valorLimpo || null;
 }
 
+/**
+ * Normaliza e valida o prazo padrão de garantia em dias.
+ * @param valor - Prazo informado
+ * @param fallback - Valor padrão de fallback
+ * @returns Inteiro positivo ou fallback
+ */
 function numeroGarantia(valor: unknown, fallback: number) {
   if (valor === undefined || valor === null || valor === "") {
     return fallback;
@@ -35,16 +58,33 @@ function numeroGarantia(valor: unknown, fallback: number) {
   return Math.round(numero);
 }
 
+/**
+ * Valida o padrão de e-mail através de expressão regular.
+ * @param email - E-mail a validar
+ * @returns Verdadeiro se válido ou se nulo
+ */
 function emailValido(email: string | null) {
   if (!email) return true;
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+/**
+ * Normaliza flags booleanas de módulos (Produtos, OS) com suporte a valor padrão.
+ * @param valor - Flag informada
+ * @param fallback - Padrão de ativação (default true)
+ * @returns Booleano resultante
+ */
 function moduloProdutosAtivo(valor: unknown, fallback = true) {
   if (valor === undefined || valor === null) return fallback;
   return valor !== false;
 }
 
+/**
+ * Formata o registro do Prisma CompanySettings com aliases amigáveis compatíveis
+ * com os múltiplos formatos consumidos pelos componentes do frontend.
+ * @param configuracoes - Registro persistido no banco
+ * @returns Objeto com dados originais e aliases normalizados
+ */
 function respostaConfiguracoes(configuracoes: CompanySettings) {
   return {
     ...configuracoes,
@@ -76,6 +116,10 @@ function respostaConfiguracoes(configuracoes: CompanySettings) {
   };
 }
 
+/**
+ * Recupera o primeiro registro de configurações ou cria o registro padrão caso seja a primeira execução.
+ * @returns Registro CompanySettings persistido
+ */
 async function obterOuCriarConfiguracoes() {
   const existente = await prisma.companySettings.findFirst();
 
@@ -99,6 +143,12 @@ async function obterOuCriarConfiguracoes() {
   });
 }
 
+/**
+ * Retorna as configurações ativas da empresa no Nio-OS.
+ * Leitura pública sem bloqueio de sessão para abastecer layout, recibos e telas iniciais.
+ * 
+ * @returns JSON com os dados e aliases da empresa
+ */
 export async function GET() {
   try {
     // Leitura mantida sem bloqueio de permissão porque menu, PDFs e páginas
@@ -117,6 +167,20 @@ export async function GET() {
   }
 }
 
+/**
+ * Atualiza os parâmetros cadastrais e operacionais da empresa.
+ * Exige autenticação e permissão 'configuracoes.editar'.
+ * 
+ * Parâmetros configuráveis:
+ * - Identificação: Razão Social, Nome Fantasia, CNPJ/CPF.
+ * - Localização e Contato: Endereço, Cidade, UF, CEP, Telefones, WhatsApp, E-mail, Site, Redes Sociais.
+ * - Identidade Visual: URL do Logo, URL do Banner e Cor Primária.
+ * - Políticas de Atendimento: Dias e horários de funcionamento, operador padrão e texto de garantia.
+ * - Módulos: Ativação/desativação de Módulo de Produtos e Ordens de Serviço.
+ * 
+ * @param request - Requisição HTTP com JSON contendo as configurações alteradas
+ * @returns JSON com as configurações atualizadas ou erro (400, 403, 500)
+ */
 export async function PUT(request: Request) {
   try {
     const acesso = await exigirPermissaoApi("configuracoes.editar");
