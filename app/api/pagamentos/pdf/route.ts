@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint para exportação do Extrato de Pagamentos em PDF (`/api/pagamentos/pdf`).
+ * Gera relatório gerencial A4 em orientação paisagem (landscape) com cabeçalho,
+ * cards de resumo financeiro (Total arrecadado, Total de transações, Ticket médio)
+ * e tabela detalhada de todos os recebimentos de OS no período informado.
+ */
+
 import PDFDocument from "pdfkit";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
@@ -6,6 +14,9 @@ import { exigirPermissaoApi } from "@/lib/permissaoApi";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Dicionário para exibição legível das formas de pagamento no relatório PDF.
+ */
 const nomesPagamento: Record<string, string> = {
   DINHEIRO: "Dinheiro",
   PIX: "Pix",
@@ -14,24 +25,44 @@ const nomesPagamento: Record<string, string> = {
   TRANSFERENCIA: "Transferência",
 };
 
+/**
+ * Converte string AAAA-MM-DD em objeto Date local sem desvio de timezone.
+ * @param data - String no formato AAAA-MM-DD
+ * @returns Instância de Date
+ */
 function criarDataLocal(data: string) {
   const [ano, mes, dia] = data.split("-").map(Number);
 
   return new Date(ano, mes - 1, dia);
 }
 
+/**
+ * Ajusta a data para o primeiro milissegundo do dia (00:00:00.000).
+ * @param data - String AAAA-MM-DD
+ * @returns Date ajustada
+ */
 function inicioDoDia(data: string) {
   const d = criarDataLocal(data);
   d.setHours(0, 0, 0, 0);
   return d;
 }
 
+/**
+ * Ajusta a data para o último milissegundo do dia (23:59:59.999).
+ * @param data - String AAAA-MM-DD
+ * @returns Date ajustada
+ */
 function fimDoDia(data: string) {
   const d = criarDataLocal(data);
   d.setHours(23, 59, 59, 999);
   return d;
 }
 
+/**
+ * Formata um valor numérico em moeda Real Brasileiro (BRL).
+ * @param valor - Valor a formatar
+ * @returns String formatada
+ */
 function formatarMoeda(valor: unknown) {
   return Number(valor || 0).toLocaleString("pt-BR", {
     style: "currency",
@@ -39,6 +70,11 @@ function formatarMoeda(valor: unknown) {
   });
 }
 
+/**
+ * Formata valor em data pt-BR (DD/MM/AAAA).
+ * @param data - Data a formatar
+ * @returns Data formatada ou hífen se inválida
+ */
 function formatarData(data: unknown) {
   if (!data) return "-";
 
@@ -49,6 +85,11 @@ function formatarData(data: unknown) {
   return d.toLocaleDateString("pt-BR");
 }
 
+/**
+ * Formata valor em data e hora pt-BR.
+ * @param data - Data a formatar
+ * @returns Data e hora formatadas
+ */
 function formatarDataHora(data: unknown) {
   if (!data) return "-";
 
@@ -59,6 +100,11 @@ function formatarDataHora(data: unknown) {
   return d.toLocaleString("pt-BR");
 }
 
+/**
+ * Constrói o documento PDF com layout paisagem contendo resumo e tabela de pagamentos.
+ * @param params - Objeto contendo pagamentos, dataInicial e dataFinal
+ * @returns Promise com o Buffer do PDF gerado
+ */
 function gerarPDFPagamentos({
   pagamentos,
   dataInicial,
@@ -362,6 +408,13 @@ function gerarPDFPagamentos({
   });
 }
 
+/**
+ * Manipulador GET para gerar o relatório em PDF do extrato de pagamentos de OS.
+ * Exige permissão `pagamentos.ver` ou `relatorios.financeiro`.
+ * Suporta filtragem por período através dos parâmetros `inicio` e `fim`.
+ * @param request - Requisição HTTP contendo query params
+ * @returns Resposta com binário PDF (`application/pdf; filename="extrato-pagamentos.pdf"`)
+ */
 export async function GET(request: Request) {
   try {
     const acesso = await exigirPermissaoApi([

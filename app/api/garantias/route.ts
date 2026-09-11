@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint para gerenciamento e monitoramento de Garantias de Ordens de Serviço (`/api/garantias`).
+ * Calcula dinamicamente o status de garantia de cada OS entregue (VIGENTE, VENCENDO em até 7 dias,
+ * VENCIDA ou SEM_GARANTIA) a partir da data de entrega (`deliveredAt`) e dias concedidos (`warrantyDays`),
+ * fornecendo contadores consolidados e suporte a filtros por situação.
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { exigirPermissaoApi } from "@/lib/permissaoApi";
@@ -5,6 +13,9 @@ import { exigirPermissaoApi } from "@/lib/permissaoApi";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Tipos de filtros aplicáveis à listagem de garantias.
+ */
 type FiltroGarantia =
   | "TODAS"
   | "VIGENTE"
@@ -12,6 +23,9 @@ type FiltroGarantia =
   | "VENCIDA"
   | "SEM_GARANTIA";
 
+/**
+ * Lista de filtros aceitos pela API de garantias.
+ */
 const FILTROS_PERMITIDOS: FiltroGarantia[] = [
   "TODAS",
   "VIGENTE",
@@ -20,18 +34,35 @@ const FILTROS_PERMITIDOS: FiltroGarantia[] = [
   "SEM_GARANTIA",
 ];
 
+/**
+ * Adiciona um número de dias a uma data base sem alterar o objeto original.
+ * @param data - Data de referência
+ * @param dias - Quantidade de dias a somar
+ * @returns Nova instância de Date calculada
+ */
 function adicionarDias(data: Date, dias: number) {
   const novaData = new Date(data);
   novaData.setDate(novaData.getDate() + dias);
   return novaData;
 }
 
+/**
+ * Retorna uma cópia da data ajustada para o primeiro milissegundo do dia (00:00:00.000).
+ * @param data - Data base
+ * @returns Data ajustada para início do dia
+ */
 function inicioDoDia(data: Date) {
   const novaData = new Date(data);
   novaData.setHours(0, 0, 0, 0);
   return novaData;
 }
 
+/**
+ * Calcula a diferença em dias inteiros entre duas datas desconsiderando horários.
+ * @param dataFinal - Data final (vencimento)
+ * @param dataInicial - Data inicial (hoje)
+ * @returns Quantidade de dias restantes (negativo se já expirou)
+ */
 function diferencaDias(dataFinal: Date, dataInicial: Date) {
   const umDia = 1000 * 60 * 60 * 24;
 
@@ -41,6 +72,11 @@ function diferencaDias(dataFinal: Date, dataInicial: Date) {
   );
 }
 
+/**
+ * Normaliza o parâmetro de busca recebido na query string para um filtro válido.
+ * @param valor - Valor bruto do parâmetro `filtro`
+ * @returns FiltroGarantia normalizado (padrão 'TODAS')
+ */
 function normalizarFiltro(valor: string | null): FiltroGarantia {
   const filtro = String(valor || "TODAS").trim().toUpperCase();
 
@@ -49,6 +85,11 @@ function normalizarFiltro(valor: string | null): FiltroGarantia {
     : "TODAS";
 }
 
+/**
+ * Determina o status categórico da garantia com base no vencimento e dias restantes.
+ * @param params - Objeto com data de vencimento e dias restantes
+ * @returns Status da garantia: SEM_GARANTIA, VENCIDA, VENCENDO (<= 7 dias) ou VIGENTE
+ */
 function resolverStatusGarantia({
   venceEm,
   diasRestantes,
@@ -63,6 +104,11 @@ function resolverStatusGarantia({
   return "VIGENTE";
 }
 
+/**
+ * Agrega totais estatísticos de garantias para os cards de resumo da interface.
+ * @param garantias - Array de itens com statusGarantia calculado
+ * @returns Contadores de total, vigentes, vencendo, vencidas e sem garantia
+ */
 function montarResumo(
   garantias: {
     statusGarantia: Exclude<FiltroGarantia, "TODAS">;
@@ -82,6 +128,12 @@ function montarResumo(
   };
 }
 
+/**
+ * Manipulador GET para listar Ordens de Serviço finalizadas com dados calculados de garantia.
+ * Exige permissão `garantias.ver`. Suporta filtro via query param `?filtro=`.
+ * @param request - Requisição HTTP contendo query params
+ * @returns Resposta JSON com lista de garantias e resumos estatísticos
+ */
 export async function GET(request: Request) {
   try {
     const acesso = await exigirPermissaoApi("garantias.ver");

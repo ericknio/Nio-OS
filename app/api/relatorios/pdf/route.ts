@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint para geração e exportação de Relatórios Gerenciais em PDF (`/api/relatorios/pdf`).
+ * Suporta dois modos de exportação: Relatório Geral Operacional de OS (com resumo, rankings e tabela analítica)
+ * e Relatório Financeiro de Técnicos (com detalhamento de ordens concluídas, lucro gerado e participação/comissão individual).
+ */
+
 import { NextRequest } from "next/server";
 import PDFDocument from "pdfkit";
 import fs from "fs";
@@ -12,6 +19,9 @@ import { obterUsuarioLogado } from "@/lib/authSistema";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Estrutura de dados cadastrais da empresa para impressão no cabeçalho dos relatórios.
+ */
 type EmpresaConfig = {
   nomeEmpresa?: string;
   companyName?: string;
@@ -29,6 +39,9 @@ type EmpresaConfig = {
   footerText?: string;
 };
 
+/**
+ * Mapeamento dos códigos de status de OS para textos em caixa alta.
+ */
 const nomesStatus: Record<string, string> = {
   RECEBIDO: "RECEBIDO",
   EM_ANALISE: "EM ANÁLISE",
@@ -39,6 +52,9 @@ const nomesStatus: Record<string, string> = {
   CANCELADO: "CANCELADO",
 };
 
+/**
+ * Mapeamento de tipos de equipamentos cadastrados.
+ */
 const nomesEquipamento: Record<string, string> = {
   NOTEBOOK: "Notebook",
   COMPUTADOR: "Computador",
@@ -50,6 +66,11 @@ const nomesEquipamento: Record<string, string> = {
   OUTRO: "Outro",
 };
 
+/**
+ * Formata um valor numérico em moeda Real Brasileiro (BRL).
+ * @param valor - Valor a formatar
+ * @returns String formatada em BRL
+ */
 function formatarMoeda(valor: unknown) {
   const numero = Number(valor ?? 0);
   const seguro = Number.isFinite(numero) ? numero : 0;
@@ -60,6 +81,11 @@ function formatarMoeda(valor: unknown) {
   });
 }
 
+/**
+ * Formata valor em data pt-BR (DD/MM/AAAA).
+ * @param data - Data a formatar
+ * @returns Data formatada ou hífen se inválida
+ */
 function formatarData(data: unknown) {
   if (!data) return "-";
 
@@ -70,6 +96,11 @@ function formatarData(data: unknown) {
   return d.toLocaleDateString("pt-BR");
 }
 
+/**
+ * Faz parsing seguro de data no formato AAAA-MM-DD para objeto Date local.
+ * @param data - String no formato AAAA-MM-DD
+ * @returns Instância de Date ou null se inválida
+ */
 function criarDataLocalSegura(data: string) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(data);
 
@@ -91,6 +122,12 @@ function criarDataLocalSegura(data: string) {
   return d;
 }
 
+/**
+ * Valida o caminho do arquivo de logotipo da empresa garantindo confinamento ao diretório de uploads.
+ * Previne ataques de travessia de diretório (Path Traversal).
+ * @param logoUrl - URL ou caminho do logotipo
+ * @returns Caminho absoluto seguro no disco ou null se inválido
+ */
 function caminhoLogoSeguro(logoUrl?: string) {
   const uploadsDir = path.resolve(caminhoUploadPublico());
   const logoLimpa = String(logoUrl || "/uploads/logo.png").split("?")[0];
@@ -108,11 +145,22 @@ function caminhoLogoSeguro(logoUrl?: string) {
   return dentro ? caminhoResolvido : null;
 }
 
+/**
+ * Trata valores nulos ou indefinidos retornando '-' como fallback.
+ * @param valor - Valor de entrada
+ * @returns String tratada
+ */
 function texto(valor: unknown) {
   if (valor === null || valor === undefined || valor === "") return "-";
   return String(valor);
 }
 
+/**
+ * Trunca uma string adicionando reticências caso ultrapasse o limite de caracteres.
+ * @param textoOriginal - Texto original
+ * @param tamanho - Comprimento máximo permitido
+ * @returns Texto truncado ou original
+ */
 function cortar(textoOriginal: unknown, tamanho: number) {
   const valor = texto(textoOriginal);
 
@@ -121,6 +169,11 @@ function cortar(textoOriginal: unknown, tamanho: number) {
   return `${valor.slice(0, tamanho - 3)}...`;
 }
 
+/**
+ * Obtém o número legível e padronizado da Ordem de Serviço com padding de zeros.
+ * @param ordem - Objeto da OS
+ * @returns Número da OS (ex: '042') ou '-'
+ */
 function numeroOS(ordem: any) {
   const valor =
     ordem?.osNumber ??
@@ -134,6 +187,11 @@ function numeroOS(ordem: any) {
   return String(valor).padStart(3, "0");
 }
 
+/**
+ * Extrai o nome do cliente associado à ordem de serviço com fallbacks.
+ * @param ordem - Objeto da OS
+ * @returns Nome do cliente
+ */
 function nomeCliente(ordem: any) {
   return (
     ordem?.customer?.name ||
@@ -146,6 +204,11 @@ function nomeCliente(ordem: any) {
   );
 }
 
+/**
+ * Extrai o nome amigável do equipamento da ordem de serviço.
+ * @param ordem - Objeto da OS
+ * @returns Nome legível do equipamento
+ */
 function nomeEquipamento(ordem: any) {
   if (ordem?.nomeEquipamento) {
     return ordem.nomeEquipamento;
@@ -167,6 +230,11 @@ function nomeEquipamento(ordem: any) {
   );
 }
 
+/**
+ * Obtém o valor monetário total da ordem de serviço.
+ * @param ordem - Objeto da OS
+ * @returns Valor numérico
+ */
 function valorOrdem(ordem: any) {
   return (
     ordem?.totalAmount ??
@@ -178,6 +246,11 @@ function valorOrdem(ordem: any) {
   );
 }
 
+/**
+ * Extrai a quantidade numérica de itens/contadores de relatórios agregados.
+ * @param item - Objeto contendo propriedade de contagem
+ * @returns Número seguro
+ */
 function totalItem(item: any) {
   const valor =
     item?.total ??
@@ -194,6 +267,14 @@ function totalItem(item: any) {
   return Number.isFinite(numero) ? numero : 0;
 }
 
+/**
+ * Gera o buffer binário do relatório em PDF geral de Ordens de Serviço (A4 Retrato).
+ * @param relatorio - Dados do relatório retornados pela API `/api/relatorios`
+ * @param empresa - Configurações cadastrais da empresa
+ * @param periodoInicio - Data inicial formatada
+ * @param periodoFim - Data final formatada
+ * @returns Promise com o Buffer binário do PDF
+ */
 async function gerarBufferPDF(
   relatorio: any,
   empresa: EmpresaConfig,
@@ -723,7 +804,18 @@ async function gerarBufferPDF(
   });
 }
 
-
+/**
+ * Gera o buffer binário do relatório em PDF específico para técnicos e comissões.
+ * Suporta filtragem por técnico individual ou visão geral consolidada de todos os técnicos,
+ * aplicando restrições de sigilo para perfil técnico (não exibe lucro geral da loja).
+ * @param relatorio - Dados analíticos retornados pela API de relatórios
+ * @param empresa - Dados cadastrais da empresa
+ * @param periodoInicio - Data inicial formatada
+ * @param periodoFim - Data final formatada
+ * @param tecnicoFiltro - Chave do técnico filtrado ou 'TODOS'
+ * @param ehApenasTecnico - Indicador se o usuário autenticado é técnico com visão restrita
+ * @returns Promise com o Buffer binário do PDF
+ */
 async function gerarBufferPDFTecnicos(
   relatorio: any,
   empresa: EmpresaConfig,
@@ -1099,6 +1191,14 @@ async function gerarBufferPDFTecnicos(
   });
 }
 
+/**
+ * Manipulador GET para exportação de relatórios em formato PDF.
+ * Suporta o modo `geral` (exige `relatorios.ver` ou `relatorios.financeiro`)
+ * e o modo `tecnicos` (exige `relatorios.financeiro` ou perfil técnico ativo).
+ * Invoca internamente a API `/api/relatorios` e `/api/configuracoes` para renderizar o PDF compilado.
+ * @param request - Requisição HTTP contendo query params (`modo`, `tecnico`, `inicio`, `fim`)
+ * @returns Resposta com stream binário PDF (`application/pdf`)
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams, origin } = new URL(request.url);

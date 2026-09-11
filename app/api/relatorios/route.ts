@@ -1,3 +1,12 @@
+/**
+ * @file route.ts
+ * @description Endpoint analítico e de Business Intelligence (BI) de Ordens de Serviço (`/api/relatorios`).
+ * Processa métricas avançadas de produtividade, faturamento bruto/líquido, custos de peças técnicas,
+ * lucro operacional da loja, comissionamento/participação de lucros dos técnicos com snapshot histórico,
+ * sazonalidade por dia da semana/mês, equipamentos/modelos mais consertados e clientes mais frequentes.
+ * Conta com isolamento seguro para visão exclusiva do técnico (RBAC).
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
@@ -15,6 +24,9 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Nomes dos dias da semana indexados de 0 (Domingo) a 6 (Sábado).
+ */
 const DIAS_SEMANA = [
   "Domingo",
   "Segunda-feira",
@@ -25,6 +37,9 @@ const DIAS_SEMANA = [
   "Sábado",
 ];
 
+/**
+ * Tradução de tipos de equipamentos cadastrados.
+ */
 const nomesEquipamento: Record<string, string> = {
   NOTEBOOK: "Notebook",
   COMPUTADOR: "Computador",
@@ -36,6 +51,11 @@ const nomesEquipamento: Record<string, string> = {
   OUTRO: "Outro",
 };
 
+/**
+ * Converte string AAAA-MM-DD em objeto Date local seguro contra distorções de fuso horário.
+ * @param data - String no formato AAAA-MM-DD
+ * @returns Instância de Date ou null se inválida
+ */
 function criarDataLocalSegura(data: string | null) {
   if (!data) return null;
 
@@ -60,31 +80,61 @@ function criarDataLocalSegura(data: string | null) {
   return d;
 }
 
+/**
+ * Retorna uma data ajustada para o primeiro milissegundo do dia (00:00:00.000).
+ * @param data - Data base
+ * @returns Date ajustada
+ */
 function inicioDoDia(data: Date) {
   const d = new Date(data);
   d.setHours(0, 0, 0, 0);
   return d;
 }
 
+/**
+ * Retorna uma data ajustada para o último milissegundo do dia (23:59:59.999).
+ * @param data - Data base
+ * @returns Date ajustada
+ */
 function fimDoDia(data: Date) {
   const d = new Date(data);
   d.setHours(23, 59, 59, 999);
   return d;
 }
 
+/**
+ * Converte valor em número finito seguro, retornando 0 como fallback.
+ * @param valor - Valor a converter
+ * @returns Número seguro
+ */
 function numero(valor: unknown) {
   const n = Number(valor ?? 0);
   return Number.isFinite(n) ? n : 0;
 }
 
+/**
+ * Arredonda valor monetário para duas casas decimais com precisão segura (EPSILON).
+ * @param valor - Valor numérico
+ * @returns Valor arredondado
+ */
 function moeda(valor: number) {
   return Math.round((valor + Number.EPSILON) * 100) / 100;
 }
 
+/**
+ * Converte valor em percentual limitado entre 0 e 100.
+ * @param valor - Valor a converter
+ * @returns Percentual entre 0 e 100
+ */
 function percentual(valor: unknown) {
   return Math.min(Math.max(numero(valor), 0), 100);
 }
 
+/**
+ * Converte um objeto Date em formato de string AAAA-MM-DD.
+ * @param data - Objeto Date
+ * @returns String formatada AAAA-MM-DD
+ */
 function formatarDataInput(data: Date) {
   const ano = data.getFullYear();
   const mes = String(data.getMonth() + 1).padStart(2, "0");
@@ -93,6 +143,13 @@ function formatarDataInput(data: Date) {
   return `${ano}-${mes}-${dia}`;
 }
 
+/**
+ * Inicializa a série temporal de dias úteis dentro do período filtrado.
+ * @param inicio - Data inicial
+ * @param fim - Data final
+ * @param diasFuncionamento - Array com dias da semana que a loja funciona (0 a 6)
+ * @returns Estrutura com dias do período prontos para acúmulo de ordens
+ */
 function criarDiasDoPeriodo(inicio: Date, fim: Date, diasFuncionamento: number[]) {
   const dias: {
     data: string;
@@ -143,6 +200,10 @@ function criarDiasDoPeriodo(inicio: Date, fim: Date, diasFuncionamento: number[]
   return dias;
 }
 
+/**
+ * Consulta no banco as configurações de horário e dias de funcionamento da loja.
+ * @returns Configurações normalizadas de dias e horários de atendimento
+ */
 async function buscarFuncionamentoLoja() {
   const configuracoes = await prisma.companySettings.findFirst({
     select: {
@@ -164,6 +225,11 @@ async function buscarFuncionamentoLoja() {
   };
 }
 
+/**
+ * Obtém o nome formatado do equipamento da ordem (tratando tipo 'OUTRO').
+ * @param ordem - Objeto com tipo e descrição alternativa do equipamento
+ * @returns Nome legível do equipamento
+ */
 function nomeEquipamento(ordem: {
   equipmentType?: string | null;
   equipmentOther?: string | null;
@@ -175,6 +241,11 @@ function nomeEquipamento(ordem: {
   return nomesEquipamento[ordem.equipmentType || ""] || ordem.equipmentType || "-";
 }
 
+/**
+ * Monta o nome composto de marca e modelo da ordem de serviço.
+ * @param ordem - Objeto com marca e modelo
+ * @returns Nome consolidado da marca/modelo
+ */
 function nomeModelo(ordem: {
   brand?: string | null;
   model?: string | null;
@@ -194,6 +265,13 @@ function nomeModelo(ordem: {
   return "Modelo não informado";
 }
 
+/**
+ * Manipulador GET para geração do relatório analítico e consolidação de BI de Ordens de Serviço.
+ * Exige permissão `relatorios.ver` ou `relatorios.financeiro`, ou perfil técnico ativo.
+ * Suporta filtragem por data (`dataInicial`, `dataFinal`).
+ * @param request - Requisição HTTP contendo query params
+ * @returns Resposta JSON com resumo executivo, dados financeiros, rankings e séries temporais
+ */
 export async function GET(request: Request) {
   try {
     const acesso = await exigirPermissaoApi([

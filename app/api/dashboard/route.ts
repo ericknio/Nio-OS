@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint agregador do Painel Inicial / Dashboard do sistema (`/api/dashboard`).
+ * Consolida indicadores operacionais, contadores de Ordens de Serviço por status,
+ * alertas de garantias a vencer, produtos com estoque crítico, métricas de vendas balcão (PDV)
+ * e totais financeiros do mês corrente, respeitando estritamente os privilégios RBAC de cada operador.
+ */
+
 import { NextResponse } from "next/server";
 import { ProductSaleStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -11,6 +19,12 @@ import { reconciliarEstornosOrdensCanceladas } from "@/lib/reconciliarEstornos";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Cria resposta JSON padronizada com desativação de cache do navegador.
+ * @param data - Dados a serem serializados no corpo da resposta
+ * @param init - Opções adicionais de inicialização da Response (status, headers)
+ * @returns Instância de NextResponse
+ */
 function respostaJson(data: unknown, init?: ResponseInit) {
   return NextResponse.json(data, {
     ...init,
@@ -21,18 +35,35 @@ function respostaJson(data: unknown, init?: ResponseInit) {
   });
 }
 
+/**
+ * Adiciona um número de dias a uma data base sem alterar o objeto original.
+ * @param data - Data de referência
+ * @param dias - Quantidade de dias a somar
+ * @returns Nova instância de Date calculada
+ */
 function adicionarDias(data: Date, dias: number) {
   const novaData = new Date(data);
   novaData.setDate(novaData.getDate() + dias);
   return novaData;
 }
 
+/**
+ * Retorna uma nova data com horário zerado (00:00:00.000) no fuso local.
+ * @param data - Data a normalizar
+ * @returns Data normalizada para início do dia
+ */
 function inicioDoDia(data: Date) {
   const novaData = new Date(data);
   novaData.setHours(0, 0, 0, 0);
   return novaData;
 }
 
+/**
+ * Calcula a diferença em dias inteiros entre duas datas desconsiderando horários.
+ * @param dataFinal - Data final
+ * @param dataInicial - Data inicial
+ * @returns Diferença em número de dias
+ */
 function diferencaDias(dataFinal: Date, dataInicial: Date) {
   const umDia = 1000 * 60 * 60 * 24;
 
@@ -42,15 +73,31 @@ function diferencaDias(dataFinal: Date, dataInicial: Date) {
   );
 }
 
+/**
+ * Converte valor desconhecido em número finito seguro, retornando 0 como fallback.
+ * @param valor - Valor a ser convertido
+ * @returns Número seguro
+ */
 function numero(valor: unknown) {
   const n = Number(valor ?? 0);
   return Number.isFinite(n) ? n : 0;
 }
 
+/**
+ * Converte valor em inteiro positivo (arredondado para baixo, mínimo 0).
+ * @param valor - Valor a ser convertido
+ * @returns Número inteiro maior ou igual a zero
+ */
 function inteiro(valor: unknown) {
   return Math.max(0, Math.floor(numero(valor)));
 }
 
+/**
+ * Manipulador GET para consulta consolidada de métricas do painel inicial.
+ * Exige permissão `dashboard.ver`. Executa consultas condicionais baseadas nas permissões
+ * de ordens, clientes, produtos, PDV e dados financeiros sensíveis do usuário.
+ * @returns Resposta JSON com dados de todos os módulos autorizados
+ */
 export async function GET() {
   try {
     const acesso = await exigirPermissaoApi("dashboard.ver");

@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint de consolidação financeira geral da empresa (`/api/financeiro-geral`).
+ * Unifica recebimentos e estornos de Ordens de Serviço com o faturamento de Vendas Balcão (PDV),
+ * calculando ticket médio, distribuição por meio de pagamento (PIX, Dinheiro, Cartão),
+ * margens de lucro/custo (RBAC) e extrato cronológico unificado no período selecionado.
+ */
+
 import { NextResponse } from "next/server";
 import { ProductSaleStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -11,25 +19,48 @@ import { reconciliarEstornosOrdensCanceladas } from "@/lib/reconciliarEstornos";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Converte valor desconhecido em número finito seguro, retornando 0 como fallback.
+ * @param valor - Valor a converter
+ * @returns Número seguro
+ */
 function numero(valor: unknown) {
   const n = Number(valor ?? 0);
   return Number.isFinite(n) ? n : 0;
 }
 
+/**
+ * Converte valor em string sem espaços laterais.
+ * @param valor - Valor a converter
+ * @returns String tratada
+ */
 function texto(valor: unknown) {
   return String(valor || "").trim();
 }
 
+/**
+ * Retorna a data do primeiro dia do mês atual às 00:00:00.
+ * @returns Data do início do mês
+ */
 function inicioMesAtual() {
   const hoje = new Date();
   return new Date(hoje.getFullYear(), hoje.getMonth(), 1, 0, 0, 0, 0);
 }
 
+/**
+ * Retorna a data do último dia do mês atual às 23:59:59.999.
+ * @returns Data do fim do mês
+ */
 function fimMesAtual() {
   const hoje = new Date();
   return new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0, 23, 59, 59, 999);
 }
 
+/**
+ * Faz parsing seguro de uma string no formato AAAA-MM-DD para Date local evitando deslocamento de fuso.
+ * @param data - String de data no formato AAAA-MM-DD
+ * @returns Instância válida de Date ou null se o formato/valores forem inválidos
+ */
 function criarDataLocalSegura(data: string) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(data);
 
@@ -51,19 +82,33 @@ function criarDataLocalSegura(data: string) {
   return d;
 }
 
+/**
+ * Retorna uma cópia da data ajustada para o primeiro milissegundo do dia (00:00:00.000).
+ * @param data - Data base
+ * @returns Data ajustada para 00:00:00.000
+ */
 function inicioDoDia(data: Date) {
   const d = new Date(data);
   d.setHours(0, 0, 0, 0);
   return d;
 }
 
+/**
+ * Retorna uma cópia da data ajustada para o último milissegundo do dia (23:59:59.999).
+ * @param data - Data base
+ * @returns Data ajustada para 23:59:59.999
+ */
 function fimDoDia(data: Date) {
   const d = new Date(data);
   d.setHours(23, 59, 59, 999);
   return d;
 }
 
-
+/**
+ * Converte um objeto Date em formato de string para inputs HTML (AAAA-MM-DD).
+ * @param data - Objeto Date
+ * @returns String formatada AAAA-MM-DD
+ */
 function formatarDataInput(data: Date) {
   const ano = data.getFullYear();
   const mes = String(data.getMonth() + 1).padStart(2, "0");
@@ -72,6 +117,11 @@ function formatarDataInput(data: Date) {
   return `${ano}-${mes}-${dia}`;
 }
 
+/**
+ * Retorna o nome amigável em português para o código da forma de pagamento.
+ * @param forma - Código da forma de pagamento
+ * @returns Nome legível
+ */
 function nomeFormaPagamento(forma: string) {
   const nomes: Record<string, string> = {
     PIX: "PIX",
@@ -84,6 +134,13 @@ function nomeFormaPagamento(forma: string) {
   return nomes[forma] || forma || "-";
 }
 
+/**
+ * Manipulador GET para consulta do relatório financeiro geral consolidado.
+ * Suporta filtragem por período (`dataInicio`, `dataFim`).
+ * Exige permissão `relatorios.ver` ou `relatorios.financeiro`.
+ * @param request - Requisição HTTP contendo query params
+ * @returns Resposta JSON com resumo financeiro, agregações e extrato unificado
+ */
 export async function GET(request: Request) {
   try {
     const acesso = await exigirPermissaoApi([

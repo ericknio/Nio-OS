@@ -1,3 +1,11 @@
+/**
+ * @file route.ts
+ * @description Endpoint de manutenção administrativa para regularização de pagamentos em OS finalizadas (`/api/manutencao/regularizar-pagamentos-finalizadas`).
+ * Identifica e regulariza inconsistências históricas em Ordens de Serviço com status `ENTREGUE`
+ * cujo `paymentPercent < 100%` ou `paidAmount < finalAmount` (legados anteriores ao fechamento com quitação obrigatória).
+ * Exige perfil de Administrador (`exigirAdministradorApi`).
+ */
+
 import { NextResponse } from "next/server";
 import { OrderStatus, PaymentMethod } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -6,11 +14,21 @@ import { exigirAdministradorApi } from "@/lib/permissaoApi";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Converte valor em número finito seguro, retornando 0 como fallback.
+ * @param valor - Valor a converter
+ * @returns Número seguro
+ */
 function numeroSeguro(valor: unknown) {
   const numero = Number(valor ?? 0);
   return Number.isFinite(numero) ? numero : 0;
 }
 
+/**
+ * Valida se a forma de pagamento é aceita pelo enum do Prisma, evitando 'AGUARDANDO_PAGAMENTO'.
+ * @param valor - Valor bruto da forma de pagamento
+ * @returns Instância válida de PaymentMethod (padrão PIX)
+ */
 function pagamentoValido(valor: unknown): PaymentMethod {
   const recebido = String(valor || "").trim();
 
@@ -23,6 +41,10 @@ function pagamentoValido(valor: unknown): PaymentMethod {
   return PaymentMethod.PIX;
 }
 
+/**
+ * Consulta no banco todas as OS entregues com divergência de quitação financeira.
+ * @returns Array de Ordens de Serviço pendentes de regularização
+ */
 async function buscarOrdensParaRegularizar() {
   const ordens = await prisma.serviceOrder.findMany({
     where: {
@@ -54,6 +76,11 @@ async function buscarOrdensParaRegularizar() {
   });
 }
 
+/**
+ * Manipulador GET para pré-visualizar quais OS entregues possuem pendência de regularização de pagamento.
+ * Exige privilégios de Administrador.
+ * @returns Resposta JSON com contagem total e lista de OS a regularizar
+ */
 export async function GET() {
   try {
     const acesso = await exigirAdministradorApi();
@@ -89,6 +116,13 @@ export async function GET() {
   }
 }
 
+/**
+ * Manipulador POST para executar a regularização em lote dos pagamentos das OS entregues.
+ * Atualiza `paidAmount = finalAmount`, `paymentPercent = 100`, cria o registro em `serviceOrderPayment`
+ * e insere registro na trilha de auditoria (`REGULARIZACAO_PAGAMENTO`).
+ * Exige perfil de Administrador.
+ * @returns Resposta JSON confirmando o total de ordens regularizadas e relação de IDs
+ */
 export async function POST() {
   try {
     const acesso = await exigirAdministradorApi();

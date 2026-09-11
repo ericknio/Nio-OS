@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint de histórico de movimentações e lançamentos físicos de estoque (`/api/estoque-tecnico/[id]/movimentos`).
+ * Permite listar a trilha auditável de entradas, saídas, reservas e estornos de uma peça (GET),
+ * e registrar novas movimentações manuais (entradas de compra, ajustes positivos e negativos) via POST.
+ */
+
 import {
   listTechnicalPartMovements,
   registerNegativeAdjustment,
@@ -25,6 +32,13 @@ type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
+/**
+ * Manipulador GET para listar as movimentações de estoque de uma peça técnica.
+ * Suporta paginação (`page`, `pageSize`) e ofuscação de custos caso o usuário não possua permissão financeira.
+ * @param request - Requisição HTTP com query params opcionais
+ * @param context - Contexto contendo `params.id` da peça técnica
+ * @returns Resposta JSON paginada com histórico de movimentos
+ */
 export async function GET(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("estoque.ver");
@@ -50,6 +64,15 @@ export async function GET(request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Manipulador POST para registrar movimentações manuais de estoque na peça técnica.
+ * Suporta as operações: `ENTRY` (entrada de nova compra/lote), `POSITIVE_ADJUSTMENT` (ajuste inventário +)
+ * e `NEGATIVE_ADJUSTMENT` (ajuste inventário -/perda).
+ * Exige permissão `estoque.ajustar` e validação CSRF (Same-Origin).
+ * @param request - Requisição HTTP contendo JSON com `operation` e `command`
+ * @param context - Contexto contendo `params.id` da peça técnica
+ * @returns Resposta JSON com a movimentação registrada
+ */
 export async function POST(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("estoque.ajustar");

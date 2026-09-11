@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint para listagem e filtragem de lançamentos financeiros de Ordens de Serviço (`/api/pagamentos`).
+ * Retorna o extrato de recebimentos e estornos vinculados às OS em um intervalo de datas e/ou forma de pagamento,
+ * calculando o total líquido arrecadado, ticket médio, quantitativo de estornos e totais agrupados por modalidade (PIX, Dinheiro, Cartão, Parcelado).
+ */
+
 import { NextResponse } from "next/server";
 import { PaymentMethod, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -7,6 +14,9 @@ import { reconciliarEstornosOrdensCanceladas } from "@/lib/reconciliarEstornos";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Relação de formas de pagamento suportadas pelo filtro da API.
+ */
 const FORMAS_PAGAMENTO_VALIDAS = [
   PaymentMethod.PIX,
   PaymentMethod.DINHEIRO,
@@ -16,6 +26,11 @@ const FORMAS_PAGAMENTO_VALIDAS = [
 
 type FormaPagamentoFiltro = (typeof FORMAS_PAGAMENTO_VALIDAS)[number];
 
+/**
+ * Valida se a forma de pagamento informada na query string é suportada pelo sistema.
+ * @param valor - String recebida no parâmetro `forma`
+ * @returns FormaPagamentoFiltro válida, null se ausente/'TODAS', ou 'INVALIDA' se incorreta
+ */
 function formaPagamentoValida(
   valor: string | null
 ): FormaPagamentoFiltro | "INVALIDA" | null {
@@ -28,6 +43,11 @@ function formaPagamentoValida(
     : "INVALIDA";
 }
 
+/**
+ * Converte string de data no formato AAAA-MM-DD em objeto Date local sem desvio de timezone.
+ * @param data - String no formato AAAA-MM-DD
+ * @returns Instância de Date ou null se inválida
+ */
 function criarDataLocalSegura(data: string | null) {
   if (!data) return null;
 
@@ -52,20 +72,34 @@ function criarDataLocalSegura(data: string | null) {
   return d;
 }
 
+/**
+ * Ajusta o horário do objeto Date para o primeiro milissegundo do dia (00:00:00.000).
+ * @param data - Instância de Date
+ * @returns Nova Date ajustada para 00:00:00.000
+ */
 function inicioDoDia(data: Date) {
   const d = new Date(data);
   d.setHours(0, 0, 0, 0);
   return d;
 }
 
+/**
+ * Ajusta o horário do objeto Date para o último milissegundo do dia (23:59:59.999).
+ * @param data - Instância de Date
+ * @returns Nova Date ajustada para 23:59:59.999
+ */
 function fimDoDia(data: Date) {
   const d = new Date(data);
   d.setHours(23, 59, 59, 999);
   return d;
 }
 
-
-
+/**
+ * Manipulador GET para consultar o extrato filtrado de pagamentos de Ordens de Serviço.
+ * Exige permissão `pagamentos.ver` ou `relatorios.financeiro`.
+ * @param request - Requisição HTTP contendo query params (`inicio`, `fim`, `forma`)
+ * @returns Resposta JSON com resumo consolidado e lista de pagamentos
+ */
 export async function GET(request: Request) {
   try {
     const acesso = await exigirPermissaoApi(["pagamentos.ver", "relatorios.financeiro"]);

@@ -1,3 +1,10 @@
+/**
+ * @file route.ts
+ * @description Endpoint para consulta e despacho administrativo de uma Peça Técnica (`/api/estoque-tecnico/[id]`).
+ * Permite obter dados cadastrais e de estoque com mascaramento financeiro (GET),
+ * e executar mutações de ciclo de vida (atualização de metadados, inativação, reativação, controle de saldo) via PATCH.
+ */
+
 import {
   changeTechnicalPartToControlled,
   changeTechnicalPartToUnlimited,
@@ -25,6 +32,13 @@ type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
+/**
+ * Manipulador GET para obter os detalhes de uma peça técnica específica.
+ * Exige permissão `estoque.ver`. Aplica filtro de visibilidade financeira (custos/margem).
+ * @param _request - Requisição HTTP
+ * @param context - Contexto contendo `params.id` da peça técnica
+ * @returns Resposta JSON com dados da peça técnica
+ */
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("estoque.ver");
@@ -41,6 +55,14 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 }
 
+/**
+ * Manipulador PATCH para despachar operações administrativas na peça técnica.
+ * Suporta as operações: `UPDATE_METADATA`, `DEACTIVATE`, `REACTIVATE`, `TO_CONTROLLED` e `TO_UNLIMITED`.
+ * Exige permissão `estoque.ajustar` e validação CSRF (Same-Origin).
+ * @param request - Requisição HTTP com JSON contento `operation` e `command`
+ * @param context - Contexto contendo `params.id` da peça técnica
+ * @returns Resposta JSON com a peça técnica atualizada
+ */
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const acesso = await exigirPermissaoApi("estoque.ajustar");
