@@ -1,6 +1,6 @@
 Se gostou e puder mandar um café, Agradeço
 Chave pix : 4fdb8a8c-3e95-4d9d-89bf-01969a802438
-<img width="1036" height="1005" alt="98f8d927-e3dc-40d7-8f6c-10bd331f5ddd" src="https://github.com/user-attachments/assets/230f7082-7b61-4eeb-825e-18b421b5c06b" />
+<img width="600" height="550" alt="98f8d927-e3dc-40d7-8f6c-10bd331f5ddd" src="https://github.com/user-attachments/assets/230f7082-7b61-4eeb-825e-18b421b5c06b" />
 
 
 # Nio-OS 🛠️
