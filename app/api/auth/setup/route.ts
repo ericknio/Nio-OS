@@ -178,15 +178,7 @@ export async function GET() {
  * @returns JSON com dados do novo admin criado e cookie de sessão
  */
 export async function POST(request: Request) {
-  if (
-    process.env.NODE_ENV === "production" &&
-    process.env.NIO_OS_LICENSE_ACTIVE !== "1"
-  ) {
-    return respostaJson(
-      "Este computador não possui uma licença ativa do Nio-OS. Realize a ativação para acessar.",
-      403
-    );
-  }
+  // Edição 100% Local: criação do primeiro administrador sem bloqueio de licença
 
   if (!bootstrapDesktopValido(request)) {
     return respostaJson(

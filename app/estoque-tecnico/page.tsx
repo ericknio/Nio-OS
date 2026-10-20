@@ -1015,8 +1015,8 @@ export default function EstoqueTecnicoPage() {
                     }}
                     className={`w-full rounded-2xl p-4 text-left ring-1 transition ${
                       selected?.id === part.id
-                        ? "bg-blue-50 ring-blue-300"
-                        : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800"
+                        ? "bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-300 dark:ring-blue-500/40"
+                        : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100 dark:ring-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">

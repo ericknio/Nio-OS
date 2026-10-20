@@ -36,12 +36,82 @@ export type ReleaseInfo = {
 /**
  * Versão atual em execução do software Nio-OS Desktop.
  */
-export const VERSAO_ATUAL_SISTEMA = "0.1.4";
+export const VERSAO_ATUAL_SISTEMA = "0.1.5";
 
 /**
  * Histórico decrescente de releases publicados com seus respectivos changelogs.
  */
 export const HISTORICO_RELEASES: ReleaseInfo[] = [
+  {
+    version: "0.1.5",
+    titulo: "Edição 100% Local Desbloqueada (Uso Vitalício)",
+    data: "20/10/2026",
+    tamanhoAproximado: "244 MB",
+    downloadUrl: "/release/Nio-OS%20Setup%200.1.5.exe",
+    resumo:
+      "Versão especial totalmente offline, sem bloqueio de licença ou necessidade de ativação na nuvem. Modo Servidor e Cliente LAN ilimitados.",
+    itens: [
+      {
+        tipo: "adicionado",
+        titulo: "Operação 100% Local Sem Licença",
+        descricao:
+          "O sistema opera de forma totalmente autônoma e irrestrita no computador, sem bloqueios de tela, sem checagem de chave ou expiração.",
+      },
+      {
+        tipo: "modificado",
+        titulo: "Desativação de Bloqueios e Sincronização em Nuvem",
+        descricao:
+          "Eliminação de bloqueios de login por licença e de tentativas de conexão externa com a nuvem, mantendo privacidade e autonomia absoluta.",
+      },
+      {
+        tipo: "modificado",
+        titulo: "Rede Local (LAN) Irrestrita",
+        descricao:
+          "Terminais clientes podem se conectar livremente ao servidor local via rede Wi-Fi/cabo sem exigência de licença ativa no servidor.",
+      },
+    ],
+  },
+  {
+    version: "0.1.4-1",
+    titulo: "Etiqueta Térmica Otimizada e Painel de WhatsApp",
+    data: "19/09/2026",
+    tamanhoAproximado: "243 MB",
+    downloadUrl: "/release/Nio-OS%20Setup%200.1.4-1.exe",
+    resumo:
+      "Novo layout universal de etiqueta térmica sem bordas cortantes, QR Code integrado para bancada, atalhos rápidos e integração com WhatsApp na OS.",
+    itens: [
+      {
+        tipo: "adicionado",
+        titulo: "Botão de Etiqueta Térmica na OS e Listagem",
+        descricao:
+          "Impressão de etiqueta de identificação térmica rápida na tela de detalhes da Ordem de Serviço e na listagem geral de ordens.",
+      },
+      {
+        tipo: "adicionado",
+        titulo: "Painel de WhatsApp Integrado na OS",
+        descricao:
+          "Envio rápido de mensagens com modelos prontos (orçamento, aguardando peça, aparelho pronto e cobrança) direto para o WhatsApp do cliente.",
+      },
+      {
+        tipo: "adicionado",
+        titulo: "QR Code de Consulta Rápida na Etiqueta",
+        descricao:
+          "A etiqueta de bancada agora inclui um QR Code legível para localizar instantaneamente a OS no sistema através de leitor ou celular.",
+      },
+      {
+        tipo: "modificado",
+        titulo: "Layout Térmico Universal (80x40mm)",
+        descricao:
+          "Eliminação da moldura externa que causava aspecto torto e expansão das margens de segurança, garantindo impressão reta e alinhada.",
+      },
+      {
+        tipo: "corrigido",
+        titulo: "Estouro de Margem Inferior na Etiqueta",
+        descricao:
+          "Correção da posição dos campos de IMEI, número de série e modelo que eram cortados pela serrilha ou sensor de corte da impressora térmica.",
+      },
+    ],
+  },
   {
     version: "0.1.4",
     titulo: "Central de Atualizações e Fechamento de Caixa Aprimorado",

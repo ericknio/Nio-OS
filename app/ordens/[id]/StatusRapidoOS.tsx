@@ -295,7 +295,7 @@ export default function StatusRapidoOS({
         </div>
 
         {precisaTecnico && (
-          <div className="rounded-2xl bg-blue-50 p-4 ring-1 ring-blue-100">
+          <div className="rounded-2xl bg-blue-50 dark:bg-blue-950/40 p-4 ring-1 ring-blue-100 dark:ring-blue-900/60">
             <label className="mb-1 block text-sm font-black text-blue-700 dark:text-blue-400">
               Técnico responsável pelo serviço *
             </label>

@@ -256,7 +256,6 @@
 
       <div class="tools">
         <button id="redefinir" class="linkbtn" type="button">Redefinir escolha de modo</button>
-        <button id="log" class="linkbtn" type="button">Abrir log técnico</button>
       </div>
     </section>
   </main>
@@ -267,7 +266,6 @@
     const clienteBtn = document.getElementById("cliente");
     const manualBtn = document.getElementById("manual");
     const urlManual = document.getElementById("urlManual");
-    const logBtn = document.getElementById("log");
     const redefinirBtn = document.getElementById("redefinir");
 
     function setTravado(valor) {
@@ -289,14 +287,9 @@
 
     servidorBtn.addEventListener("click", async () => {
       setTravado(true);
-      setStatus("Verificando licença e iniciando servidor...", "info");
+      setStatus("Iniciando servidor local...", "info");
 
       const result = await window.nioOS.iniciarServidor();
-
-      if (result?.precisaAtivacao) {
-        window.location.href = "cloud-login.html";
-        return;
-      }
 
       if (!result?.ok) {
         setTravado(false);
@@ -328,15 +321,18 @@
       }
     });
 
-    logBtn.addEventListener("click", () => {
-      window.nioOS.abrirLog();
-    });
-
     redefinirBtn.addEventListener("click", async () => {
       setTravado(true);
       await window.nioOS.redefinirModo();
       setTravado(false);
       setStatus("Escolha redefinida. Selecione servidor ou cliente.", "sucesso");
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "F12") {
+        event.preventDefault();
+        window.nioOS.abrirLog();
+      }
     });
   </script>
 </body>

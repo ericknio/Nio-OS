@@ -109,6 +109,22 @@ function log(...partes) {
   console.log(...partes);
 }
 
+async function abrirArquivoLogTecnico() {
+  const arquivo = logPath();
+
+  try {
+    fs.mkdirSync(path.dirname(arquivo), { recursive: true });
+    if (!fs.existsSync(arquivo)) {
+      fs.writeFileSync(arquivo, "", "utf8");
+    }
+
+    await shell.openPath(arquivo);
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, message: error?.message || String(error) };
+  }
+}
+
 function escaparPowerShellLiteral(valor) {
   return String(valor).replace(/'/g, "''");
 }
@@ -123,6 +139,8 @@ function executarPowerShell(script) {
         "-NonInteractive",
         "-ExecutionPolicy",
         "Bypass",
+        "-WindowStyle",
+        "Hidden",
         "-EncodedCommand",
         encoded,
       ],
@@ -172,6 +190,8 @@ function executarFirewallHelper(modo, elevado = false) {
     "-NonInteractive",
     "-ExecutionPolicy",
     "Bypass",
+    "-WindowStyle",
+    "Hidden",
     "-File",
     helper,
     "-Mode",
@@ -216,7 +236,7 @@ function executarFirewallHelper(modo, elevado = false) {
   const encoded = Buffer.from(elevatedScript, "utf16le").toString("base64");
   const bootstrap = [
     "$ErrorActionPreference = 'Stop'",
-    "$p = Start-Process -FilePath 'powershell.exe' -Verb RunAs -Wait -PassThru -ErrorAction Stop -ArgumentList @('-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-EncodedCommand','" +
+    "$p = Start-Process -FilePath 'powershell.exe' -Verb RunAs -WindowStyle Hidden -Wait -PassThru -ErrorAction Stop -ArgumentList @('-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-WindowStyle','Hidden','-EncodedCommand','" +
       encoded +
       "')",
     "exit $p.ExitCode",
@@ -230,6 +250,8 @@ function executarFirewallHelper(modo, elevado = false) {
         "-NonInteractive",
         "-ExecutionPolicy",
         "Bypass",
+        "-WindowStyle",
+        "Hidden",
         "-Command",
         bootstrap,
       ],
@@ -599,6 +621,11 @@ function configurarJanelaPrincipal(win) {
     if (input.key === "F11") {
       event.preventDefault();
     }
+
+    if (input.key === "F12" && input.type === "keyDown") {
+      event.preventDefault();
+      abrirArquivoLogTecnico();
+    }
   });
 
   win.webContents.setVisualZoomLevelLimits(1, 1).catch(() => {});
@@ -802,8 +829,8 @@ function escreverEnvRuntime() {
     `NIO_OS_DATA_DIR="${normalizarPathSQLite(app.getPath("userData"))}"`,
     `NIO_OS_RUNTIME_DIR="${normalizarPathSQLite(app.getPath("userData"))}"`,
     `AUTH_SECRET="${obterAuthSecretLocal()}"`,
-    `NIO_OS_LICENSE_ACTIVE="${process.env.NIO_OS_LICENSE_ACTIVE || "0"}"`,
-    `NIO_OS_LICENSE_EXPIRES_ON="${process.env.NIO_OS_LICENSE_EXPIRES_ON || ""}"`,
+    `NIO_OS_LICENSE_ACTIVE="1"`,
+    `NIO_OS_LICENSE_EXPIRES_ON=""`,
     "",
   ];
 
@@ -1082,8 +1109,8 @@ function iniciarProcessoServidor() {
       NIO_OS_DATA_DIR: app.getPath("userData"),
       NIO_OS_RUNTIME_DIR: app.getPath("userData"),
       NIO_OS_ENV_PATH: appDataPath(".env"),
-      NIO_OS_LICENSE_ACTIVE: process.env.NIO_OS_LICENSE_ACTIVE || "0",
-      NIO_OS_LICENSE_EXPIRES_ON: process.env.NIO_OS_LICENSE_EXPIRES_ON || "",
+      NIO_OS_LICENSE_ACTIVE: "1",
+      NIO_OS_LICENSE_EXPIRES_ON: "",
     },
     windowsHide: true,
     stdio: ["ignore", "pipe", "pipe"],
@@ -1226,24 +1253,14 @@ async function validarServidorCliente(baseUrl, identityEsperada = "") {
     identityEsperada,
   });
 
-  // LICENCA_LOCAL_V1_CLIENTE
-  if (resultado.ok && resultado.licenseActive !== true) {
-    return {
-      ...resultado,
-      ok: false,
-      code: "SERVER_LICENSE_INACTIVE",
-      message: "O servidor Nio-OS foi encontrado, mas a licença do servidor não está ativa.",
-      base,
-    };
-  }
-
+  // LICENCA_LOCAL_V1_CLIENTE (Desbloqueado para operação local)
   return {
     ...resultado,
     base,
   };
 }
 
-async function esperarServidor(baseUrl, tentativas = 90) {
+async function esperarServidor(baseUrl, tentativas = 120) {
   const base = normalizarUrlServidor(baseUrl) || LOCAL_ORIGIN;
 
   for (let i = 1; i <= tentativas; i++) {
@@ -1509,220 +1526,50 @@ function instalarArquivoLicencaLocalV1(origem) {
 
 // LICENCA_LOCAL_V1_ENV_SERVIDOR
 function publicarLicencaServidorNoAmbiente(resultado = null) {
-  delete process.env.NIO_OS_LICENSE_ACTIVE;
-  delete process.env.NIO_OS_LICENSE_EXPIRES_ON;
-
-  if (!resultado?.ok) return;
-
   process.env.NIO_OS_LICENSE_ACTIVE = "1";
-  process.env.NIO_OS_LICENSE_EXPIRES_ON =
-    String(resultado.license?.expiresOn || "").trim();
+  process.env.NIO_OS_LICENSE_EXPIRES_ON = "";
 }
 
-
-// CLOUD_ACTIVATION_RUNTIME_FACTORY_V1
-function criarNioCloudActivationRuntimeV1({
-  baseUrl,
-  allowLoopbackHttp = false,
-  fetchImpl = globalThis.fetch
-}) {
-  const userDataDir = app.getPath("userData");
-  const tokenStore = criarNioCloudTokenStoreV1(userDataDir);
-  const client = createNioCloudClientV1({
-    baseUrl,
-    fetchImpl,
-    allowLoopbackHttp
-  });
-  const bridge = createNioCloudActivationBridgeV1({
-    licenseCore,
-    userDataDir,
-    tokenStore,
-    installLicenseFile: instalarArquivoLicencaLocalV1
-  });
-
-  return Object.freeze({ client, bridge, tokenStore });
-}
-// FIM CLOUD_ACTIVATION_RUNTIME_FACTORY_V1
-
-// CLOUD_ACTIVATION_RUNTIME_CONFIG_V1
-function criarNioCloudActivationRuntimeConfiguradoV1({
-  env = process.env,
-  fetchImpl = globalThis.fetch
-} = {}) {
-  const config = resolveNioCloudConfigV1({
-    env,
-    isPackaged: app.isPackaged
-  });
-
-  if (!config.enabled) return null;
-
-  return criarNioCloudActivationRuntimeV1({
-    baseUrl: config.baseUrl,
-    allowLoopbackHttp: config.allowLoopbackHttp,
-    fetchImpl
-  });
-}
-// FIM CLOUD_ACTIVATION_RUNTIME_CONFIG_V1
-
-// CLOUD_ACTIVATION_V1
+// CLOUD_ACTIVATION_V1 (Desativado na versão 100% local desbloqueada)
 let nioCloudRuntimeV1 = null;
 
 function inicializarNioCloudV1() {
-  nioCloudRuntimeV1 = criarNioCloudActivationRuntimeConfiguradoV1();
-
-  if (!nioCloudRuntimeV1) {
-    log("Cloud solicitada, mas NIO_OS_CLOUD_URL não foi configurada ou app está offline.");
-    return false;
-  }
-
-  log("Cloud inicializada.");
-  return true;
+  log("Edição 100% Local Desbloqueada: serviços em nuvem desativados.");
+  return false;
 }
-// FIM CLOUD_ACTIVATION_V1
 
-// CLOUD_SYNC_V1
-let sincronizandoLicenca = false;
-let timerSyncLicenca = null;
-
+// CLOUD_SYNC_V1 (Sem revogação ou bloqueio na edição local)
 function tratarLicencaRevogadaLocalmente(userDataDir, motivo) {
-  try {
-    const licPath = licenseCore.licensePath(userDataDir);
-    if (fs.existsSync(licPath)) {
-      fs.unlinkSync(licPath);
-    }
-  } catch (e) {
-    log("Erro ao remover licença local:", e);
-  }
-
-  try {
-    nioCloudRuntimeV1?.tokenStore?.clear();
-  } catch (e) {
-    log("Erro ao limpar deviceToken:", e);
-  }
-
-  delete process.env.NIO_OS_LICENSE_ACTIVE;
-  delete process.env.NIO_OS_LICENSE_EXPIRES_ON;
-
-  salvarConfig({
-    lastMode: "",
-    autoStart: false,
-  });
-
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    log("Redirecionando mainWindow para cloud-login.html devido à licença revogada/expirada...");
-    mainWindow.loadFile(path.join(__dirname, "cloud-login.html"));
-  }
+  // Edição 100% Local Desbloqueada: nunca revoga acesso
 }
 
 async function sincronizarLicencaComNuvemV1() {
-  if (!nioCloudRuntimeV1) return { ok: false, motivo: "CLOUD_NOT_INITIALIZED" };
-  if (sincronizandoLicenca) return { ok: false, motivo: "ALREADY_SYNCING" };
-
-  sincronizandoLicenca = true;
-  try {
-    const userDataDir = app.getPath("userData");
-    const deviceToken = nioCloudRuntimeV1.tokenStore.load();
-    if (!deviceToken) {
-      log("Sincronização de licença ignorada: nenhum deviceToken encontrado.");
-      return { ok: false, motivo: "NO_DEVICE_TOKEN" };
-    }
-
-    const installationId = licenseCore.ensureInstallationId(userDataDir);
-    log("Iniciando sincronização de licença com a nuvem para installationId:", installationId);
-
-    let syncResult;
-    try {
-      syncResult = await nioCloudRuntimeV1.client.sync({ installationId }, deviceToken);
-    } catch (err) {
-      log("Aviso: falha na conexão de sincronização com a nuvem:", err?.message || String(err));
-      if (err?.code === "DEVICE_TOKEN_INVALID" || err?.code === "INVALID_CREDENTIALS" || err?.httpStatus === 401) {
-        log("Device token inválido na nuvem. Revogando licença local...");
-        tratarLicencaRevogadaLocalmente(userDataDir, "DEVICE_TOKEN_INVALID");
-        return { ok: false, revogada: true, motivo: "DEVICE_TOKEN_INVALID" };
-      }
-      return { ok: false, offline: true, error: err?.message };
-    }
-
-    const applied = nioCloudRuntimeV1.bridge.applySyncResponse(syncResult);
-    log("Resposta da sincronização cloud:", { status: applied.status, reason: applied.reason, installed: applied.installed });
-
-    if (applied.status === "ACTIVE" && applied.installed) {
-      const validada = verificarLicencaServidorLocalV1();
-      log("Licença sincronizada e atualizada com sucesso. Nova data de expiração:", validada.license?.expiresOn);
-      return { ok: true, license: validada.license };
-    }
-
-    if (applied.status === "BLOCKED" || applied.status === "EXPIRED") {
-      log(`Licença com status ${applied.status} na nuvem (motivo: ${applied.reason}). Revogando acesso local...`);
-      tratarLicencaRevogadaLocalmente(userDataDir, applied.reason || applied.status);
-      return { ok: false, revogada: true, status: applied.status, reason: applied.reason };
-    }
-
-    return { ok: false, motivo: "UNEXPECTED_STATUS" };
-  } catch (error) {
-    log("Erro inesperado na sincronização de licença:", error?.message || String(error));
-    return { ok: false, error: error?.message };
-  } finally {
-    sincronizandoLicenca = false;
-  }
+  return { ok: true, offline: true };
 }
 
 function iniciarAgendadorSyncNuvemV1() {
-  if (timerSyncLicenca) clearInterval(timerSyncLicenca);
-
-  // Sincroniza a cada 30 minutos (1800000 ms)
-  const INTERVALO_SYNC_MS = 30 * 60 * 1000;
-  timerSyncLicenca = setInterval(() => {
-    sincronizarLicencaComNuvemV1().catch((err) =>
-      log("Erro na sincronização periódica de licença:", err)
-    );
-  }, INTERVALO_SYNC_MS);
+  // Desativado na edição local sem licença
 }
-// FIM CLOUD_SYNC_V1
 
 // VERIFICACAO_LICENCA_SERVIDOR_V1
 function verificarLicencaServidorLocalV1() {
-  const userDataDir = app.getPath("userData");
   publicarLicencaServidorNoAmbiente();
-  const atual = licenseCore.verifyLicenseFile(userDataDir);
-
-  if (atual.ok) {
-    publicarLicencaServidorNoAmbiente(atual);
-    log("Licença local do servidor carregada e válida.");
-    return { ok: true, license: atual.license };
-  }
-
-  log("Servidor sem licença válida. Código:", atual.code);
-  return { ok: false, code: atual.code };
+  log("Edição 100% Local Desbloqueada: servidor ativo sem exigência de licença.");
+  return {
+    ok: true,
+    license: {
+      licenseId: "OFFLINE-ILIMITADO",
+      clientName: "Assistência Técnica Local",
+      plan: "PRO (Vitalício)",
+      expiresOn: null,
+      issuedOn: "2026-01-01",
+    },
+  };
 }
 
 async function iniciarServidor(opcoes = {}) {
-  // Sincroniza com a nuvem antes de validar
-  if (nioCloudRuntimeV1) {
-    try {
-      await sincronizarLicencaComNuvemV1();
-    } catch (e) {
-      log("Erro ao tentar sincronizar licença antes de iniciar servidor:", e);
-    }
-  }
-
-  const licenca = verificarLicencaServidorLocalV1();
-  if (!licenca.ok) {
-    salvarConfig({
-      lastMode: "",
-      autoStart: false,
-    });
-    log("Servidor sem licença válida. Redirecionando diretamente para tela de login da nuvem...");
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.loadFile(path.join(__dirname, "cloud-login.html"));
-    }
-    return {
-      ok: false,
-      precisaAtivacao: true,
-      code: licenca.code,
-      message: "Licença necessária. Redirecionando para ativação na nuvem...",
-    };
-  }
+  // Edição 100% local desbloqueada: licença permanente garantida
+  verificarLicencaServidorLocalV1();
 
   if (iniciandoServidor) {
     return { ok: false, message: "Inicialização do servidor já está em andamento." };
@@ -1982,19 +1829,7 @@ ipcMain.handle("nio-os:cliente", async (event, urlManual) => {
 
 ipcMain.handle("nio-os:abrir-log", async (event) => {
   exigirIpcDoSeletor(event);
-  const arquivo = logPath();
-
-  try {
-    fs.mkdirSync(path.dirname(arquivo), { recursive: true });
-    if (!fs.existsSync(arquivo)) {
-      fs.writeFileSync(arquivo, "", "utf8");
-    }
-
-    await shell.openPath(arquivo);
-    return { ok: true };
-  } catch (error) {
-    return { ok: false, message: error?.message || String(error) };
-  }
+  return await abrirArquivoLogTecnico();
 });
 
 ipcMain.handle("nio-os:redefinir-modo", async (event) => {

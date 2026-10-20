@@ -87,7 +87,7 @@ function runText(command, args) {
     encoding: "utf8",
     windowsHide: true,
     shell: false,
-    timeout: 5000,
+    timeout: 15000,
   });
 
   if (r.status !== 0) return "";
@@ -114,6 +114,8 @@ function windowsSystemUuid() {
   const text = runText("powershell.exe", [
     "-NoProfile",
     "-NonInteractive",
+    "-WindowStyle",
+    "Hidden",
     "-Command",
     "(Get-CimInstance Win32_ComputerSystemProduct -ErrorAction Stop).UUID",
   ]);
@@ -252,83 +254,57 @@ function validatePayload(payload) {
   return "";
 }
 
-function verifyLicenseObject(envelope, userDataDir, options = {}) {
+function licencaLocalIlimitadaPadrao(userDataDir) {
+  let fingerprint = "LOCAL_OFFLINE_PRO";
   try {
-    if (!envelope || typeof envelope !== "object" || Array.isArray(envelope)) {
-      return { ok: false, code: "LICENSE_FORMAT_INVALID" };
+    if (userDataDir) {
+      const installationId = ensureInstallationId(userDataDir);
+      fingerprint = machineFingerprint(installationId);
     }
+  } catch {}
 
-    if (envelope.schema !== LICENSE_SCHEMA) {
-      return { ok: false, code: "LICENSE_SCHEMA_UNSUPPORTED" };
+  return {
+    ok: true,
+    code: "OK",
+    license: {
+      licenseId: "OFFLINE-ILIMITADO",
+      clientName: "Assistência Técnica Local",
+      plan: "PRO (Vitalício)",
+      issuedOn: "2026-01-01",
+      expiresOn: null,
+      features: { all: true, localOnly: true },
+      machineCode: machineCodeFromFingerprint(fingerprint),
+    },
+  };
+}
+
+function verifyLicenseObject(envelope, userDataDir, options = {}) {
+  // Edição 100% Local Desbloqueada: validação sempre positiva
+  if (!envelope) {
+    return licencaLocalIlimitadaPadrao(userDataDir);
+  }
+
+  try {
+    if (envelope.payload) {
+      const installationId = userDataDir ? ensureInstallationId(userDataDir) : "";
+      const fingerprint = installationId ? machineFingerprint(installationId) : "LOCAL_OFFLINE_PRO";
+      return {
+        ok: true,
+        code: "OK",
+        license: {
+          licenseId: envelope.payload.licenseId || "OFFLINE-ILIMITADO",
+          clientName: envelope.payload.clientName || "Assistência Técnica Local",
+          plan: String(envelope.payload.plan || "PRO (Vitalício)"),
+          issuedOn: envelope.payload.issuedOn || "2026-01-01",
+          expiresOn: null,
+          features: envelope.payload.features || { all: true },
+          machineCode: machineCodeFromFingerprint(fingerprint),
+        },
+      };
     }
-
-    if (envelope.keyId !== KEY_ID) {
-      return { ok: false, code: "LICENSE_KEY_UNKNOWN" };
-    }
-
-    const payloadError = validatePayload(envelope.payload);
-    if (payloadError) return { ok: false, code: payloadError };
-
-    if (!/^[A-Za-z0-9_-]{64,256}$/.test(String(envelope.signature || ""))) {
-      return { ok: false, code: "SIGNATURE_FORMAT_INVALID" };
-    }
-
-    const publicKey = crypto.createPublicKey(PUBLIC_KEY_PEM);
-    const signature = base64urlDecode(envelope.signature);
-    const verified = crypto.verify(
-      null,
-      signedEnvelopeBytes(envelope),
-      publicKey,
-      signature
-    );
-
-    if (!verified) {
-      return { ok: false, code: "SIGNATURE_INVALID" };
-    }
-
-    const installationId = ensureInstallationId(userDataDir);
-    if (envelope.payload.installationId !== installationId) {
-      return { ok: false, code: "INSTALLATION_MISMATCH" };
-    }
-
-    const fingerprint = machineFingerprint(installationId);
-    if (
-      String(envelope.payload.machineFingerprint).toLowerCase() !==
-      fingerprint.toLowerCase()
-    ) {
-      return { ok: false, code: "MACHINE_MISMATCH" };
-    }
-
-    const now = options.now instanceof Date ? options.now : new Date();
-    const today = todayLocalDate(now);
-
-    if (envelope.payload.issuedOn && today < envelope.payload.issuedOn) {
-      return { ok: false, code: "LICENSE_NOT_YET_VALID" };
-    }
-
-    if (envelope.payload.expiresOn && today > envelope.payload.expiresOn) {
-      return { ok: false, code: "LICENSE_EXPIRED" };
-    }
-
-    return {
-      ok: true,
-      code: "OK",
-      license: {
-        licenseId: envelope.payload.licenseId,
-        clientName: envelope.payload.clientName,
-        plan: String(envelope.payload.plan || "PRO"),
-        issuedOn: envelope.payload.issuedOn || null,
-        expiresOn: envelope.payload.expiresOn || null,
-        features: envelope.payload.features || {},
-        machineCode: machineCodeFromFingerprint(fingerprint),
-      },
-    };
-  } catch (error) {
-    return {
-      ok: false,
-      code: "LICENSE_VERIFY_ERROR",
-      message: error instanceof Error ? error.message : String(error),
-    };
+    return licencaLocalIlimitadaPadrao(userDataDir);
+  } catch {
+    return licencaLocalIlimitadaPadrao(userDataDir);
   }
 }
 
@@ -336,7 +312,7 @@ function verifyLicenseFile(userDataDir, options = {}) {
   const file = options.file || licensePath(userDataDir);
 
   if (!fs.existsSync(file)) {
-    return { ok: false, code: "LICENSE_NOT_FOUND", file };
+    return licencaLocalIlimitadaPadrao(userDataDir);
   }
 
   try {
@@ -345,12 +321,10 @@ function verifyLicenseFile(userDataDir, options = {}) {
       ...verifyLicenseObject(envelope, userDataDir, options),
       file,
     };
-  } catch (error) {
+  } catch {
     return {
-      ok: false,
-      code: "LICENSE_FILE_INVALID",
+      ...licencaLocalIlimitadaPadrao(userDataDir),
       file,
-      message: error instanceof Error ? error.message : String(error),
     };
   }
 }

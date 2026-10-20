@@ -272,7 +272,7 @@ function LinhaRanking({
   total: ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 ring-1 ring-slate-100">
+    <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 ring-1 ring-slate-100 dark:ring-slate-800">
       <div>
         <p className="font-black text-slate-900 dark:text-white">{titulo}</p>
 
@@ -283,7 +283,7 @@ function LinhaRanking({
         )}
       </div>
 
-      <strong className="text-2xl">{total}</strong>
+      <strong className="text-2xl text-slate-900 dark:text-white">{total}</strong>
     </div>
   );
 }
@@ -306,7 +306,9 @@ function BarraMovimentoOS({
   return (
     <div
       className={`rounded-2xl p-4 ring-1 ${
-        destaque ? "bg-blue-50 ring-blue-200" : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100"
+        destaque
+          ? "bg-blue-50 ring-blue-200 dark:bg-blue-900/20 dark:ring-blue-500/30"
+          : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100 dark:ring-slate-800"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -330,7 +332,7 @@ function BarraMovimentoOS({
       <div className="mt-3 h-3 overflow-hidden rounded-full bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
         <div
           className={`h-full rounded-full ${
-            destaque ? "bg-blue-600" : "bg-slate-400"
+            destaque ? "bg-blue-600" : "bg-slate-400 dark:bg-slate-600"
           }`}
           style={{ width: `${largura}%` }}
         />
@@ -347,8 +349,8 @@ function CampoResumo({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 ring-1 ring-slate-100">
-      <p className="text-xs font-black uppercase tracking-wide text-slate-400">
+    <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 ring-1 ring-slate-100 dark:ring-slate-800">
+      <p className="text-xs font-black uppercase tracking-wide text-slate-400 dark:text-slate-400">
         {titulo}
       </p>
 
@@ -780,7 +782,7 @@ export default function RelatoriosPage() {
           </div>
         </section>
 
-        <div className={abaAtiva === "geral" && !ehApenasTecnico ? "contents" : "hidden"}>
+        <div className={abaAtiva === "geral" && !ehApenasTecnico ? "space-y-6" : "hidden"}>
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <CardResumo titulo="Total de OS" valor={totalOrdens} />
 
@@ -928,7 +930,7 @@ export default function RelatoriosPage() {
                   <p className="text-sm font-black text-green-700 dark:text-green-400">
                     Dia da semana mais forte
                   </p>
-                  <p className="mt-1 text-sm font-semibold text-green-900">
+                  <p className="mt-1 text-sm font-semibold text-green-900 dark:text-green-200">
                     {dados?.diagnostico?.diaSemanaMaisForte?.label || "-"} | {dados?.diagnostico?.diaSemanaMaisForte?.totalOrdens || 0} OS
                   </p>
                 </div>
@@ -937,7 +939,7 @@ export default function RelatoriosPage() {
                   <p className="text-sm font-black text-orange-700 dark:text-orange-400">
                     Dia da semana mais fraco
                   </p>
-                  <p className="mt-1 text-sm font-semibold text-orange-900">
+                  <p className="mt-1 text-sm font-semibold text-orange-900 dark:text-orange-200">
                     {dados?.diagnostico?.diaSemanaMaisFraco?.label || "-"} | {dados?.diagnostico?.diaSemanaMaisFraco?.totalOrdens || 0} OS
                   </p>
                 </div>
@@ -946,7 +948,7 @@ export default function RelatoriosPage() {
                   <p className="text-sm font-black text-blue-700 dark:text-blue-400">
                     Melhor dia do período
                   </p>
-                  <p className="mt-1 text-sm font-semibold text-blue-900">
+                  <p className="mt-1 text-sm font-semibold text-blue-900 dark:text-blue-200">
                     {dados?.diagnostico?.diaMesMaisForte?.label || "-"} | {dados?.diagnostico?.diaMesMaisForte?.totalOrdens || 0} OS
                   </p>
                 </div>
@@ -955,7 +957,7 @@ export default function RelatoriosPage() {
                   <p className="text-sm font-black text-red-700 dark:text-red-400">
                     Dia mais fraco do período
                   </p>
-                  <p className="mt-1 text-sm font-semibold text-red-900">
+                  <p className="mt-1 text-sm font-semibold text-red-900 dark:text-red-200">
                     {dados?.diagnostico?.diaMesMaisFraco?.label || "-"} | {dados?.diagnostico?.diaMesMaisFraco?.totalOrdens || 0} OS
                   </p>
                 </div>
@@ -1456,7 +1458,7 @@ export default function RelatoriosPage() {
                           onClick={() =>
                             setTecnicoSelecionado(tecnico.technicianKey)
                           }
-                          className="rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 text-left ring-1 ring-slate-100 transition hover:bg-blue-50 hover:ring-blue-200"
+                          className="rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 text-left ring-1 ring-slate-100 dark:ring-slate-800 transition hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:ring-blue-200 dark:hover:ring-blue-500/30"
                         >
                           <div className="flex items-start justify-between gap-4">
                             <div>

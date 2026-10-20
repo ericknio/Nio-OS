@@ -142,8 +142,10 @@ function CardForma({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-2xl p-4 text-left ring-1 transition hover:bg-blue-50 ${
-        ativo ? "bg-blue-50 ring-2 ring-blue-500" : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100"
+      className={`rounded-2xl p-4 text-left ring-1 transition hover:bg-blue-50 dark:hover:bg-blue-900/20 ${
+        ativo
+          ? "bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-500 dark:ring-blue-400"
+          : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100 dark:ring-slate-800"
       }`}
     >
       <p className="text-xs font-black uppercase tracking-wide text-slate-400">

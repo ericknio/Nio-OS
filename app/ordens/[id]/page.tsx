@@ -25,6 +25,7 @@ import ObservacoesInternasOS from "./ObservacoesInternasOS";
 import StatusRapidoOS from "./StatusRapidoOS";
 import PecasTecnicasOS from "./PecasTecnicasOS";
 import GerenciarPecasTecnicasOS from "./GerenciarPecasTecnicasOS";
+import WhatsAppOS from "./WhatsAppOS";
 
 type Ordem = {
   id: string;
@@ -643,6 +644,15 @@ export default function DetalhesOrdemPage() {
               </a>
 
               <a
+                href={`/api/ordens/${ordem.id}/etiqueta`}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm font-black text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:bg-slate-800/50 dark:hover:bg-slate-800/50"
+              >
+                🏷️ Etiqueta Térmica
+              </a>
+
+              <a
                 href={`/api/ordens/${ordem.id}/garantia`}
                 target="_blank"
                 rel="noreferrer"
@@ -883,6 +893,14 @@ export default function DetalhesOrdemPage() {
             </div>
           </section>
         </section>
+
+        <WhatsAppOS
+          clienteNome={ordem.customer?.name}
+          whatsapp={ordem.customer?.whatsapp}
+          numeroOS={ordem.osNumber}
+          equipamento={equipamentoNome(ordem)}
+          valorTotal={ordem.totalAmount}
+        />
 
         <section className="rounded-3xl bg-white dark:bg-slate-900 p-6 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
           <div className="mb-5">

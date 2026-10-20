@@ -202,46 +202,7 @@ export async function POST(request: Request) {
       },
     });
 
-    const isDesktop = !!process.env.NIO_OS_RUNTIME_DIR;
-    const cloudUrl = process.env.NIO_OS_CLOUD_URL;
-
-    if (
-      process.env.NODE_ENV === "production" &&
-      process.env.NIO_OS_LICENSE_ACTIVE !== "1"
-    ) {
-      registrarFalha(chave);
-      return respostaJson(
-        "Este computador não possui uma licença ativa do Nio-OS. Realize a ativação para acessar.",
-        403
-      );
-    }
-
-    // Se não for Desktop e tiver Cloud URL configurada, a nuvem deve ditar o acesso.
-    // Mas, como a API da nuvem agora exige HWID (Desktop), Web Servers sempre tomariam 400.
-    // Para manter a segurança sem quebrar o sistema Web existente, nós apenas validamos 
-    // se a nuvem explicitamente bloqueou (401, 402, 403) a assinatura.
-    if (cloudUrl && !isDesktop) {
-      try {
-        const cloudRes = await fetch(`${cloudUrl}/api/v1/client-auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: username, password }),
-        });
-
-        if (cloudRes.status === 403 || cloudRes.status === 402 || cloudRes.status === 401) {
-          const cloudData = await cloudRes.json().catch(() => null);
-          if (!usuario || usuario.role === SystemUserRole.ADMIN) {
-            registrarFalha(chave);
-            return respostaJson(
-              cloudData?.message || "Assinatura expirada, senha inválida ou conta bloqueada na nuvem.", 
-              403
-            );
-          }
-        }
-      } catch (error) {
-        console.warn("Falha ao comunicar com a Nuvem no modo Web. Acesso local permitido temporariamente.", error);
-      }
-    }
+    // Edição 100% Local: autenticação direta no banco SQLite sem bloqueios de licença ou dependência de nuvem.
 
     if (!usuario) {
       registrarFalha(chave);

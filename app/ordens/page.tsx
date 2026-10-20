@@ -235,6 +235,10 @@ export default function OrdensPage() {
     window.open(`/api/ordens/${ordem.id}/imprimir`, "_blank");
   }
 
+  function imprimirEtiqueta(ordem: Ordem) {
+    window.open(`/api/ordens/${ordem.id}/etiqueta`, "_blank");
+  }
+
   useEffect(() => {
     carregarOrdens();
   }, []);
@@ -303,7 +307,7 @@ export default function OrdensPage() {
           <button
             type="button"
             onClick={() => aplicarStatusRapido("PRONTO")}
-            className="rounded-3xl bg-white dark:bg-slate-900 p-5 text-left shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 hover:bg-blue-50"
+            className="rounded-3xl bg-white dark:bg-slate-900 p-5 text-left shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 hover:bg-blue-50 dark:hover:bg-indigo-950/30 transition"
           >
             <p className="text-sm font-bold text-slate-500 dark:text-slate-400">Prontas</p>
             <strong className="mt-2 block text-4xl text-indigo-700 dark:text-indigo-400">
@@ -314,7 +318,7 @@ export default function OrdensPage() {
           <button
             type="button"
             onClick={() => aplicarStatusRapido("ENTREGUE")}
-            className="rounded-3xl bg-white dark:bg-slate-900 p-5 text-left shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 hover:bg-green-50"
+            className="rounded-3xl bg-white dark:bg-slate-900 p-5 text-left shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 hover:bg-green-50 dark:hover:bg-green-950/30 transition"
           >
             <p className="text-sm font-bold text-slate-500 dark:text-slate-400">Entregues</p>
             <strong className="mt-2 block text-4xl text-green-700 dark:text-green-400">
@@ -324,7 +328,7 @@ export default function OrdensPage() {
 
           <Link
             href="/ordens/atrasadas"
-            className="rounded-3xl bg-white dark:bg-slate-900 p-5 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 hover:bg-red-50"
+            className="rounded-3xl bg-white dark:bg-slate-900 p-5 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 hover:bg-red-50 dark:hover:bg-red-950/30 transition"
           >
             <p className="text-sm font-bold text-slate-500 dark:text-slate-400">Atrasadas</p>
             <strong className="mt-2 block text-4xl text-red-700 dark:text-red-400">
@@ -568,13 +572,24 @@ export default function OrdensPage() {
                         )}
 
                         {podeImprimirOrdem && (
-                          <button
-                            type="button"
-                            onClick={() => imprimirOrdem(ordem)}
-                            className="rounded-xl bg-slate-950 px-4 py-3 text-xs font-black text-white hover:bg-slate-800"
-                          >
-                            Imprimir
-                          </button>
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => imprimirEtiqueta(ordem)}
+                              className="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-xs font-black text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800"
+                              title="Imprimir Etiqueta Térmica de Bancada"
+                            >
+                              Etiqueta
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => imprimirOrdem(ordem)}
+                              className="rounded-xl bg-slate-950 px-4 py-3 text-xs font-black text-white hover:bg-slate-800"
+                            >
+                              Imprimir
+                            </button>
+                          </>
                         )}
                       </div>
                     </div>

@@ -1234,8 +1234,8 @@ export default function UsuariosSistemaPage() {
                     key={usuario.id}
                     className={`rounded-2xl p-4 ring-1 ${
                       usuarioSelecionado?.id === usuario.id
-                        ? "bg-blue-50 ring-blue-200"
-                        : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100"
+                        ? "bg-blue-50 dark:bg-blue-900/20 ring-blue-200 dark:ring-blue-500/30"
+                        : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100 dark:ring-slate-800"
                     }`}
                   >
                     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">

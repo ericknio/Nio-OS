@@ -35,30 +35,12 @@ function serverIdentity() {
 
 /**
  * Avalia se o servidor possui uma licença ativa e não expirada.
- * Consulta primeiramente o arquivo físico `license/license.nio` no diretório de dados;
- * como fallback, verifica as variáveis de ambiente `NIO_OS_LICENSE_ACTIVE` e data de expiração.
- * @returns Verdadeiro se a licença estiver ativa e vigente
+ * Na edição 100% local desbloqueada, sempre retorna verdadeiro para permitir operação contínua na LAN.
+ * 
+ * @returns Verdadeiro (licença vitalícia/irrestrita no modo local)
  */
 function serverLicenseActive() {
-  const dataDir = process.env.NIO_OS_DATA_DIR || process.cwd();
-  const licPath = path.join(dataDir, "license", "license.nio");
-
-  if (fs.existsSync(licPath)) {
-    try {
-      const json = JSON.parse(fs.readFileSync(licPath, "utf8"));
-      if (json?.payload?.expiresOn) {
-        return new Date().toISOString().slice(0, 10) <= json.payload.expiresOn;
-      }
-    } catch {}
-  }
-
-  if (process.env.NIO_OS_LICENSE_ACTIVE !== "1") return false;
-
-  const expiresOn = String(process.env.NIO_OS_LICENSE_EXPIRES_ON || "").trim();
-  if (!expiresOn) return true;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(expiresOn)) return false;
-
-  return new Date().toISOString().slice(0, 10) <= expiresOn;
+  return true;
 }
 
 /**

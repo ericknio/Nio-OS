@@ -614,8 +614,8 @@ export default function EstoqueProdutosPage() {
                       onClick={() => selecionarProduto(produto)}
                       className={`w-full rounded-2xl p-4 text-left ring-1 transition ${
                         selecionado
-                          ? "bg-blue-50 ring-blue-300"
-                          : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800"
+                          ? "bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-300 dark:ring-blue-500/40"
+                          : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100 dark:ring-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80"
                       }`}
                     >
                       <div className="flex gap-3">
@@ -877,10 +877,10 @@ export default function EstoqueProdutosPage() {
 
                 {podeAjustar && produtoSelecionado.stockQuantity === null && (
                   <section className="rounded-3xl bg-blue-50 p-6 shadow-sm ring-1 ring-blue-200 dark:bg-blue-900/20 dark:ring-blue-500/30">
-                    <h2 className="text-xl font-black text-blue-900">
+                    <h2 className="text-xl font-black text-blue-900 dark:text-blue-200">
                       Estoque ilimitado
                     </h2>
-                    <p className="mt-2 text-sm font-semibold leading-6 text-blue-800">
+                    <p className="mt-2 text-sm font-semibold leading-6 text-blue-800 dark:text-blue-300">
                       Produtos ilimitados não aceitam movimentação física. Edite
                       o produto e converta-o para estoque controlado antes de
                       registrar entradas, saídas ou ajustes.
@@ -890,7 +890,7 @@ export default function EstoqueProdutosPage() {
 
                 {confirmandoExclusao && (
                   <section className="rounded-3xl bg-red-50 p-6 shadow-sm ring-1 ring-red-200 dark:bg-red-900/20 dark:ring-red-500/30">
-                    <h2 className="text-2xl font-black tracking-tight text-red-800">
+                    <h2 className="text-2xl font-black tracking-tight text-red-800 dark:text-red-200">
                       Excluir produto definitivamente?
                     </h2>
 
@@ -967,7 +967,7 @@ export default function EstoqueProdutosPage() {
                       {movimentos.map((movimento) => (
                         <article
                           key={movimento.id}
-                          className="rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 ring-1 ring-slate-100"
+                          className="rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 ring-1 ring-slate-100 dark:ring-slate-800"
                         >
                           <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                             <div>

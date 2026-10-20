@@ -1438,10 +1438,10 @@ export default function ProdutosPage() {
                             setProdutoVendaId(produto.id);
                             setProdutoBuscaVenda(produto.name);
                           }}
-                          className={`mb-2 flex w-full items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left transition hover:bg-blue-50 ${
+                          className={`mb-2 flex w-full items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left transition hover:bg-blue-50 dark:hover:bg-blue-900/20 ${
                             produtoVendaId === produto.id
-                              ? "bg-blue-50 ring-2 ring-blue-300"
-                              : "bg-slate-50 dark:bg-slate-800/50 ring-1 ring-slate-100"
+                              ? "bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-300 dark:ring-blue-500/40"
+                              : "bg-slate-50 dark:bg-slate-800/50 ring-1 ring-slate-100 dark:ring-slate-800"
                           }`}
                         >
                           <span className="min-w-0">

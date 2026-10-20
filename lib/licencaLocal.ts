@@ -139,12 +139,12 @@ export function obterLicencaLocal(): DadosLicencaLocal {
     // Ignora erros de leitura de diretório
   }
 
-  // Retorno padrão quando não há nenhuma licença válida detectada
+  // Retorno padrão da edição local ilimitada (versão totalmente local sem bloqueio)
   return {
-    ativa: false,
+    ativa: true,
     vencimento: null,
-    cliente: null,
-    plano: null,
-    licenseId: null,
+    cliente: "Uso Local Desbloqueado",
+    plano: "PRO (Vitalício)",
+    licenseId: "OFFLINE-ILIMITADO",
   };
 }

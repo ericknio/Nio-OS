@@ -295,7 +295,7 @@ function BarraMovimento({
       <div className="mt-3 h-3 overflow-hidden rounded-full bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
         <div
           className={`h-full rounded-full ${
-            destaque ? "bg-blue-600" : "bg-slate-400"
+            destaque ? "bg-blue-600" : "bg-slate-400 dark:bg-slate-600"
           }`}
           style={{
             width: `${largura}%`,
@@ -734,7 +734,7 @@ export default function RelatoriosProdutosPage() {
         </section>
 
         {/* ABA: VISÃO GERAL (Apenas Admin / Gestores com permissão financeira) */}
-        <div className={abaAtiva === "geral" && !ehApenasAtendente ? "contents" : "hidden"}>
+        <div className={abaAtiva === "geral" && !ehApenasAtendente ? "space-y-6" : "hidden"}>
           <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <CardResumo
               titulo="Total vendido"
@@ -991,7 +991,7 @@ export default function RelatoriosProdutosPage() {
         </div>
 
         {/* ABA: LUCRO POR ATENDENTE / MINHA COMISSÃO */}
-        <div className={abaAtiva === "atendentes" || ehApenasAtendente ? "contents" : "hidden"}>
+        <div className={abaAtiva === "atendentes" || ehApenasAtendente ? "space-y-6" : "hidden"}>
           {/* Barra de Filtro do Atendente e Exportação */}
           <section className="rounded-3xl bg-white dark:bg-slate-900 p-6 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -1124,7 +1124,7 @@ export default function RelatoriosProdutosPage() {
                     key={att.id}
                     type="button"
                     onClick={() => setAtendenteSelecionado(att.id)}
-                    className="rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 text-left ring-1 ring-slate-100 dark:ring-slate-800 transition hover:bg-blue-50 hover:ring-blue-200 dark:hover:bg-slate-800"
+                    className="rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 text-left ring-1 ring-slate-100 dark:ring-slate-800 transition hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:ring-blue-200 dark:hover:ring-blue-500/30"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div>

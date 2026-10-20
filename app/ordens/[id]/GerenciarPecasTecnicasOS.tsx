@@ -552,8 +552,8 @@ export default function GerenciarPecasTecnicasOS({
       </div>
 
       {item && (
-        <div className="mt-5 rounded-2xl border border-blue-200 bg-blue-50 p-5">
-          <p className="text-sm font-black text-blue-900">
+        <div className="mt-5 rounded-2xl border border-blue-200 dark:border-blue-900/40 bg-blue-50 dark:bg-blue-950/30 p-5">
+          <p className="text-sm font-black text-blue-900 dark:text-blue-300">
             Reserva: {item.partNameSnapshot}
           </p>
           <div className="mt-4 grid gap-3 md:grid-cols-[160px_1fr]">

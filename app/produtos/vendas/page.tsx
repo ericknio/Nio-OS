@@ -667,8 +667,8 @@ export default function VendasProdutosPage() {
                     key={venda.id}
                     className={`rounded-3xl p-5 ring-1 ${
                       cancelada
-                        ? "bg-red-50 ring-red-200"
-                        : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100"
+                        ? "bg-red-50 ring-red-200 dark:bg-red-950/30 dark:ring-red-500/30"
+                        : "bg-slate-50 dark:bg-slate-800/50 ring-slate-100 dark:ring-slate-800"
                     }`}
                   >
                     <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
