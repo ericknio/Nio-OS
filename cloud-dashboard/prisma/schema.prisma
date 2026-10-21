@@ -1,0 +1,208 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NIO_CLOUD_DATABASE_URL")
+}
+
+enum CommercialAccountStatus {
+  ACTIVE
+  BLOCKED
+}
+
+enum InstallationStatus {
+  ACTIVE
+  REVOKED
+}
+
+enum EntitlementStatus {
+  ACTIVE
+  EXPIRED
+  BLOCKED
+}
+
+enum EntitlementSource {
+  TRIAL
+  PAID
+  MANUAL
+}
+
+enum AdminUserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum AuditActorType {
+  ACCOUNT
+  ADMIN
+  SYSTEM
+}
+
+model CommercialAccount {
+  id           String                  @id @default(cuid())
+  email        String                  @unique @db.VarChar(320)
+  name         String                  @db.VarChar(120)
+  passwordHash String                  @db.VarChar(255)
+  status       CommercialAccountStatus @default(ACTIVE)
+  resellerId   String?
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  reseller      AdminUser?     @relation(fields: [resellerId], references: [id])
+  installations Installation[]
+  entitlement   Entitlement?
+  trialClaim    TrialClaim?
+  deviceTokens  DeviceToken[]
+  licenseIssues LicenseIssue[]
+
+  @@index([status])
+  @@index([resellerId])
+}
+
+model Installation {
+  id                  String             @id @default(cuid())
+  accountId           String
+  installationId      String             @unique @db.Uuid
+  machineFingerprint  String             @db.Char(64)
+  machineIdentityHash String             @db.Char(64)
+  machineCode         String             @db.VarChar(128)
+  status              InstallationStatus @default(ACTIVE)
+  createdAt           DateTime           @default(now())
+  lastSeenAt          DateTime           @default(now())
+  revokedAt           DateTime?
+
+  account       CommercialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  deviceTokens  DeviceToken[]
+  licenseIssues LicenseIssue[]
+
+  @@unique([accountId, machineFingerprint])
+  @@index([accountId, status])
+  @@index([machineFingerprint])
+  @@index([machineIdentityHash])
+}
+
+model TrialClaim {
+  id                  String   @id @default(cuid())
+  accountId           String   @unique
+  installationId      String   @db.Uuid
+  machineFingerprint  String   @db.Char(64)
+  machineIdentityHash String   @unique @db.Char(64)
+  claimedAt           DateTime @default(now())
+  expiresAt           DateTime
+
+  account CommercialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+}
+
+model Entitlement {
+  id        String            @id @default(cuid())
+  accountId String            @unique
+  source    EntitlementSource
+  status    EntitlementStatus @default(ACTIVE)
+  plan      String            @db.VarChar(32)
+  features  Json
+  startsAt  DateTime
+  expiresAt DateTime
+  version   Int               @default(1)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  account       CommercialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  licenseIssues LicenseIssue[]
+
+  @@index([status, expiresAt])
+}
+
+model DeviceToken {
+  id             String    @id @default(cuid())
+  accountId      String
+  installationId String
+  tokenHash      String    @unique @db.Char(64)
+  createdAt      DateTime  @default(now())
+  lastUsedAt     DateTime  @default(now())
+  expiresAt      DateTime?
+  revokedAt      DateTime?
+
+  account      CommercialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  installation Installation      @relation(fields: [installationId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, revokedAt])
+  @@index([installationId, revokedAt])
+}
+
+model LicenseIssue {
+  id             String   @id @default(cuid())
+  accountId      String
+  installationId String
+  entitlementId  String
+  keyId          String   @db.VarChar(80)
+  licenseSha256  String   @db.Char(64)
+  issuedAt       DateTime @default(now())
+  expiresAt      DateTime
+  reason         String   @db.VarChar(32)
+
+  account      CommercialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  installation Installation      @relation(fields: [installationId], references: [id], onDelete: Cascade)
+  entitlement  Entitlement       @relation(fields: [entitlementId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, issuedAt])
+  @@index([installationId, issuedAt])
+  @@index([entitlementId, issuedAt])
+}
+
+model IdempotencyRecord {
+  id              String   @id @default(cuid())
+  operation       String   @db.VarChar(24)
+  keyHash         String   @db.Char(64)
+  requestHash     String   @db.Char(64)
+  response        Json
+  deviceTokenHash String?  @db.Char(64)
+  accountId       String?  @db.VarChar(64)
+  installationId  String?  @db.VarChar(64)
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime
+
+  @@unique([operation, keyHash])
+  @@index([expiresAt])
+}
+
+enum Role {
+  MASTER
+  RESELLER
+}
+
+model AdminUser {
+  id           String          @id @default(cuid())
+  email        String          @unique @db.VarChar(320)
+  passwordHash String          @db.VarChar(255)
+  status       AdminUserStatus @default(ACTIVE)
+  role         Role            @default(RESELLER)
+  credits      Int             @default(0)
+  creatorId    String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  lastLoginAt  DateTime?
+
+  creator      AdminUser?          @relation("ResellerHierarchy", fields: [creatorId], references: [id], onDelete: SetNull)
+  subResellers AdminUser[]         @relation("ResellerHierarchy")
+  clients      CommercialAccount[] // Clientes criados por este revendedor
+
+  @@index([creatorId])
+}
+
+model AuditEvent {
+  id          String         @id @default(cuid())
+  actorType   AuditActorType
+  actorId     String?        @db.VarChar(64)
+  event       String         @db.VarChar(80)
+  subjectType String         @db.VarChar(48)
+  subjectId   String?        @db.VarChar(64)
+  metadata    Json?
+  createdAt   DateTime       @default(now())
+
+  @@index([event, createdAt])
+  @@index([subjectType, subjectId, createdAt])
+}

@@ -1,3 +1,0 @@
-[submodule "cloud-dashboard"]
-	path = cloud-dashboard
-	url = https://github.com/ericknio/nio-os-cloud-dashboard.git
